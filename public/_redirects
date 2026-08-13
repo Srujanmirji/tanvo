@@ -1,0 +1,4 @@
+# Netlify SPA fallback.
+# Without this, a hard refresh on /privacy, /terms or /admin 404s,
+# because those paths only exist inside the client-side router.
+/*  /index.html  200

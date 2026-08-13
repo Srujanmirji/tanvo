@@ -1,0 +1,11 @@
+# https://tanvo.tech/robots.txt
+# Update the Sitemap host below to your real domain before deploying.
+
+User-agent: *
+Allow: /
+
+# The team dashboard is private. This keeps it out of search results;
+# it is not an access control — see README → "Hardening the admin route".
+Disallow: /admin
+
+Sitemap: https://tanvo.tech/sitemap.xml

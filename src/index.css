@@ -1,0 +1,895 @@
+/* Fonts are loaded in index.html with preconnect — importing them here
+   would create a render-blocking request chain. */
+@import 'tailwindcss';
+
+/* ============================================================
+   LAYERING — READ BEFORE ADDING PLAIN CSS TO THIS FILE
+   ============================================================
+   Tailwind v4 registers `@layer theme, base, components, utilities`.
+   CSS written OUTSIDE any layer beats every layered rule regardless of
+   specificity — so an unlayered `* { margin: 0 }` silently defeats
+   `mx-auto`, `p-8`, and every other utility.
+
+   Therefore: base resets go in `@layer base`, reusable classes go in
+   `@layer components`, and only rules that must genuinely win over
+   utilities (the reduced-motion overrides) stay unlayered.
+   ============================================================ */
+
+@theme {
+  /* Surfaces — named `void`/`surface` rather than `base` to avoid
+     colliding with Tailwind's `text-base` font-size utility. */
+  --color-void: #030307;
+  --color-surface: #0a0a14;
+  --color-elevated: #0d0d19;
+
+  /* Brand */
+  --color-brand: #00f2fe;
+  --color-brand-mid: #0072ff;
+  --color-brand-deep: #0022cc;
+
+  /* Typography */
+  --font-heading: 'Space Grotesk', ui-sans-serif, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Plus Jakarta Sans', ui-sans-serif, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Motion */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Animations */
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-slow: float 9s ease-in-out infinite;
+  /* Rotation-free variant for elements with a straight edge (pills,
+     cards) where a tilt reads as a rendering fault, not a flourish. */
+  --animate-drift: drift 9s ease-in-out infinite;
+  --animate-pulse-glow: pulseGlow 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-15px) rotate(3deg);
+  }
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* --- Intro overlay keyframes ---------------------------------- */
+@keyframes introFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes introFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The whole mark settles in with a slight overshoot. */
+@keyframes introMarkIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.72) rotate(-8deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.06) rotate(2deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+/* Individual shapes rise into place, staggered. */
+@keyframes introPathIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes introSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes introPulse {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.12);
+  }
+}
+
+/* Wordmark wipes up from behind its own overflow mask. */
+@keyframes introWordIn {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes introBar {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Exit: the panel lifts away rather than simply fading, so the site
+   underneath feels revealed instead of cross-dissolved. */
+@keyframes introExit {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+    clip-path: inset(0 0 0 0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-3%);
+    clip-path: inset(0 0 100% 0);
+  }
+}
+
+@keyframes pulseGlow {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.05);
+  }
+}
+
+/* Tokens consumed only by the component classes below. */
+:root {
+  --bg-card: rgb(13 13 25 / 0.7);
+  --bg-glass: rgb(10 10 20 / 0.45);
+  --border-light: rgb(255 255 255 / 0.08);
+  --shadow-glow-cyan: 0 0 30px rgb(0 242 254 / 0.25);
+  --transition-smooth: 0.4s var(--ease-out-expo);
+  --transition-fast: 0.2s ease;
+  --header-height: 80px;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  /* Scoped to real content elements. A universal `margin: 0` here would
+     be in-layer and therefore still lose to utilities, but keeping it
+     narrow avoids surprising anyone who adds unlayered CSS later. */
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  figure,
+  blockquote,
+  dl,
+  dd,
+  ul,
+  ol {
+    margin: 0;
+  }
+
+  ul,
+  ol {
+    padding: 0;
+    list-style: none;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Keep anchor targets clear of the fixed header. */
+    scroll-padding-top: calc(var(--header-height) + 1rem);
+    background-color: var(--color-void);
+    color: var(--color-slate-400);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Global scale.
+     Tailwind sizes in rem, so nudging the root font size scales type,
+     padding, gaps and container widths together — the whole UI grows
+     proportionally on large displays instead of only the headings.
+     Kept off small screens, where 16px is already correct. */
+  @media (width >= 1536px) {
+    html {
+      font-size: 17px;
+    }
+  }
+
+  @media (width >= 1920px) {
+    html {
+      font-size: 18px;
+    }
+  }
+
+  @media (width >= 2400px) {
+    html {
+      font-size: 19px;
+    }
+  }
+
+  body {
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100dvh;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p {
+    line-height: 1.65;
+    text-wrap: pretty;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  img,
+  svg,
+  canvas {
+    display: block;
+    max-width: 100%;
+  }
+
+  /* Visible, on-brand focus ring for keyboard users everywhere. */
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  #root {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-void);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1e1e2f;
+    border-radius: 4px;
+    border: 2px solid var(--color-void);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-brand-mid);
+  }
+
+  ::selection {
+    background: rgb(0 242 254 / 0.25);
+    color: #fff;
+  }
+}
+
+/* ============================================================
+   COMPONENTS
+   Utilities still override these, which is what lets
+   `btn-primary px-6 py-2.5` or `field-input pr-12` work.
+   ============================================================ */
+@layer components {
+  .site-ambience {
+    background-image:
+      radial-gradient(circle at 10% 20%, rgb(0 114 255 / 0.05) 0%, transparent 40%),
+      radial-gradient(circle at 90% 80%, rgb(0 242 254 / 0.04) 0%, transparent 40%);
+  }
+
+  /* Skip link — first tab stop on the page. */
+  .skip-link {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    translate: -50% -150%;
+    z-index: 100;
+    padding: 12px 24px;
+    background: var(--color-brand);
+    color: var(--color-void);
+    font-weight: 700;
+    border-radius: 0 0 12px 12px;
+    transition: translate 0.2s ease;
+  }
+  .skip-link:focus-visible {
+    translate: -50% 0;
+  }
+
+  .gradient-text {
+    background: linear-gradient(
+      135deg,
+      var(--color-brand) 0%,
+      var(--color-brand-mid) 50%,
+      #0044ff 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+
+    /* Readable fallback if background-clip: text is unsupported. */
+    @supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+      -webkit-text-fill-color: currentcolor;
+      color: var(--color-brand);
+      background: none;
+    }
+  }
+
+  .glass-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    transition:
+      border-color var(--transition-smooth),
+      box-shadow var(--transition-smooth),
+      transform var(--transition-smooth);
+  }
+
+  .glass-card:hover {
+    border-color: rgb(0 242 254 / 0.3);
+    box-shadow: var(--shadow-glow-cyan);
+    transform: translateY(-5px);
+  }
+
+  .glassmorphism {
+    background: var(--bg-glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-light);
+    box-shadow: 0 8px 32px 0 rgb(0 0 0 / 0.37);
+  }
+
+  .glow-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.15;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .btn-primary {
+    position: relative;
+    isolation: isolate;
+    background: linear-gradient(135deg, var(--color-brand) 0%, var(--color-brand-mid) 100%);
+    color: var(--color-void);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    padding: 14px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgb(0 242 254 / 0.25);
+    transition:
+      transform var(--transition-smooth),
+      box-shadow var(--transition-smooth),
+      color var(--transition-smooth);
+  }
+
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      var(--color-brand-mid) 0%,
+      var(--color-brand-deep) 100%
+    );
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow-cyan);
+    color: #fff;
+  }
+  .btn-primary:hover:not(:disabled)::before {
+    opacity: 1;
+  }
+  .btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .btn-secondary {
+    background: rgb(255 255 255 / 0.05);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    padding: 14px 28px;
+    border-radius: 12px;
+    border: 1px solid var(--border-light);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition:
+      background var(--transition-smooth),
+      border-color var(--transition-smooth),
+      transform var(--transition-smooth);
+  }
+
+  .btn-secondary:hover:not(:disabled) {
+    background: rgb(255 255 255 / 0.1);
+    border-color: rgb(255 255 255 / 0.2);
+    transform: translateY(-2px);
+  }
+  .btn-secondary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .field-input {
+    width: 100%;
+    background: rgb(2 6 23 / 0.6);
+    border: 1px solid rgb(255 255 255 / 0.1);
+    border-radius: 12px;
+    padding: 12px 16px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.875rem;
+    transition:
+      border-color var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+  .field-input::placeholder {
+    color: var(--color-slate-600);
+  }
+  .field-input:focus {
+    outline: none;
+    border-color: var(--color-brand);
+    box-shadow: 0 0 0 3px rgb(0 242 254 / 0.15);
+  }
+  .field-input[aria-invalid='true'] {
+    border-color: #f87171;
+  }
+  .field-input[aria-invalid='true']:focus {
+    box-shadow: 0 0 0 3px rgb(248 113 113 / 0.15);
+  }
+
+  /* --- Page container ------------------------------------------
+     The single place page width is decided. Every section uses this
+     rather than repeating `max-w-7xl mx-auto px-6 md:px-12`, so the
+     site's measure can be retuned here in one edit.
+
+     Gutters scale with the viewport, and the cap is generous enough
+     that the layout still fills a 1920+ display instead of stranding
+     the content in a narrow strip. Long-form text is separately
+     constrained (max-w-2xl / prose widths) so line length stays
+     readable regardless of how wide this gets. */
+  .container-page {
+    width: 100%;
+    /* Deliberately px, not rem. The root font size steps up on large
+       displays to scale type and spacing; if this cap were in rem it
+       would scale too, and at 1920px the container grew to 1900px —
+       leaving a 10px margin. The measure must stay fixed while the
+       contents grow. */
+    max-width: 1600px;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 3.5vw, 4.5rem);
+  }
+
+  /* Ultrawide displays get a little more room rather than a huge void. */
+  @media (width >= 2200px) {
+    .container-page {
+      max-width: 1840px;
+    }
+  }
+
+  /* Vertical rhythm only — horizontal gutters belong to .container-page,
+     otherwise the two stack and double the inset. */
+  .section-padding {
+    padding-block: 100px;
+  }
+
+  @media (width <= 768px) {
+    .section-padding {
+      padding-block: 70px;
+    }
+  }
+
+  @media (width >= 1536px) {
+    .section-padding {
+      padding-block: 140px;
+    }
+  }
+
+  /* --- Logo ----------------------------------------------------- */
+  .logo-mark {
+    filter: drop-shadow(0 0 0 transparent);
+    transition:
+      transform 0.5s var(--ease-out-expo),
+      filter 0.5s ease;
+  }
+
+  .group:hover .logo-mark {
+    filter: drop-shadow(0 4px 14px rgb(0 242 254 / 0.45));
+  }
+
+  .logo-path {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  /* Each shape drifts independently on hover, so the mark feels
+     assembled rather than a flat image being scaled. */
+  .group:hover .logo-path--1 {
+    transform: translateY(-2px);
+    transition: transform 0.45s var(--ease-out-expo);
+  }
+  .group:hover .logo-path--2 {
+    transform: translateY(-1px) scale(1.02);
+    transition: transform 0.45s var(--ease-out-expo) 0.04s;
+  }
+  .group:hover .logo-path--3 {
+    transform: translateY(1px);
+    transition: transform 0.45s var(--ease-out-expo) 0.08s;
+  }
+  .logo-path {
+    transition: transform 0.45s var(--ease-out-expo);
+  }
+
+  /* Oversized watermark used behind hero / footer content. */
+  .logo-watermark {
+    position: absolute;
+    pointer-events: none;
+    user-select: none;
+    opacity: 0.022;
+    z-index: 0;
+    filter: blur(0.5px);
+  }
+
+  /* --- Intro overlay -------------------------------------------- */
+  .intro {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    background:
+      radial-gradient(circle at 50% 45%, rgb(0 114 255 / 0.10) 0%, transparent 55%),
+      var(--color-void);
+    cursor: pointer;
+    animation: introFadeIn 0.3s ease both;
+  }
+
+  .intro--exiting {
+    animation: introExit var(--intro-exit, 800ms) var(--ease-out-expo) forwards;
+    pointer-events: none;
+  }
+
+  .intro__stage {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 210px;
+    height: 210px;
+  }
+
+  .intro__logo {
+    width: 106px;
+    height: 106px;
+    position: relative;
+    z-index: 2;
+    animation: introMarkIn 1s var(--ease-out-expo) both;
+  }
+
+  /* Stagger the three shapes so the mark builds itself. */
+  .logo-mark--animated .logo-path--1 {
+    animation: introPathIn 0.75s var(--ease-out-expo) 0.15s both;
+  }
+  .logo-mark--animated .logo-path--2 {
+    animation: introPathIn 0.75s var(--ease-out-expo) 0.3s both;
+  }
+  .logo-mark--animated .logo-path--3 {
+    animation: introPathIn 0.75s var(--ease-out-expo) 0.45s both;
+  }
+
+  .intro__ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    background:
+      conic-gradient(
+          from 0deg,
+          transparent 0deg,
+          rgb(0 242 254 / 0.7) 60deg,
+          rgb(0 114 255 / 0.25) 130deg,
+          transparent 200deg
+        )
+        border-box;
+    /* Punch out the centre so only the ring stroke shows. */
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    padding: 1px;
+    animation: introSpin 2.4s linear infinite;
+    opacity: 0;
+    animation-name: introSpin, introFadeIn;
+    animation-duration: 2.4s, 0.6s;
+    animation-iteration-count: infinite, 1;
+    animation-timing-function: linear, ease;
+    animation-delay: 0s, 0.5s;
+    animation-fill-mode: none, forwards;
+  }
+
+  .intro__glow {
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgb(0 242 254 / 0.22), transparent 70%);
+    filter: blur(22px);
+    animation: introPulse 2.6s ease-in-out infinite;
+  }
+
+  .intro__word {
+    overflow: hidden;
+  }
+
+  .intro__word-text {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: clamp(1.6rem, 4vw, 2.25rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #fff;
+    animation: introWordIn 0.8s var(--ease-out-expo) 0.75s both;
+  }
+
+  .intro__tagline {
+    font-size: 0.75rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-slate-500);
+    animation: introFadeUp 0.8s var(--ease-out-expo) 0.95s both;
+  }
+
+  .intro__track {
+    width: min(220px, 55vw);
+    height: 2px;
+    border-radius: 2px;
+    background: rgb(255 255 255 / 0.07);
+    overflow: hidden;
+    margin-top: 0.5rem;
+    animation: introFadeIn 0.5s ease 1.05s both;
+  }
+
+  .intro__bar {
+    height: 100%;
+    width: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--color-brand), var(--color-brand-mid));
+    transform-origin: left center;
+    animation: introBar 2.2s var(--ease-out-expo) 1.05s both;
+  }
+
+  .intro__skip {
+    position: absolute;
+    bottom: 2.5rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-slate-600);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    transition: color 0.2s ease;
+    animation: introFadeIn 0.5s ease 1.6s both;
+  }
+  .intro__skip:hover {
+    color: var(--color-brand);
+  }
+
+  /* --- Scroll reveal -------------------------------------------
+     Elements start hidden ONLY when JS has confirmed it will drive
+     them (`.js-reveal-ready` on <html>). Without JS, or if the
+     observer never fires, content renders normally — it can never
+     be permanently stranded at opacity 0. */
+  .js-reveal-ready .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition:
+      opacity 0.9s var(--ease-out-expo),
+      transform 0.9s var(--ease-out-expo);
+  }
+
+  .js-reveal-ready .reveal[data-revealed='true'] {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* --- Custom cursor -------------------------------------------
+     The native cursor is hidden ONLY after CustomCursor mounts and
+     adds `.has-custom-cursor`. If JS fails, the user keeps a cursor. */
+  .custom-cursor-dot,
+  .custom-cursor-ring {
+    position: fixed;
+    left: 0;
+    top: 0;
+    border-radius: 50%;
+    pointer-events: none;
+    will-change: transform;
+  }
+
+  .custom-cursor-dot {
+    width: 6px;
+    height: 6px;
+    margin: -3px 0 0 -3px;
+    background-color: var(--color-brand);
+    z-index: 9999;
+    transition:
+      width 0.2s,
+      height 0.2s,
+      margin 0.2s,
+      background-color 0.2s;
+  }
+
+  .custom-cursor-ring {
+    width: 36px;
+    height: 36px;
+    margin: -18px 0 0 -18px;
+    border: 1px solid rgb(0 242 254 / 0.5);
+    z-index: 9998;
+    transition:
+      width 0.3s var(--ease-out-expo),
+      height 0.3s var(--ease-out-expo),
+      margin 0.3s var(--ease-out-expo),
+      border-color 0.3s,
+      background-color 0.3s;
+  }
+
+  .custom-cursor-hover .custom-cursor-ring {
+    width: 55px;
+    height: 55px;
+    margin: -27.5px 0 0 -27.5px;
+    background-color: rgb(0 242 254 / 0.08);
+    border-color: var(--color-brand);
+  }
+
+  .custom-cursor-hover .custom-cursor-dot {
+    width: 10px;
+    height: 10px;
+    margin: -5px 0 0 -5px;
+    background-color: #fff;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .has-custom-cursor body,
+    .has-custom-cursor a,
+    .has-custom-cursor button,
+    .has-custom-cursor input,
+    .has-custom-cursor textarea,
+    .has-custom-cursor select,
+    .has-custom-cursor [role='button'] {
+      cursor: none;
+    }
+  }
+}
+
+/* ============================================================
+   REDUCED MOTION — WCAG 2.3.3
+   Deliberately UNLAYERED so it wins over both components and
+   utilities. Decorative motion is removed outright; functional
+   transitions collapse to near-instant rather than disappearing,
+   so state changes stay perceivable.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  .js-reveal-ready .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .glass-card:hover,
+  .btn-primary:hover:not(:disabled),
+  .btn-secondary:hover:not(:disabled) {
+    transform: none !important;
+  }
+
+  .custom-cursor-dot,
+  .custom-cursor-ring {
+    display: none !important;
+  }
+}
