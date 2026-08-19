@@ -19,6 +19,23 @@ function hasSeenIntro() {
   }
 }
 
+/**
+ * Deep links skip the intro entirely.
+ *
+ * Two reasons. Editorially, someone following tanvo.tech/#contact wants
+ * that section, not a two-second animation. Mechanically, the overlay
+ * locks body scroll while it runs, which prevents the browser from ever
+ * scrolling to the anchor — the visitor lands at the top of the page and
+ * the link silently does nothing.
+ */
+function isDeepLink() {
+  return typeof window !== 'undefined' && window.location.hash.length > 1;
+}
+
+function shouldSkip() {
+  return hasSeenIntro() || isDeepLink();
+}
+
 function markSeen() {
   try {
     sessionStorage.setItem(SEEN_KEY, '1');
@@ -32,6 +49,7 @@ function markSeen() {
  *
  * Deliberate constraints:
  *   - shows once per browser session, not on every route change
+ *   - skipped on deep links (#hash), which the scroll lock would break
  *   - never blocks longer than MAX_VISIBLE_MS even if an asset stalls
  *   - skipped entirely for prefers-reduced-motion
  *   - dismissible with Escape or a click, for anyone who has seen it
@@ -41,7 +59,7 @@ function markSeen() {
 export default function Preloader() {
   const prefersReducedMotion = useReducedMotion();
   const [phase, setPhase] = useState(() =>
-    hasSeenIntro() ? 'done' : 'active',
+    shouldSkip() ? 'done' : 'active',
   );
   const startedAt = useRef(Date.now());
 
