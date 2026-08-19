@@ -35,15 +35,15 @@ import { useContent } from '../lib/store';
 
 const TABS = [
   { id: 'pipeline', label: 'Pipeline', icon: LayoutGrid },
+  { id: 'inbox', label: 'Inbox', icon: Inbox },
   { id: 'leads', label: 'CRM Leads', icon: Kanban },
   { id: 'clients', label: 'Clients', icon: Users },
   { id: 'deliverables', label: 'Deliverables', icon: FileCheck2 },
   { id: 'invoices', label: 'Invoices', icon: CreditCard },
-  { id: 'comms', label: 'Email & WhatsApp', icon: Send },
+  { id: 'comms', label: 'Outbound Broadcasts', icon: Send },
   { id: 'services', label: 'Services CMS', icon: Package },
   { id: 'casestudies', label: 'Case Studies', icon: Layers },
   { id: 'tickets', label: 'Requests', icon: MessageSquare },
-  { id: 'inbox', label: 'Inbox', icon: Inbox },
   { id: 'data', label: 'Data & Backup', icon: Database },
 ];
 
@@ -86,27 +86,25 @@ export default function AdminDashboard({ onSignOut, expiresAt }) {
     invoices = [],
     deliverables = [],
     tickets = [],
-    applications = [],
+    conversations = [],
   } = useContent();
 
   const stats = useMemo(() => {
     const pipelineVolume = leads
       .filter((l) => l.status !== 'LOST')
-      .reduce((sum, l) => sum + (l.budgetBand === 'ABOVE_25L' ? 35000 : 12000), 0);
+      .reduce((sum, l) => sum + (l.budgetBand === 'ABOVE_25L' ? 3500000 : 650000), 0);
 
-    const totalCollected = invoices
-      .filter((i) => i.status === 'paid')
-      .reduce((sum, i) => sum + (Number(i.amount) || 0), 0);
+    const totalCollected = invoices.reduce((sum, i) => sum + (Number(i.paidAmount) || 0), 0);
 
     const unpaidAmount = invoices
-      .filter((i) => i.status === 'sent' || i.status === 'overdue')
-      .reduce((sum, i) => sum + (Number(i.amount) || 0), 0);
+      .filter((i) => i.status !== 'paid' && i.status !== 'cancelled')
+      .reduce((sum, i) => sum + (Number(i.balanceDue) || Number(i.amount) || 0), 0);
 
     const activeClientsCount = clients.length;
     const activeProjectsCount = projects.filter((p) => p.status === 'in-progress').length;
     const pendingDel = deliverables.filter((d) => d.status === 'pending').length;
-    const openTickets = tickets.filter((t) => t.status === 'open' || t.status === 'progress').length;
-    const newApplicants = applications.filter((a) => a.status === 'NEW').length;
+    const openTickets = tickets.filter((t) => t.status === 'open' || t.status === 'in-progress').length;
+    const unreadInbox = conversations.filter((c) => c.unread).length;
 
     return {
       pipelineVolume,
@@ -116,9 +114,9 @@ export default function AdminDashboard({ onSignOut, expiresAt }) {
       activeProjectsCount,
       pendingDel,
       openTickets,
-      newApplicants,
+      unreadInbox,
     };
-  }, [leads, clients, projects, invoices, deliverables, tickets, applications]);
+  }, [leads, clients, projects, invoices, deliverables, tickets, conversations]);
 
   const handleTriggerAction = (actionId) => {
     if (actionId === 'new-lead') setTab('leads');
@@ -193,16 +191,16 @@ export default function AdminDashboard({ onSignOut, expiresAt }) {
             {TABS.map(({ id, label, icon: Icon }) => {
               const active = tab === id;
               let badge = null;
-              if (id === 'leads' && leads.filter((l) => l.status === 'NEW').length > 0) {
+              if (id === 'inbox' && stats.unreadInbox > 0) {
+                badge = stats.unreadInbox;
+              } else if (id === 'leads' && leads.filter((l) => l.status === 'NEW').length > 0) {
                 badge = leads.filter((l) => l.status === 'NEW').length;
               } else if (id === 'deliverables' && stats.pendingDel > 0) {
                 badge = stats.pendingDel;
-              } else if (id === 'invoices' && invoices.filter((i) => i.status === 'sent').length > 0) {
-                badge = invoices.filter((i) => i.status === 'sent').length;
+              } else if (id === 'invoices' && invoices.filter((i) => i.status !== 'paid' && i.status !== 'cancelled').length > 0) {
+                badge = invoices.filter((i) => i.status !== 'paid' && i.status !== 'cancelled').length;
               } else if (id === 'tickets' && stats.openTickets > 0) {
                 badge = stats.openTickets;
-              } else if (id === 'inbox' && stats.newApplicants > 0) {
-                badge = stats.newApplicants;
               }
 
               return (
@@ -227,7 +225,9 @@ export default function AdminDashboard({ onSignOut, expiresAt }) {
                       className={`rounded-full px-1.5 py-0.2 text-[10px] font-mono font-bold ${
                         active
                           ? 'bg-cyan-400 text-slate-950'
-                          : 'bg-white/10 text-slate-300'
+                          : id === 'inbox'
+                            ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'
+                            : 'bg-white/10 text-slate-300'
                       }`}
                     >
                       {badge}
@@ -246,15 +246,15 @@ export default function AdminDashboard({ onSignOut, expiresAt }) {
         <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-4">
           <StatCard
             label="Revenue Settled"
-            value={`$${stats.totalCollected.toLocaleString()}`}
-            subValue={`₹${(stats.totalCollected * 83).toLocaleString()} INR`}
+            value={`₹${(stats.totalCollected).toLocaleString()}`}
+            subValue="Corporate Ledger"
             tone="text-emerald-400"
           />
           <StatCard
             label="Receivables Due"
-            value={`$${stats.unpaidAmount.toLocaleString()}`}
+            value={`₹${(stats.unpaidAmount).toLocaleString()}`}
             subValue={stats.unpaidAmount > 0 ? 'Pending Settlement' : 'All Settled'}
-            tone={stats.unpaidAmount > 0 ? 'text-rose-400' : 'text-slate-400'}
+            tone={stats.unpaidAmount > 0 ? 'text-amber-400' : 'text-slate-400'}
           />
           <StatCard
             label="Deliverable Reviews"
@@ -263,10 +263,10 @@ export default function AdminDashboard({ onSignOut, expiresAt }) {
             tone={stats.pendingDel > 0 ? 'text-amber-400' : 'text-slate-400'}
           />
           <StatCard
-            label="Client Requests"
-            value={stats.openTickets}
-            subValue={`${tickets.length} Total Tickets`}
-            tone={stats.openTickets > 0 ? 'text-sky-400' : 'text-slate-400'}
+            label="Unread Inbound Messages"
+            value={stats.unreadInbox}
+            subValue="WhatsApp / Email / IG"
+            tone={stats.unreadInbox > 0 ? 'text-cyan-400' : 'text-slate-400'}
           />
         </div>
 
@@ -279,6 +279,7 @@ export default function AdminDashboard({ onSignOut, expiresAt }) {
           className="rounded-3xl border border-white/10 bg-slate-950/60 p-6 sm:p-8 backdrop-blur-xl shadow-2xl"
         >
           {tab === 'pipeline' && <WorkBoard onRequestDelete={setConfirmRequest} />}
+          {tab === 'inbox' && <InboxPanel onConfirmDelete={setConfirmRequest} />}
           {tab === 'leads' && <LeadsPanel onConfirmDelete={setConfirmRequest} />}
           {tab === 'clients' && <ClientsPanel onConfirmDelete={setConfirmRequest} />}
           {tab === 'deliverables' && <DeliverablesPanel onConfirmDelete={setConfirmRequest} />}
@@ -287,7 +288,6 @@ export default function AdminDashboard({ onSignOut, expiresAt }) {
           {tab === 'services' && <ServicesCMSPanel onConfirmDelete={setConfirmRequest} />}
           {tab === 'casestudies' && <CaseStudiesCMSPanel onConfirmDelete={setConfirmRequest} />}
           {tab === 'tickets' && <TicketsPanel onConfirmDelete={setConfirmRequest} />}
-          {tab === 'inbox' && <InboxPanel onConfirmDelete={setConfirmRequest} />}
           {tab === 'data' && <DataTools onRequestConfirm={setConfirmRequest} />}
         </div>
       </main>

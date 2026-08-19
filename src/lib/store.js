@@ -23,9 +23,45 @@ function clamp(n, min, max) {
   return Math.min(max, Math.max(min, n));
 }
 
+export function uid(prefix = 'id') {
+  return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
+}
+
 const DELIVERABLE_STATUS_IDS = (DELIVERABLE_STATUSES || []).map((s) => s.id);
 const INVOICE_STATUS_IDS = (INVOICE_STATUSES || []).map((s) => s.id);
 const TICKET_STATUS_IDS = (TICKET_STATUSES || []).map((s) => s.id);
+
+/** Financial Year Series Generator (e.g. TNV/25-26/0001) */
+export function generateNextInvoiceNumber(existingInvoices = []) {
+  const now = new Date();
+  const currentMonth = now.getMonth() + 1; // 1-12
+  const currentYear = now.getFullYear();
+  
+  // Indian Fiscal Year starts in April (Month 4)
+  let startYear = currentYear;
+  let endYear = currentYear + 1;
+  if (currentMonth < 4) {
+    startYear = currentYear - 1;
+    endYear = currentYear;
+  }
+  
+  const fyPrefix = `TNV/${String(startYear).slice(-2)}-${String(endYear).slice(-2)}/`;
+  
+  // Find highest existing sequence in current FY
+  let highestSeq = 0;
+  existingInvoices.forEach((inv) => {
+    const num = inv.invoiceNumber || '';
+    if (num.startsWith(fyPrefix)) {
+      const seqPart = parseInt(num.slice(fyPrefix.length), 10);
+      if (!isNaN(seqPart) && seqPart > highestSeq) {
+        highestSeq = seqPart;
+      }
+    }
+  });
+  
+  const nextSeq = String(highestSeq + 1).padStart(4, '0');
+  return `${fyPrefix}${nextSeq}`;
+}
 
 /** Defensive normalisation */
 function normalise(raw) {
@@ -33,6 +69,10 @@ function normalise(raw) {
   const projects = Array.isArray(raw?.projects) ? raw.projects : (seedContent.projects || []);
   const deliverables = Array.isArray(raw?.deliverables) ? raw.deliverables : (seedContent.deliverables || []);
   const invoices = Array.isArray(raw?.invoices) ? raw.invoices : (seedContent.invoices || []);
+  const creditNotes = Array.isArray(raw?.creditNotes) ? raw.creditNotes : (seedContent.creditNotes || []);
+  const recurringProfiles = Array.isArray(raw?.recurringProfiles) ? raw.recurringProfiles : (seedContent.recurringProfiles || []);
+  const conversations = Array.isArray(raw?.conversations) ? raw.conversations : (seedContent.conversations || []);
+  const messages = Array.isArray(raw?.messages) ? raw.messages : (seedContent.messages || []);
   const tickets = Array.isArray(raw?.tickets) ? raw.tickets : (seedContent.tickets || []);
   const documents = Array.isArray(raw?.documents) ? raw.documents : (seedContent.documents || []);
   const achievements = Array.isArray(raw?.achievements) ? raw.achievements : (seedContent.achievements || []);
@@ -243,34 +283,124 @@ function normalise(raw) {
       })),
     invoices: invoices
       .filter((inv) => inv && typeof inv.id === 'string')
-      .map((inv) => ({
-        id: inv.id,
-        invoiceNumber: String(inv.invoiceNumber ?? 'TNV/2026/001'),
-        clientId: String(inv.clientId ?? ''),
-        projectId: String(inv.projectId ?? ''),
-        title: String(inv.title ?? 'Milestone Payment'),
-        amount: Math.max(0, Number(inv.amount) || 0),
-        currency: CURRENCY_IDS.includes(inv.currency) ? inv.currency : 'USD',
-        subtotal: Math.max(0, Number(inv.subtotal) || Number(inv.amount) || 0),
-        taxRatePct: Number(inv.taxRatePct) || 0,
-        taxAmount: Number(inv.taxAmount) || 0,
-        status: INVOICE_STATUS_IDS.includes(inv.status) ? inv.status : 'pending',
-        issuedDate: String(inv.issuedDate ?? new Date().toISOString().slice(0, 10)),
-        dueDate: String(inv.dueDate ?? ''),
-        paidDate: String(inv.paidDate ?? ''),
-        sacCode: String(inv.sacCode ?? '998311'),
-        notes: String(inv.notes ?? ''),
-        items: Array.isArray(inv.items)
-          ? inv.items.map((item) => ({
-              id: String(item.id ?? uid('item')),
-              description: String(item.description ?? 'Service item'),
-              qty: Number(item.qty) || 1,
-              rate: Number(item.rate) || 0,
-              sacCode: String(item.sacCode ?? '998311'),
-              amount: Number(item.amount) || 0,
-            }))
-          : [],
-        isSample: Boolean(inv.isSample),
+      .map((inv) => {
+        const totalAmount = Math.max(0, Number(inv.amount) || 0);
+        const paidAmount = Math.max(0, Number(inv.paidAmount) || (inv.status === 'paid' ? totalAmount : 0));
+        const balanceDue = Math.max(0, totalAmount - paidAmount);
+        const isLocked = Boolean(inv.locked || inv.status === 'sent' || inv.status === 'viewed' || inv.status === 'partially_paid' || inv.status === 'paid');
+
+        return {
+          id: inv.id,
+          invoiceNumber: String(inv.invoiceNumber ?? 'TNV/25-26/0001'),
+          clientId: String(inv.clientId ?? ''),
+          projectId: String(inv.projectId ?? ''),
+          title: String(inv.title ?? 'Milestone Payment'),
+          amount: totalAmount,
+          currency: CURRENCY_IDS.includes(inv.currency) ? inv.currency : 'INR',
+          subtotal: Math.max(0, Number(inv.subtotal) || totalAmount),
+          taxRatePct: Number(inv.taxRatePct) || 0,
+          taxAmount: Number(inv.taxAmount) || 0,
+          paidAmount,
+          balanceDue,
+          status: INVOICE_STATUS_IDS.includes(inv.status) ? inv.status : 'draft',
+          locked: isLocked,
+          issuedDate: String(inv.issuedDate ?? new Date().toISOString().slice(0, 10)),
+          dueDate: String(inv.dueDate ?? ''),
+          paidDate: String(inv.paidDate ?? ''),
+          viewedAt: String(inv.viewedAt ?? ''),
+          sacCode: String(inv.sacCode ?? '998311'),
+          notes: String(inv.notes ?? ''),
+          items: Array.isArray(inv.items)
+            ? inv.items.map((item) => ({
+                id: String(item.id ?? uid('item')),
+                description: String(item.description ?? 'Service item'),
+                qty: Number(item.qty) || 1,
+                rate: Number(item.rate) || 0,
+                sacCode: String(item.sacCode ?? '998311'),
+                amount: Number(item.amount) || 0,
+              }))
+            : [],
+          payments: Array.isArray(inv.payments)
+            ? inv.payments.map((p) => ({
+                id: String(p.id ?? uid('pay')),
+                amount: Number(p.amount) || 0,
+                currency: String(p.currency ?? inv.currency ?? 'INR'),
+                paymentMode: String(p.paymentMode ?? 'UPI'),
+                referenceId: String(p.referenceId ?? ''),
+                paymentDate: String(p.paymentDate ?? new Date().toISOString().slice(0, 10)),
+                notes: String(p.notes ?? ''),
+              }))
+            : [],
+          creditNoteIds: Array.isArray(inv.creditNoteIds) ? inv.creditNoteIds.map(String) : [],
+          isSample: Boolean(inv.isSample),
+        };
+      }),
+    creditNotes: creditNotes
+      .filter((cn) => cn && typeof cn.id === 'string')
+      .map((cn) => ({
+        id: cn.id,
+        creditNoteNumber: String(cn.creditNoteNumber ?? 'CN-TNV/25-26/0001'),
+        invoiceId: String(cn.invoiceId ?? ''),
+        invoiceNumber: String(cn.invoiceNumber ?? ''),
+        clientId: String(cn.clientId ?? ''),
+        clientName: String(cn.clientName ?? ''),
+        amount: Math.max(0, Number(cn.amount) || 0),
+        currency: CURRENCY_IDS.includes(cn.currency) ? cn.currency : 'INR',
+        reason: String(cn.reason ?? 'Scope adjustment or discount credit'),
+        issuedDate: String(cn.issuedDate ?? new Date().toISOString().slice(0, 10)),
+        status: String(cn.status ?? 'ISSUED'),
+        isSample: Boolean(cn.isSample),
+      })),
+    recurringProfiles: recurringProfiles
+      .filter((rec) => rec && typeof rec.id === 'string')
+      .map((rec) => ({
+        id: rec.id,
+        title: String(rec.title ?? 'Monthly Retainer'),
+        clientId: String(rec.clientId ?? ''),
+        clientName: String(rec.clientName ?? ''),
+        projectId: String(rec.projectId ?? ''),
+        frequency: String(rec.frequency ?? 'MONTHLY'),
+        amount: Math.max(0, Number(rec.amount) || 0),
+        currency: CURRENCY_IDS.includes(rec.currency) ? rec.currency : 'INR',
+        taxRatePct: Number(rec.taxRatePct) || 18,
+        sacCode: String(rec.sacCode ?? '998314'),
+        nextRunDate: String(rec.nextRunDate ?? new Date().toISOString().slice(0, 10)),
+        autoGenerate: Boolean(rec.autoGenerate ?? true),
+        status: String(rec.status ?? 'ACTIVE'),
+        items: Array.isArray(rec.items) ? rec.items : [],
+        isSample: Boolean(rec.isSample),
+      })),
+    conversations: conversations
+      .filter((conv) => conv && typeof conv.id === 'string')
+      .map((conv) => ({
+        id: conv.id,
+        channel: ['EMAIL', 'WHATSAPP', 'INSTAGRAM'].includes(conv.channel) ? conv.channel : 'WHATSAPP',
+        contactName: String(conv.contactName ?? 'Unknown Contact'),
+        contactHandle: String(conv.contactHandle ?? ''),
+        status: ['OPEN', 'PENDING', 'RESOLVED'].includes(conv.status) ? conv.status : 'OPEN',
+        assignedTo: String(conv.assignedTo ?? 'unassigned'),
+        tags: Array.isArray(conv.tags) ? conv.tags.map(String) : [],
+        clientId: String(conv.clientId ?? ''),
+        leadId: String(conv.leadId ?? ''),
+        projectId: String(conv.projectId ?? ''),
+        unread: Boolean(conv.unread),
+        lastMessagePreview: String(conv.lastMessagePreview ?? ''),
+        lastMessageAt: String(conv.lastMessageAt ?? new Date().toISOString()),
+        isSample: Boolean(conv.isSample),
+      })),
+    messages: messages
+      .filter((msg) => msg && typeof msg.id === 'string')
+      .map((msg) => ({
+        id: msg.id,
+        conversationId: String(msg.conversationId ?? ''),
+        sender: ['contact', 'team', 'system'].includes(msg.sender) ? msg.sender : 'contact',
+        senderName: String(msg.senderName ?? 'User'),
+        type: msg.type === 'internal_note' ? 'internal_note' : 'message',
+        channel: ['EMAIL', 'WHATSAPP', 'INSTAGRAM'].includes(msg.channel) ? msg.channel : 'WHATSAPP',
+        content: String(msg.content ?? ''),
+        attachments: Array.isArray(msg.attachments) ? msg.attachments : [],
+        timestamp: String(msg.timestamp ?? new Date().toISOString()),
+        isSample: Boolean(msg.isSample),
       })),
     tickets: tickets
       .filter((t) => t && typeof t.id === 'string')
@@ -358,651 +488,893 @@ function persist(next) {
     try {
       localStorage.setItem(STORAGE_KEYS.content, JSON.stringify(next));
     } catch {
-      // Storage error
+      // quota or private mode
     }
   }
-  listeners.forEach((fn) => fn());
-}
-
-function subscribe(fn) {
-  listeners.add(fn);
-  return () => listeners.delete(fn);
-}
-
-function getSnapshot() {
-  return state;
+  listeners.forEach((l) => l());
 }
 
 if (isBrowser()) {
   window.addEventListener('storage', (e) => {
     if (e.key === STORAGE_KEYS.content) {
       state = load();
-      listeners.forEach((fn) => fn());
+      listeners.forEach((l) => l());
     }
   });
 }
 
-/** Subscribe hook */
-export function useContent() {
-  return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+function subscribe(listener) {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
 }
 
-export function getContent() {
+function getSnapshot() {
   return state;
 }
 
-export function uid(prefix = 'id') {
-  const rand =
-    typeof crypto !== 'undefined' && crypto.randomUUID
-      ? crypto.randomUUID().slice(0, 8)
-      : Math.random().toString(36).slice(2, 10);
-  return `${prefix}-${rand}`;
+export function useContent() {
+  return useSyncExternalStore(subscribe, getSnapshot, () => normalise(seedContent));
 }
 
-/* ---------------------------------------------------------------
-   CRM Leads Mutations
-   --------------------------------------------------------------- */
-export const emptyLead = () => ({
-  id: uid('lead'),
-  name: '',
-  company: '',
-  email: '',
-  phone: '',
-  serviceInterest: ['web-development'],
-  budgetBand: '3L_TO_10L',
-  timeline: '4-8 weeks',
-  message: '',
-  source: 'Admin Manual Entry',
-  status: 'NEW',
-  lostReason: null,
-  createdAt: new Date().toISOString(),
-  notes: '',
-  isSample: false,
-});
+// -------------------------------------------------------------
+// INVOICE & TAX ENGINE ACTIONS
+// -------------------------------------------------------------
+
+export function emptyInvoice() {
+  return {
+    id: uid('inv'),
+    invoiceNumber: generateNextInvoiceNumber(state.invoices),
+    clientId: state.clients[0]?.id || '',
+    projectId: state.projects[0]?.id || '',
+    title: 'Milestone Scope Deliverable Payment',
+    amount: 590000,
+    currency: 'INR',
+    subtotal: 500000,
+    taxRatePct: 18,
+    taxAmount: 90000,
+    paidAmount: 0,
+    balanceDue: 590000,
+    status: 'draft',
+    locked: false,
+    issuedDate: new Date().toISOString().slice(0, 10),
+    dueDate: new Date(Date.now() + 15 * 86400000).toISOString().slice(0, 10),
+    paidDate: '',
+    viewedAt: '',
+    sacCode: '998311',
+    notes: 'Standard 15-day milestone settlement terms. 18% GST applicable for domestic supply.',
+    items: [
+      { id: uid('item'), description: 'Full-Stack Architecture & Feature Sprint Delivery', qty: 1, rate: 500000, sacCode: '998311', amount: 500000 },
+    ],
+    payments: [],
+    creditNoteIds: [],
+    isSample: false,
+  };
+}
+
+export function saveInvoice(invoice) {
+  const current = state.invoices || [];
+  const exists = current.some((i) => i.id === invoice.id);
+  const totalAmount = Math.max(0, Number(invoice.amount) || 0);
+  const paidAmount = Math.max(0, Number(invoice.paidAmount) || 0);
+  const balanceDue = Math.max(0, totalAmount - paidAmount);
+
+  let calculatedStatus = invoice.status;
+  if (paidAmount >= totalAmount && totalAmount > 0) {
+    calculatedStatus = 'paid';
+  } else if (paidAmount > 0) {
+    calculatedStatus = 'partially_paid';
+  }
+
+  const isLocked = Boolean(invoice.locked || calculatedStatus !== 'draft');
+
+  const payload = {
+    ...invoice,
+    amount: totalAmount,
+    paidAmount,
+    balanceDue,
+    status: calculatedStatus,
+    locked: isLocked,
+    isSample: false,
+  };
+
+  const next = exists
+    ? current.map((i) => (i.id === invoice.id ? payload : i))
+    : [payload, ...current];
+
+  persist({ ...state, invoices: next });
+}
+
+export function deleteInvoice(id) {
+  const next = (state.invoices || []).filter((i) => i.id !== id);
+  persist({ ...state, invoices: next });
+}
+
+export function markInvoicePaid(id) {
+  const inv = (state.invoices || []).find((i) => i.id === id);
+  if (!inv) return;
+  const nowStr = new Date().toISOString().slice(0, 10);
+  saveInvoice({
+    ...inv,
+    status: 'paid',
+    paidAmount: inv.amount,
+    balanceDue: 0,
+    paidDate: nowStr,
+    locked: true,
+  });
+}
+
+export function recordInvoicePayment(invoiceId, paymentData) {
+  const inv = (state.invoices || []).find((i) => i.id === invoiceId);
+  if (!inv) return;
+
+  const paymentAmount = Math.max(0, Number(paymentData.amount) || 0);
+  const newPaidAmount = (Number(inv.paidAmount) || 0) + paymentAmount;
+  const totalAmount = Number(inv.amount) || 0;
+  const newBalanceDue = Math.max(0, totalAmount - newPaidAmount);
+
+  const paymentEntry = {
+    id: uid('pay'),
+    amount: paymentAmount,
+    currency: paymentData.currency || inv.currency,
+    paymentMode: paymentData.paymentMode || 'UPI',
+    referenceId: paymentData.referenceId || '',
+    paymentDate: paymentData.paymentDate || new Date().toISOString().slice(0, 10),
+    notes: paymentData.notes || '',
+  };
+
+  const updatedPayments = [...(inv.payments || []), paymentEntry];
+  const newStatus = newPaidAmount >= totalAmount ? 'paid' : 'partially_paid';
+
+  saveInvoice({
+    ...inv,
+    paidAmount: newPaidAmount,
+    balanceDue: newBalanceDue,
+    payments: updatedPayments,
+    status: newStatus,
+    paidDate: newStatus === 'paid' ? paymentEntry.paymentDate : inv.paidDate,
+    locked: true,
+  });
+}
+
+export function issueCreditNote(creditNoteData) {
+  const inv = (state.invoices || []).find((i) => i.id === creditNoteData.invoiceId);
+  if (!inv) return;
+
+  const cnId = uid('cn');
+  const cnNumber = `CN-${inv.invoiceNumber}`;
+  const creditAmount = Math.max(0, Number(creditNoteData.amount) || 0);
+
+  const newCreditNote = {
+    id: cnId,
+    creditNoteNumber: cnNumber,
+    invoiceId: inv.id,
+    invoiceNumber: inv.invoiceNumber,
+    clientId: inv.clientId,
+    clientName: creditNoteData.clientName || 'Client',
+    amount: creditAmount,
+    currency: inv.currency,
+    reason: creditNoteData.reason || 'Scope adjustment / revision credit',
+    issuedDate: new Date().toISOString().slice(0, 10),
+    status: 'ISSUED',
+    isSample: false,
+  };
+
+  const nextCreditNotes = [newCreditNote, ...(state.creditNotes || [])];
+  const updatedCreditNoteIds = [...(inv.creditNoteIds || []), cnId];
+
+  let nextInvoiceStatus = inv.status;
+  if (creditAmount >= inv.amount) {
+    nextInvoiceStatus = 'cancelled';
+  }
+
+  const updatedInvoices = (state.invoices || []).map((i) =>
+    i.id === inv.id
+      ? {
+          ...i,
+          creditNoteIds: updatedCreditNoteIds,
+          status: nextInvoiceStatus,
+          balanceDue: Math.max(0, (Number(i.balanceDue) || 0) - creditAmount),
+        }
+      : i
+  );
+
+  persist({
+    ...state,
+    invoices: updatedInvoices,
+    creditNotes: nextCreditNotes,
+  });
+}
+
+export function saveRecurringProfile(profile) {
+  const current = state.recurringProfiles || [];
+  const exists = current.some((p) => p.id === profile.id);
+  const payload = { ...profile, id: profile.id || uid('rec'), isSample: false };
+  const next = exists
+    ? current.map((p) => (p.id === profile.id ? payload : p))
+    : [payload, ...current];
+  persist({ ...state, recurringProfiles: next });
+}
+
+export function deleteRecurringProfile(id) {
+  const next = (state.recurringProfiles || []).filter((p) => p.id !== id);
+  persist({ ...state, recurringProfiles: next });
+}
+
+export function generateRetainerInvoices() {
+  const profiles = (state.recurringProfiles || []).filter((p) => p.status === 'ACTIVE');
+  let generatedCount = 0;
+  const newInvoices = [...(state.invoices || [])];
+
+  profiles.forEach((p) => {
+    const nextInvNumber = generateNextInvoiceNumber(newInvoices);
+    const subtotal = Number(p.amount) || 0;
+    const taxRate = Number(p.taxRatePct) || 0;
+    const taxAmount = Math.round(subtotal * (taxRate / 100));
+    const totalAmount = subtotal + taxAmount;
+
+    const inv = {
+      id: uid('inv'),
+      invoiceNumber: nextInvNumber,
+      clientId: p.clientId,
+      projectId: p.projectId || '',
+      title: `${p.title} (${new Date().toLocaleString('default', { month: 'long', year: 'numeric' })})`,
+      amount: totalAmount,
+      currency: p.currency,
+      subtotal,
+      taxRatePct: taxRate,
+      taxAmount,
+      paidAmount: 0,
+      balanceDue: totalAmount,
+      status: 'sent',
+      locked: true,
+      issuedDate: new Date().toISOString().slice(0, 10),
+      dueDate: new Date(Date.now() + 15 * 86400000).toISOString().slice(0, 10),
+      paidDate: '',
+      viewedAt: '',
+      sacCode: p.sacCode || '998314',
+      notes: `Recurring ${p.frequency} retainer invoice generated automatically.`,
+      items: p.items && p.items.length > 0 ? p.items : [
+        { id: uid('it'), description: p.title, qty: 1, rate: subtotal, sacCode: p.sacCode || '998314', amount: subtotal }
+      ],
+      payments: [],
+      creditNoteIds: [],
+      isSample: false,
+    };
+
+    newInvoices.unshift(inv);
+    generatedCount++;
+  });
+
+  if (generatedCount > 0) {
+    persist({ ...state, invoices: newInvoices });
+  }
+  return generatedCount;
+}
+
+export function getReceivablesAgeing(invoices = []) {
+  const today = new Date();
+  const buckets = {
+    current: { label: 'Current / Not Due', amount: 0, count: 0, invoices: [] },
+    overdue30: { label: '1–30 Days Overdue', amount: 0, count: 0, invoices: [] },
+    overdue60: { label: '31–60 Days Overdue', amount: 0, count: 0, invoices: [] },
+    overdue90: { label: '61–90 Days Overdue', amount: 0, count: 0, invoices: [] },
+    overdue90Plus: { label: '90+ Days Overdue', amount: 0, count: 0, invoices: [] },
+  };
+
+  invoices
+    .filter((i) => i.status !== 'paid' && i.status !== 'cancelled' && (Number(i.balanceDue) || Number(i.amount)) > 0)
+    .forEach((inv) => {
+      const balance = Number(inv.balanceDue) > 0 ? Number(inv.balanceDue) : Number(inv.amount);
+      const dueDate = inv.dueDate ? new Date(inv.dueDate) : new Date(inv.issuedDate);
+      const diffDays = Math.floor((today - dueDate) / (1000 * 60 * 60 * 24));
+
+      if (diffDays <= 0) {
+        buckets.current.amount += balance;
+        buckets.current.count++;
+        buckets.current.invoices.push(inv);
+      } else if (diffDays <= 30) {
+        buckets.overdue30.amount += balance;
+        buckets.overdue30.count++;
+        buckets.overdue30.invoices.push(inv);
+      } else if (diffDays <= 60) {
+        buckets.overdue60.amount += balance;
+        buckets.overdue60.count++;
+        buckets.overdue60.invoices.push(inv);
+      } else if (diffDays <= 90) {
+        buckets.overdue90.amount += balance;
+        buckets.overdue90.count++;
+        buckets.overdue90.invoices.push(inv);
+      } else {
+        buckets.overdue90Plus.amount += balance;
+        buckets.overdue90Plus.count++;
+        buckets.overdue90Plus.invoices.push(inv);
+      }
+    });
+
+  return buckets;
+}
+
+// -------------------------------------------------------------
+// MULTI-CHANNEL INBOX ACTIONS (Email, WhatsApp, Instagram)
+// -------------------------------------------------------------
+
+export function saveConversation(conversation) {
+  const current = state.conversations || [];
+  const exists = current.some((c) => c.id === conversation.id);
+  const payload = { ...conversation, isSample: false };
+  const next = exists
+    ? current.map((c) => (c.id === conversation.id ? payload : c))
+    : [payload, ...current];
+  persist({ ...state, conversations: next });
+}
+
+export function deleteConversation(id) {
+  const nextConv = (state.conversations || []).filter((c) => c.id !== id);
+  const nextMsgs = (state.messages || []).filter((m) => m.conversationId !== id);
+  persist({ ...state, conversations: nextConv, messages: nextMsgs });
+}
+
+export function sendMessage(conversationId, messageData) {
+  const conv = (state.conversations || []).find((c) => c.id === conversationId);
+  if (!conv) return;
+
+  const newMsg = {
+    id: uid('msg'),
+    conversationId,
+    sender: messageData.sender || 'team',
+    senderName: messageData.senderName || 'Satvik Pandurangi',
+    type: messageData.type === 'internal_note' ? 'internal_note' : 'message',
+    channel: messageData.channel || conv.channel,
+    content: messageData.content || '',
+    attachments: messageData.attachments || [],
+    timestamp: new Date().toISOString(),
+    isSample: false,
+  };
+
+  const nextMessages = [...(state.messages || []), newMsg];
+
+  const isInternal = newMsg.type === 'internal_note';
+  const updatedConversations = (state.conversations || []).map((c) =>
+    c.id === conversationId
+      ? {
+          ...c,
+          lastMessagePreview: isInternal ? `[Internal Note] ${newMsg.content.slice(0, 70)}` : newMsg.content.slice(0, 90),
+          lastMessageAt: newMsg.timestamp,
+          unread: newMsg.sender === 'contact',
+          status: isInternal ? c.status : (messageData.resolve ? 'RESOLVED' : 'PENDING'),
+        }
+      : c
+  );
+
+  persist({
+    ...state,
+    conversations: updatedConversations,
+    messages: nextMessages,
+  });
+}
+
+export function setConversationStatus(id, status) {
+  const next = (state.conversations || []).map((c) =>
+    c.id === id ? { ...c, status } : c
+  );
+  persist({ ...state, conversations: next });
+}
+
+export function assignConversation(id, assignedTo) {
+  const next = (state.conversations || []).map((c) =>
+    c.id === id ? { ...c, assignedTo } : c
+  );
+  persist({ ...state, conversations: next });
+}
+
+export function linkConversationEntity(id, { clientId, leadId, projectId }) {
+  const next = (state.conversations || []).map((c) =>
+    c.id === id
+      ? {
+          ...c,
+          clientId: clientId !== undefined ? clientId : c.clientId,
+          leadId: leadId !== undefined ? leadId : c.leadId,
+          projectId: projectId !== undefined ? projectId : c.projectId,
+        }
+      : c
+  );
+  persist({ ...state, conversations: next });
+}
+
+export function markConversationRead(id) {
+  const next = (state.conversations || []).map((c) =>
+    c.id === id ? { ...c, unread: false } : c
+  );
+  persist({ ...state, conversations: next });
+}
+
+// -------------------------------------------------------------
+// CLIENTS, LEADS, CMS, TICKETS & DISPATCH LOGS
+// -------------------------------------------------------------
+
+export function emptyClient() {
+  return {
+    id: uid('c'),
+    name: '',
+    company: '',
+    email: '',
+    phone: '',
+    accessCode: `${Math.random().toString(36).slice(2, 6).toUpperCase()}-2026`,
+    avatar: '',
+    joinedDate: new Date().toISOString().slice(0, 10),
+    portalNotes: '',
+    isSample: false,
+  };
+}
+
+export function saveClient(client) {
+  const current = state.clients || [];
+  const exists = current.some((c) => c.id === client.id);
+  const payload = { ...client, isSample: false };
+  const next = exists
+    ? current.map((c) => (c.id === client.id ? payload : c))
+    : [payload, ...current];
+  persist({ ...state, clients: next });
+}
+
+export function deleteClient(id) {
+  const next = (state.clients || []).filter((c) => c.id !== id);
+  persist({ ...state, clients: next });
+}
+
+export function emptyLead() {
+  return {
+    id: uid('lead'),
+    name: '',
+    company: '',
+    email: '',
+    phone: '',
+    serviceInterest: ['Web Application Development'],
+    budgetBand: '3L_TO_10L',
+    timeline: '4-8 weeks',
+    message: '',
+    source: 'Direct Inbound',
+    status: 'NEW',
+    lostReason: null,
+    createdAt: new Date().toISOString(),
+    notes: '',
+    isSample: false,
+  };
+}
 
 export function saveLead(lead) {
-  const exists = state.leads.some((l) => l.id === lead.id);
-  const leads = exists
-    ? state.leads.map((l) => (l.id === lead.id ? lead : l))
-    : [lead, ...state.leads];
-  persist(normalise({ ...state, leads }));
-}
-
-export function setLeadStatus(id, status, lostReason = null) {
-  const leads = state.leads.map((l) =>
-    l.id === id ? { ...l, status, lostReason: status === 'LOST' ? lostReason : l.lostReason } : l,
-  );
-  persist(normalise({ ...state, leads }));
+  const current = state.leads || [];
+  const exists = current.some((l) => l.id === lead.id);
+  const payload = { ...lead, isSample: false };
+  const next = exists
+    ? current.map((l) => (l.id === lead.id ? payload : l))
+    : [payload, ...current];
+  persist({ ...state, leads: next });
 }
 
 export function deleteLead(id) {
-  persist(normalise({ ...state, leads: state.leads.filter((l) => l.id !== id) }));
+  const next = (state.leads || []).filter((l) => l.id !== id);
+  persist({ ...state, leads: next });
+}
+
+export function setLeadStatus(id, status) {
+  const next = (state.leads || []).map((l) =>
+    l.id === id ? { ...l, status } : l
+  );
+  persist({ ...state, leads: next });
 }
 
 export function convertLeadToClient(leadId) {
-  const lead = state.leads.find((l) => l.id === leadId);
+  const lead = (state.leads || []).find((l) => l.id === leadId);
   if (!lead) return null;
 
+  const clientId = uid('c');
+  const codeName = (lead.company || lead.name || 'CLIENT').replace(/[^a-zA-Z0-9]/g, '').slice(0, 6).toUpperCase();
+  const accessCode = `${codeName}-2026`;
+
   const newClient = {
-    id: uid('c'),
+    id: clientId,
     name: lead.name,
     company: lead.company || lead.name,
     email: lead.email,
-    phone: lead.phone || '',
-    accessCode: `${(lead.company || lead.name).slice(0, 4).toUpperCase()}-${new Date().getFullYear()}`,
+    phone: lead.phone,
+    accessCode,
     avatar: '',
     joinedDate: new Date().toISOString().slice(0, 10),
-    portalNotes: `Converted from lead (${lead.source}). Timeline: ${lead.timeline}. Budget: ${lead.budgetBand}.`,
+    portalNotes: `Converted from CRM Lead. Initial interest: ${lead.serviceInterest.join(', ')}`,
     isSample: false,
   };
 
   const newProject = {
     id: uid('p'),
-    clientId: newClient.id,
-    title: `${newClient.company} Digital Platform`,
-    client: newClient.company,
+    clientId,
+    title: `${lead.company || lead.name} Architecture MVP`,
+    client: lead.company || lead.name,
     category: 'Web Dev',
     status: 'in-progress',
-    desc: lead.message || 'Engaged digital engineering project.',
+    desc: lead.message || 'Custom MVP engineered by Tanvo Tech.',
     image: '/images/dashboard.jpg',
     link: '',
-    tech: ['Next.js', 'Node.js', 'PostgreSQL'],
-    progress: 15,
+    tech: ['React 19', 'Next.js', 'Node.js', 'PostgreSQL', 'Tailwind CSS'],
+    progress: 10,
     startDate: new Date().toISOString().slice(0, 10),
-    targetDate: new Date(Date.now() + 60 * 86400000).toISOString().slice(0, 10),
+    targetDate: new Date(Date.now() + 45 * 86400000).toISOString().slice(0, 10),
     featured: false,
     isSample: false,
     milestones: [
-      { id: uid('m'), title: 'Sprint 1: Architecture & Wireframes', dueDate: 'In 2 weeks', status: 'in-progress' },
-      { id: uid('m'), title: 'Sprint 2: Core Engineering & Staging', dueDate: 'In 5 weeks', status: 'upcoming' },
-      { id: uid('m'), title: 'Sprint 3: Production Deployment', dueDate: 'In 8 weeks', status: 'upcoming' },
+      { id: uid('m'), title: 'Sprint 1: Architecture Blueprint & Core APIs', dueDate: new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10), status: 'in-progress' },
+      { id: uid('m'), title: 'Sprint 2: Staging Integration & Review', dueDate: new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10), status: 'upcoming' },
     ],
   };
 
-  const leads = state.leads.map((l) => (l.id === leadId ? { ...l, status: 'WON' } : l));
-  const clients = [newClient, ...state.clients];
-  const projects = [newProject, ...state.projects];
+  const updatedLeads = (state.leads || []).map((l) =>
+    l.id === leadId ? { ...l, status: 'WON' } : l
+  );
 
-  persist(normalise({ ...state, leads, clients, projects }));
+  persist({
+    ...state,
+    leads: updatedLeads,
+    clients: [newClient, ...(state.clients || [])],
+    projects: [newProject, ...(state.projects || [])],
+  });
+
   return { client: newClient, project: newProject };
 }
 
-/* ---------------------------------------------------------------
-   Quotes Mutations
-   --------------------------------------------------------------- */
-export const emptyQuote = () => ({
-  id: uid('q'),
-  quoteNumber: `TNV-Q-${new Date().getFullYear()}-${Math.floor(100 + Math.random() * 900)}`,
-  leadId: '',
-  clientName: '',
-  contactEmail: '',
-  currency: 'USD',
-  subtotal: 5000,
-  discountPct: 0,
-  discountAmount: 0,
-  taxRatePct: 18,
-  taxAmount: 900,
-  total: 5900,
-  validUntil: new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10),
-  status: 'SENT',
-  notes: 'Fixed-deliverable scope. Includes 100% intellectual property ownership.',
-  items: [],
-  isSample: false,
-});
-
-export function saveQuote(quote) {
-  const exists = state.quotes.some((q) => q.id === quote.id);
-  const quotes = exists
-    ? state.quotes.map((q) => (q.id === quote.id ? quote : q))
-    : [quote, ...state.quotes];
-  persist(normalise({ ...state, quotes }));
+export function emptyProject() {
+  return {
+    id: uid('p'),
+    clientId: state.clients[0]?.id || '',
+    title: '',
+    client: '',
+    category: 'Web Dev',
+    status: 'upcoming',
+    desc: '',
+    image: '/images/dashboard.jpg',
+    link: '',
+    tech: [],
+    progress: 0,
+    startDate: new Date().toISOString().slice(0, 10),
+    targetDate: '',
+    featured: false,
+    milestones: [],
+    isSample: false,
+  };
 }
-
-export function deleteQuote(id) {
-  persist(normalise({ ...state, quotes: state.quotes.filter((q) => q.id !== id) }));
-}
-
-/* ---------------------------------------------------------------
-   Services Catalog Mutations
-   --------------------------------------------------------------- */
-export const emptyService = () => ({
-  id: uid('srv'),
-  name: '',
-  slug: '',
-  category: 'Development',
-  shortDesc: '',
-  longDesc: '',
-  deliverables: ['Production Frontend', 'Backend API', 'Database Setup'],
-  pricingModel: 'FIXED',
-  basePrice: 500000,
-  currency: 'INR',
-  basePriceUSD: 6000,
-  sacCode: '998311',
-  taxRatePct: 18,
-  isPublished: true,
-  displayOrder: state.services.length + 1,
-  tags: ['Next.js', 'React', 'Node.js'],
-  isSample: false,
-});
-
-export function saveService(service) {
-  const exists = state.services.some((s) => s.id === service.id);
-  const services = exists
-    ? state.services.map((s) => (s.id === service.id ? service : s))
-    : [service, ...state.services];
-  persist(normalise({ ...state, services }));
-}
-
-export function toggleServicePublish(id) {
-  const services = state.services.map((s) =>
-    s.id === id ? { ...s, isPublished: !s.isPublished } : s,
-  );
-  persist(normalise({ ...state, services }));
-}
-
-export function deleteService(id) {
-  persist(normalise({ ...state, services: state.services.filter((s) => s.id !== id) }));
-}
-
-/* ---------------------------------------------------------------
-   Case Studies CMS Mutations
-   --------------------------------------------------------------- */
-export const emptyCaseStudy = () => ({
-  id: uid('cs'),
-  title: '',
-  slug: '',
-  clientName: '',
-  industry: 'Technology',
-  problem: '',
-  solution: '',
-  outcome: '',
-  metrics: [
-    { label: 'Latency Reduction', value: '85%' },
-    { label: 'Error Rate', value: '0.01%' },
-  ],
-  testimonial: {
-    author: '',
-    role: '',
-    company: '',
-    quote: '',
-  },
-  stack: ['Next.js', 'TypeScript', 'Node.js', 'PostgreSQL'],
-  featured: false,
-  isPublished: true,
-  isSample: false,
-});
-
-export function saveCaseStudy(cs) {
-  const exists = state.caseStudies.some((c) => c.id === cs.id);
-  const caseStudies = exists
-    ? state.caseStudies.map((c) => (c.id === cs.id ? cs : c))
-    : [cs, ...state.caseStudies];
-  persist(normalise({ ...state, caseStudies }));
-}
-
-export function deleteCaseStudy(id) {
-  persist(normalise({ ...state, caseStudies: state.caseStudies.filter((c) => c.id !== id) }));
-}
-
-/* ---------------------------------------------------------------
-   Applications & Testimonials Mutations
-   --------------------------------------------------------------- */
-export function setApplicationStatus(id, status) {
-  const applications = state.applications.map((a) => (a.id === id ? { ...a, status } : a));
-  persist(normalise({ ...state, applications }));
-}
-
-export function deleteApplication(id) {
-  persist(normalise({ ...state, applications: state.applications.filter((a) => a.id !== id) }));
-}
-
-export function saveTestimonial(t) {
-  const exists = state.testimonials.some((item) => item.id === t.id);
-  const testimonials = exists
-    ? state.testimonials.map((item) => (item.id === t.id ? t : item))
-    : [t, ...state.testimonials];
-  persist(normalise({ ...state, testimonials }));
-}
-
-export function deleteTestimonial(id) {
-  persist(normalise({ ...state, testimonials: state.testimonials.filter((t) => t.id !== id) }));
-}
-
-/* ---------------------------------------------------------------
-   Sprint Updates Mutations
-   --------------------------------------------------------------- */
-export const emptyUpdate = () => ({
-  id: uid('up'),
-  projectId: '',
-  clientId: '',
-  title: '',
-  category: 'Update',
-  author: 'Tanvo Engineering',
-  date: new Date().toISOString().slice(0, 10),
-  content: '',
-  isSample: false,
-});
-
-export function saveUpdate(u) {
-  const exists = state.updates.some((item) => item.id === u.id);
-  const updates = exists
-    ? state.updates.map((item) => (item.id === u.id ? u : item))
-    : [u, ...state.updates];
-  persist(normalise({ ...state, updates }));
-}
-
-export function deleteUpdate(id) {
-  persist(normalise({ ...state, updates: state.updates.filter((u) => u.id !== id) }));
-}
-
-/* ---------------------------------------------------------------
-   Client Mutations
-   --------------------------------------------------------------- */
-export const emptyClient = () => ({
-  id: uid('c'),
-  name: '',
-  company: '',
-  email: '',
-  phone: '',
-  accessCode: `CLIENT-${Math.random().toString(36).substring(2, 6).toUpperCase()}`,
-  avatar: '',
-  joinedDate: new Date().toISOString().slice(0, 10),
-  portalNotes: '',
-  isSample: false,
-});
-
-export function saveClient(client) {
-  const exists = state.clients.some((c) => c.id === client.id);
-  const clients = exists
-    ? state.clients.map((c) => (c.id === client.id ? client : c))
-    : [client, ...state.clients];
-  persist(normalise({ ...state, clients }));
-}
-
-export function deleteClient(id) {
-  persist(
-    normalise({
-      ...state,
-      clients: state.clients.filter((c) => c.id !== id),
-    }),
-  );
-}
-
-/* ---------------------------------------------------------------
-   Project Mutations
-   --------------------------------------------------------------- */
-export const emptyProject = () => ({
-  id: uid('p'),
-  clientId: '',
-  title: '',
-  client: '',
-  category: 'Web Dev',
-  status: 'upcoming',
-  desc: '',
-  image: '',
-  link: '',
-  tech: [],
-  progress: 0,
-  startDate: '',
-  targetDate: '',
-  featured: false,
-  isSample: false,
-  milestones: [],
-});
 
 export function saveProject(project) {
-  const exists = state.projects.some((p) => p.id === project.id);
-  const projects = exists
-    ? state.projects.map((p) => (p.id === project.id ? project : p))
-    : [project, ...state.projects];
-  persist(normalise({ ...state, projects }));
+  const current = state.projects || [];
+  const exists = current.some((p) => p.id === project.id);
+  const payload = { ...project, isSample: false };
+  const next = exists
+    ? current.map((p) => (p.id === project.id ? payload : p))
+    : [payload, ...current];
+  persist({ ...state, projects: next });
 }
 
 export function deleteProject(id) {
-  persist(normalise({ ...state, projects: state.projects.filter((p) => p.id !== id) }));
+  const next = (state.projects || []).filter((p) => p.id !== id);
+  persist({ ...state, projects: next });
 }
 
 export function setProjectStatus(id, status) {
-  const projects = state.projects.map((p) =>
-    p.id === id
-      ? { ...p, status, progress: status === 'completed' ? 100 : p.progress }
-      : p,
+  const next = (state.projects || []).map((p) =>
+    p.id === id ? { ...p, status } : p
   );
-  persist(normalise({ ...state, projects }));
+  persist({ ...state, projects: next });
 }
 
-/* ---------------------------------------------------------------
-   Deliverable Mutations
-   --------------------------------------------------------------- */
-export const emptyDeliverable = () => ({
-  id: uid('del'),
-  clientId: '',
-  projectId: '',
-  title: '',
-  type: 'Figma / Design',
-  url: '',
-  version: 'v1.0',
-  uploadedDate: new Date().toISOString().slice(0, 10),
-  status: 'pending',
-  feedback: '',
-  description: '',
-  isSample: false,
-});
-
-export function saveDeliverable(deliverable) {
-  const exists = state.deliverables.some((d) => d.id === deliverable.id);
-  const deliverables = exists
-    ? state.deliverables.map((d) => (d.id === deliverable.id ? deliverable : d))
-    : [deliverable, ...state.deliverables];
-  persist(normalise({ ...state, deliverables }));
+export function emptyDeliverable() {
+  return {
+    id: uid('d'),
+    clientId: state.clients[0]?.id || '',
+    projectId: state.projects[0]?.id || '',
+    title: '',
+    type: 'Code & Architecture',
+    url: '',
+    version: 'v1.0',
+    uploadedDate: new Date().toISOString().slice(0, 10),
+    status: 'pending',
+    feedback: '',
+    description: '',
+    isSample: false,
+  };
 }
 
-export function updateDeliverableStatus(id, status, feedback = '') {
-  const deliverables = state.deliverables.map((d) =>
-    d.id === id ? { ...d, status, feedback: feedback || d.feedback } : d,
-  );
-  persist(normalise({ ...state, deliverables }));
+export function saveDeliverable(del) {
+  const current = state.deliverables || [];
+  const exists = current.some((d) => d.id === del.id);
+  const payload = { ...del, isSample: false };
+  const next = exists
+    ? current.map((d) => (d.id === del.id ? payload : d))
+    : [payload, ...current];
+  persist({ ...state, deliverables: next });
 }
 
 export function deleteDeliverable(id) {
-  persist(
-    normalise({
-      ...state,
-      deliverables: state.deliverables.filter((d) => d.id !== id),
-    }),
+  const next = (state.deliverables || []).filter((d) => d.id !== id);
+  persist({ ...state, deliverables: next });
+}
+
+export function updateDeliverableStatus(id, status, feedback = '') {
+  const next = (state.deliverables || []).map((d) =>
+    d.id === id ? { ...d, status, feedback } : d
   );
+  persist({ ...state, deliverables: next });
 }
 
-/* ---------------------------------------------------------------
-   Invoice Mutations
-   --------------------------------------------------------------- */
-export const emptyInvoice = () => ({
-  id: uid('inv'),
-  invoiceNumber: `TNV/${new Date().getFullYear()}/${Math.floor(100 + Math.random() * 900)}`,
-  clientId: '',
-  projectId: '',
-  title: '',
-  amount: 5000,
-  currency: 'USD',
-  subtotal: 5000,
-  taxRatePct: 0,
-  taxAmount: 0,
-  status: 'pending',
-  issuedDate: new Date().toISOString().slice(0, 10),
-  dueDate: new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10),
-  paidDate: '',
-  sacCode: '998311',
-  notes: '',
-  items: [
-    { id: uid('item'), description: 'Milestone delivery scope', qty: 1, rate: 5000, sacCode: '998311', amount: 5000 },
-  ],
-  isSample: false,
-});
-
-export function saveInvoice(invoice) {
-  const exists = state.invoices.some((i) => i.id === invoice.id);
-  const invoices = exists
-    ? state.invoices.map((i) => (i.id === invoice.id ? invoice : i))
-    : [invoice, ...state.invoices];
-  persist(normalise({ ...state, invoices }));
+export function emptyService() {
+  return {
+    id: uid('srv'),
+    name: '',
+    slug: '',
+    category: 'Development',
+    shortDesc: '',
+    longDesc: '',
+    deliverables: [],
+    pricingModel: 'FIXED',
+    basePrice: 500000,
+    currency: 'INR',
+    basePriceUSD: 6000,
+    sacCode: '998311',
+    taxRatePct: 18,
+    isPublished: true,
+    displayOrder: 1,
+    tags: [],
+    isSample: false,
+  };
 }
 
-export function markInvoicePaid(id) {
-  const invoices = state.invoices.map((inv) =>
-    inv.id === id
-      ? {
-          ...inv,
-          status: 'paid',
-          paidDate: new Date().toISOString().slice(0, 10),
-        }
-      : inv,
+export function saveService(service) {
+  const current = state.services || [];
+  const exists = current.some((s) => s.id === service.id);
+  const payload = { ...service, isSample: false };
+  const next = exists
+    ? current.map((s) => (s.id === service.id ? payload : s))
+    : [payload, ...current];
+  persist({ ...state, services: next });
+}
+
+export function deleteService(id) {
+  const next = (state.services || []).filter((s) => s.id !== id);
+  persist({ ...state, services: next });
+}
+
+export function toggleServicePublish(id) {
+  const next = (state.services || []).map((s) =>
+    s.id === id ? { ...s, isPublished: !s.isPublished } : s
   );
-  persist(normalise({ ...state, invoices }));
+  persist({ ...state, services: next });
 }
 
-export function deleteInvoice(id) {
-  persist(normalise({ ...state, invoices: state.invoices.filter((i) => i.id !== id) }));
+export function emptyCaseStudy() {
+  return {
+    id: uid('cs'),
+    title: '',
+    slug: '',
+    clientName: '',
+    industry: 'Technology',
+    problem: '',
+    solution: '',
+    outcome: '',
+    metrics: [],
+    testimonial: null,
+    stack: [],
+    featured: false,
+    isPublished: true,
+    isSample: false,
+  };
 }
 
-/* ---------------------------------------------------------------
-   Support Ticket & Request Mutations
-   --------------------------------------------------------------- */
-export const emptyTicket = () => ({
-  id: uid('t'),
-  clientId: '',
-  projectId: '',
-  title: '',
-  category: 'Scope Addition',
-  priority: 'medium',
-  status: 'open',
-  createdAt: new Date().toISOString(),
-  description: '',
-  replies: [],
-  isSample: false,
-});
+export function saveCaseStudy(cs) {
+  const current = state.caseStudies || [];
+  const exists = current.some((c) => c.id === cs.id);
+  const payload = { ...cs, isSample: false };
+  const next = exists
+    ? current.map((c) => (c.id === cs.id ? payload : c))
+    : [payload, ...current];
+  persist({ ...state, caseStudies: next });
+}
+
+export function deleteCaseStudy(id) {
+  const next = (state.caseStudies || []).filter((c) => c.id !== id);
+  persist({ ...state, caseStudies: next });
+}
+
+export function toggleCaseStudyPublish(id) {
+  const next = (state.caseStudies || []).map((cs) =>
+    cs.id === id ? { ...cs, isPublished: !cs.isPublished } : cs
+  );
+  persist({ ...state, caseStudies: next });
+}
+
+export function emptyTicket(clientId = '', projectId = '') {
+  return {
+    id: uid('t'),
+    clientId,
+    projectId,
+    title: '',
+    category: 'Scope Addition',
+    priority: 'medium',
+    status: 'open',
+    createdAt: new Date().toISOString(),
+    description: '',
+    replies: [],
+    isSample: false,
+  };
+}
 
 export function saveTicket(ticket) {
-  const exists = state.tickets.some((t) => t.id === ticket.id);
-  const tickets = exists
-    ? state.tickets.map((t) => (t.id === ticket.id ? ticket : t))
-    : [ticket, ...state.tickets];
-  persist(normalise({ ...state, tickets }));
-}
-
-export function updateTicketStatus(id, status) {
-  const tickets = state.tickets.map((t) => (t.id === id ? { ...t, status } : t));
-  persist(normalise({ ...state, tickets }));
-}
-
-export function addTicketReply(ticketId, reply) {
-  const newReply = {
-    id: uid('r'),
-    sender: reply.sender || 'client',
-    senderName: reply.senderName || 'User',
-    message: reply.message || '',
-    timestamp: new Date().toISOString(),
-  };
-  const tickets = state.tickets.map((t) =>
-    t.id === ticketId
-      ? { ...t, replies: [...(t.replies || []), newReply] }
-      : t,
-  );
-  persist(normalise({ ...state, tickets }));
+  const current = state.tickets || [];
+  const exists = current.some((t) => t.id === ticket.id);
+  const payload = { ...ticket, isSample: false };
+  const next = exists
+    ? current.map((t) => (t.id === ticket.id ? payload : t))
+    : [payload, ...current];
+  persist({ ...state, tickets: next });
 }
 
 export function deleteTicket(id) {
-  persist(normalise({ ...state, tickets: state.tickets.filter((t) => t.id !== id) }));
+  const next = (state.tickets || []).filter((t) => t.id !== id);
+  persist({ ...state, tickets: next });
 }
 
-/* ---------------------------------------------------------------
-   Document Mutations
-   --------------------------------------------------------------- */
-export const emptyDocument = () => ({
-  id: uid('doc'),
-  clientId: '',
-  projectId: '',
-  title: '',
-  category: 'General',
-  url: '',
-  size: 'Link',
-  date: new Date().toISOString().slice(0, 10),
-  isSample: false,
-});
-
-export function saveDocument(doc) {
-  const exists = state.documents.some((d) => d.id === doc.id);
-  const documents = exists
-    ? state.documents.map((d) => (d.id === doc.id ? doc : d))
-    : [doc, ...state.documents];
-  persist(normalise({ ...state, documents }));
+export function updateTicketStatus(id, status) {
+  const next = (state.tickets || []).map((t) =>
+    t.id === id ? { ...t, status } : t
+  );
+  persist({ ...state, tickets: next });
 }
 
-export function deleteDocument(id) {
-  persist(normalise({ ...state, documents: state.documents.filter((d) => d.id !== id) }));
+export function addTicketReply(ticketId, reply) {
+  const next = (state.tickets || []).map((t) => {
+    if (t.id !== ticketId) return t;
+    const newReply = {
+      id: uid('r'),
+      sender: reply.sender || 'client',
+      senderName: reply.senderName || 'User',
+      message: reply.message || '',
+      timestamp: new Date().toISOString(),
+    };
+    return {
+      ...t,
+      replies: [...(t.replies || []), newReply],
+    };
+  });
+  persist({ ...state, tickets: next });
 }
 
-/* ---------------------------------------------------------------
-   Achievement Mutations
-   --------------------------------------------------------------- */
-export const emptyAchievement = () => ({
-  id: uid('a'),
-  title: '',
-  detail: '',
-  metric: '',
-  metricLabel: '',
-  date: new Date().toISOString().slice(0, 10),
-  isSample: false,
-});
+export function saveQuote(quote) {
+  const current = state.quotes || [];
+  const exists = current.some((q) => q.id === quote.id);
+  const payload = { ...quote, isSample: false };
+  const next = exists
+    ? current.map((q) => (q.id === quote.id ? payload : q))
+    : [payload, ...current];
+  persist({ ...state, quotes: next });
+}
+
+export function deleteQuote(id) {
+  const next = (state.quotes || []).filter((q) => q.id !== id);
+  persist({ ...state, quotes: next });
+}
+
+export function emptyAchievement() {
+  return {
+    id: uid('a'),
+    title: '',
+    detail: '',
+    metric: '',
+    metricLabel: '',
+    date: new Date().toISOString().slice(0, 10),
+    isSample: false,
+  };
+}
 
 export function saveAchievement(achievement) {
-  const exists = state.achievements.some((a) => a.id === achievement.id);
-  const achievements = exists
-    ? state.achievements.map((a) => (a.id === achievement.id ? achievement : a))
-    : [achievement, ...state.achievements];
-  persist(normalise({ ...state, achievements }));
+  const current = state.achievements || [];
+  const exists = current.some((a) => a.id === achievement.id);
+  const payload = { ...achievement, isSample: false };
+  const next = exists
+    ? current.map((a) => (a.id === achievement.id ? payload : a))
+    : [payload, ...current];
+  persist({ ...state, achievements: next });
 }
 
 export function deleteAchievement(id) {
-  persist(
-    normalise({ ...state, achievements: state.achievements.filter((a) => a.id !== id) }),
-  );
+  const next = (state.achievements || []).filter((a) => a.id !== id);
+  persist({ ...state, achievements: next });
 }
 
-/* ---------------------------------------------------------------
-   Client Dispatch / Communications Mutations
-   --------------------------------------------------------------- */
-export const emptyDispatchLog = () => ({
-  id: uid('dl'),
-  clientId: '',
-  clientName: '',
-  recipientEmail: '',
-  recipientPhone: '',
-  channel: 'WHATSAPP',
-  templateType: 'CUSTOM',
-  subject: '',
-  body: '',
-  sentAt: new Date().toISOString(),
-  status: 'DELIVERED',
-  isSample: false,
-});
-
 export function saveDispatchLog(log) {
-  const exists = state.dispatchLogs.some((dl) => dl.id === log.id);
-  const dispatchLogs = exists
-    ? state.dispatchLogs.map((dl) => (dl.id === log.id ? log : dl))
-    : [log, ...state.dispatchLogs];
-  persist(normalise({ ...state, dispatchLogs }));
+  const current = state.dispatchLogs || [];
+  const payload = { ...log, id: log.id || uid('dl'), sentAt: new Date().toISOString(), isSample: false };
+  const next = [payload, ...current];
+  persist({ ...state, dispatchLogs: next });
 }
 
 export function deleteDispatchLog(id) {
-  persist(
-    normalise({ ...state, dispatchLogs: state.dispatchLogs.filter((dl) => dl.id !== id) }),
-  );
+  const next = (state.dispatchLogs || []).filter((d) => d.id !== id);
+  persist({ ...state, dispatchLogs: next });
 }
 
-/* ---------------------------------------------------------------
-   Bulk Data & Seed Reset
-   --------------------------------------------------------------- */
-export function purgeSamples() {
-  persist(
-    normalise({
-      version: 3,
-      services: state.services.filter((s) => !s.isSample),
-      leads: state.leads.filter((l) => !l.isSample),
-      quotes: state.quotes.filter((q) => !q.isSample),
-      caseStudies: state.caseStudies.filter((cs) => !cs.isSample),
-      applications: state.applications.filter((a) => !a.isSample),
-      testimonials: state.testimonials.filter((t) => !t.isSample),
-      updates: state.updates.filter((u) => !u.isSample),
-      clients: state.clients.filter((c) => !c.isSample),
-      projects: state.projects.filter((p) => !p.isSample),
-      deliverables: state.deliverables.filter((d) => !d.isSample),
-      invoices: state.invoices.filter((i) => !i.isSample),
-      tickets: state.tickets.filter((t) => !t.isSample),
-      documents: state.documents.filter((doc) => !doc.isSample),
-      achievements: state.achievements.filter((a) => !a.isSample),
-      dispatchLogs: state.dispatchLogs.filter((dl) => !dl.isSample),
-    }),
-  );
+export function emptyDispatchLog() {
+  return {
+    id: uid('dl'),
+    clientId: '',
+    clientName: '',
+    recipientEmail: '',
+    recipientPhone: '',
+    channel: 'WHATSAPP',
+    templateType: 'CUSTOM',
+    subject: '',
+    body: '',
+    sentAt: new Date().toISOString(),
+    status: 'DELIVERED',
+    isSample: false,
+  };
 }
 
-export function resetToSeed() {
-  persist(normalise(seedContent));
+export function setApplicationStatus(id, status) {
+  const next = (state.applications || []).map((a) =>
+    a.id === id ? { ...a, status } : a
+  );
+  persist({ ...state, applications: next });
+}
+
+export function deleteApplication(id) {
+  const next = (state.applications || []).filter((a) => a.id !== id);
+  persist({ ...state, applications: next });
+}
+
+export function deleteTestimonial(id) {
+  const next = (state.testimonials || []).filter((t) => t.id !== id);
+  persist({ ...state, testimonials: next });
 }
 
 export function exportJson() {
   return JSON.stringify(state, null, 2);
 }
 
-export function importJson(text) {
+export function importJson(jsonStr) {
   try {
-    const parsed = JSON.parse(text);
-    if (!parsed || typeof parsed !== 'object') {
-      return { ok: false, error: 'File is not a JSON object.' };
-    }
-    persist(normalise(parsed));
+    const parsed = JSON.parse(jsonStr);
+    const normalised = normalise(parsed);
+    persist(normalised);
     return { ok: true };
   } catch (err) {
-    return { ok: false, error: err instanceof Error ? err.message : 'Invalid JSON.' };
+    return { ok: false, error: err.message };
   }
+}
+
+export function resetToSeed() {
+  persist(normalise(seedContent));
+}
+
+/** Purge all sample records across 15+ collections */
+export function purgeSamples() {
+  const filterOut = (list) => (list || []).filter((item) => !item.isSample);
+
+  persist({
+    ...state,
+    services: filterOut(state.services),
+    leads: filterOut(state.leads),
+    quotes: filterOut(state.quotes),
+    caseStudies: filterOut(state.caseStudies),
+    applications: filterOut(state.applications),
+    testimonials: filterOut(state.testimonials),
+    updates: filterOut(state.updates),
+    clients: filterOut(state.clients),
+    projects: filterOut(state.projects),
+    deliverables: filterOut(state.deliverables),
+    invoices: filterOut(state.invoices),
+    creditNotes: filterOut(state.creditNotes),
+    recurringProfiles: filterOut(state.recurringProfiles),
+    conversations: filterOut(state.conversations),
+    messages: filterOut(state.messages),
+    tickets: filterOut(state.tickets),
+    documents: filterOut(state.documents),
+    achievements: filterOut(state.achievements),
+    dispatchLogs: filterOut(state.dispatchLogs),
+  });
 }

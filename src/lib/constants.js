@@ -67,7 +67,7 @@ export const STATUSES = [
 
 export const STATUS_IDS = STATUSES.map((s) => s.id);
 
-/** CRM Lead Stages (7-Stage Pipeline from tanvo-web) */
+/** CRM Lead Stages (7-Stage Pipeline) */
 export const LEAD_STATUSES = [
   { id: 'NEW', label: 'New Inquiries', accent: 'blue' },
   { id: 'CONTACTED', label: 'Contacted', accent: 'cyan' },
@@ -108,16 +108,55 @@ export const DELIVERABLE_STATUSES = [
 
 export const DELIVERABLE_STATUS_IDS = DELIVERABLE_STATUSES.map((s) => s.id);
 
-/** Invoice Statuses */
+/** Full 7-Stage Invoice Lifecycle */
 export const INVOICE_STATUSES = [
-  { id: 'draft', label: 'Draft', accent: 'slate' },
-  { id: 'sent', label: 'Issued / Pending', accent: 'amber' },
-  { id: 'paid', label: 'Paid in Full', accent: 'emerald' },
-  { id: 'overdue', label: 'Overdue', accent: 'rose' },
-  { id: 'cancelled', label: 'Cancelled', accent: 'slate' },
+  { id: 'draft', label: 'Draft', accent: 'slate', desc: 'Editable draft, not yet issued to client' },
+  { id: 'sent', label: 'Sent / Issued', accent: 'amber', desc: 'Issued and locked against editing' },
+  { id: 'viewed', label: 'Viewed by Client', accent: 'blue', desc: 'Client opened invoice in portal' },
+  { id: 'partially_paid', label: 'Partially Paid', accent: 'cyan', desc: 'Partial settlement recorded' },
+  { id: 'paid', label: 'Paid in Full', accent: 'emerald', desc: 'Settled with zero balance due' },
+  { id: 'overdue', label: 'Overdue', accent: 'rose', desc: 'Past due date with outstanding balance' },
+  { id: 'cancelled', label: 'Cancelled', accent: 'slate', desc: 'Voided with credit note' },
 ];
 
 export const INVOICE_STATUS_IDS = INVOICE_STATUSES.map((s) => s.id);
+
+/** Payment Modes for Manual Entry */
+export const PAYMENT_MODES = [
+  { id: 'UPI', label: 'UPI (GPay / PhonePe / Paytm / BHIM)' },
+  { id: 'WIRE', label: 'Bank Wire Transfer (NEFT / RTGS / IMPS)' },
+  { id: 'CARD', label: 'Credit / Debit Card (Stripe / Razorpay)' },
+  { id: 'SWIFT', label: 'International Wire (SWIFT / ACH / IBAN)' },
+  { id: 'CHEQUE', label: 'Cheque / Demand Draft' },
+  { id: 'OTHER', label: 'Other Direct Transfer' },
+];
+
+/** Recurring / Retainer Frequencies */
+export const RECURRING_FREQUENCIES = [
+  { id: 'MONTHLY', label: 'Monthly Retainer' },
+  { id: 'QUARTERLY', label: 'Quarterly Retainer' },
+  { id: 'BIWEEKLY', label: 'Bi-Weekly Sprint' },
+  { id: 'YEARLY', label: 'Annual Maintenance' },
+];
+
+/** Multi-Channel Inbox Constants */
+export const INBOX_CHANNELS = [
+  { id: 'EMAIL', label: 'Email', iconName: 'Mail', color: 'text-blue-400', badgeBg: 'bg-blue-500/10 border-blue-500/20 text-blue-300' },
+  { id: 'WHATSAPP', label: 'WhatsApp', iconName: 'MessageCircle', color: 'text-emerald-400', badgeBg: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300' },
+  { id: 'INSTAGRAM', label: 'Instagram DM', iconName: 'Instagram', color: 'text-pink-400', badgeBg: 'bg-pink-500/10 border-pink-500/20 text-pink-300' },
+];
+
+export const CONVERSATION_STATUSES = [
+  { id: 'OPEN', label: 'Open', accent: 'amber' },
+  { id: 'PENDING', label: 'Pending Client Reply', accent: 'cyan' },
+  { id: 'RESOLVED', label: 'Resolved', accent: 'emerald' },
+];
+
+export const TEAM_MEMBERS = [
+  { id: 'satvik', name: 'Satvik Pandurangi', role: 'Lead Architect', initials: 'SP' },
+  { id: 'zeeshan', name: 'Zeeshan Madras', role: 'Technical Director', initials: 'ZM' },
+  { id: 'unassigned', name: 'Unassigned', role: 'General Triage', initials: '—' },
+];
 
 /** Ticket Categories */
 export const TICKET_CATEGORIES = [
