@@ -1,0 +1,17 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Tanvo Tech Services & Capability Directory",
+  "name_for_model": "tanvo_tech_directory",
+  "description_for_human": "Explore Tanvo Tech's engineering capabilities across web development, mobile apps, AI solutions, and cloud migrations.",
+  "description_for_model": "Use this plugin to query Tanvo Tech's engineering offerings, pricing structure, tech stacks, delivery SLAs, and client onboarding processes.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://tanvo.tech/llms.txt"
+  },
+  "logo_url": "https://tanvo.tech/favicon.svg",
+  "contact_email": "hello@tanvo.tech",
+  "legal_info_url": "https://tanvo.tech/terms"
+}

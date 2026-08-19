@@ -140,40 +140,30 @@ export default function Preloader() {
     <div
       className={`intro ${phase === 'exiting' ? 'intro--exiting' : ''}`}
       role="status"
-      aria-live="polite"
+      aria-label="Loading Tanvo Tech"
       onClick={() => setPhase('exiting')}
     >
-      <span className="sr-only">Loading Tanvo Tech</span>
+      <div className="intro-backdrop" />
+      <div className="intro-grid" />
+      <div className="intro-glow" />
 
-      <div className="intro__stage" aria-hidden="true">
-        {/* Orbiting accent ring behind the mark */}
-        <div className="intro__ring" />
-        <div className="intro__glow" />
+      <div className="intro-body">
+        <div className="intro-mark">
+          <Logo className="h-20 w-20 md:h-28 md:w-28" showText={false} animated />
+        </div>
 
-        <Logo className="intro__logo" showText={false} animated />
-      </div>
-
-      <div className="intro__word" aria-hidden="true">
-        <span className="intro__word-text">
+        <p className="intro-word font-heading tracking-tight text-white">
           Tanvo<span className="font-light text-cyan-400">Tech</span>
-        </span>
+        </p>
+
+        <p className="intro-tagline font-sans text-xs tracking-widest text-slate-400 uppercase md:text-sm">
+          Digital Solutions Agency
+        </p>
+
+        <div className="intro-bar" aria-hidden="true">
+          <div className="intro-progress" />
+        </div>
       </div>
-
-      <p className="intro__tagline" aria-hidden="true">
-        Engineering next-gen digital futures
-      </p>
-
-      <div className="intro__track" aria-hidden="true">
-        <div className="intro__bar" />
-      </div>
-
-      <button
-        type="button"
-        className="intro__skip"
-        onClick={() => setPhase('exiting')}
-      >
-        Skip intro
-      </button>
     </div>
   );
 }

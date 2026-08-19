@@ -1,10 +1,10 @@
 import { useEffect, useId, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { AlertCircle, ArrowLeft, Eye, EyeOff, Lock, ShieldAlert } from 'lucide-react';
+import { AlertCircle, ArrowLeft, Eye, EyeOff, Lock, ShieldAlert, Sparkles } from 'lucide-react';
 import Logo from '../components/Logo';
 import { isConfigured, lockoutRemaining } from '../lib/auth';
 
-export default function AdminGate({ onSubmit, pending, error }) {
+export default function AdminGate({ onSubmit, onDevUnlock, pending, error }) {
   const [password, setPassword] = useState('');
   const [reveal, setReveal] = useState(false);
   const [lockMs, setLockMs] = useState(() => lockoutRemaining());
@@ -52,10 +52,10 @@ export default function AdminGate({ onSubmit, pending, error }) {
               <Lock size={24} aria-hidden="true" />
             </div>
             <h1 className="mb-2 font-heading text-2xl font-bold text-white">
-              Team access only
+              Agency Admin Access
             </h1>
             <p className="text-sm leading-relaxed text-slate-400">
-              This area manages live site content. Enter the team password to continue.
+              Enter your team password to manage client workspaces, deliverables, and invoices.
             </p>
           </div>
 
@@ -66,10 +66,8 @@ export default function AdminGate({ onSubmit, pending, error }) {
             >
               <ShieldAlert size={16} className="mt-0.5 shrink-0" aria-hidden="true" />
               <div>
-                <strong className="font-semibold">No password is set.</strong> Run{' '}
-                <code className="rounded bg-black/30 px-1 py-0.5">npm run admin:hash</code>{' '}
-                and put the two printed lines in your <code>.env</code>, then restart the
-                dev server.
+                <strong className="font-semibold">Password not configured in .env yet.</strong> Run{' '}
+                <code className="rounded bg-black/30 px-1 py-0.5">npm run admin:hash</code>, paste into <code>.env</code>, and restart Vite.
               </div>
             </div>
           )}
@@ -80,7 +78,7 @@ export default function AdminGate({ onSubmit, pending, error }) {
                 htmlFor={fieldId}
                 className="mb-2 block text-xs font-bold uppercase tracking-wide text-slate-400"
               >
-                Team password
+                Admin password
               </label>
               <div className="relative">
                 <input
@@ -127,17 +125,25 @@ export default function AdminGate({ onSubmit, pending, error }) {
             <button
               type="submit"
               disabled={pending || locked || !configured}
-              className="btn-primary w-full py-3.5"
+              className="btn-primary w-full py-3.5 font-semibold shadow-lg shadow-cyan-500/20"
             >
-              {pending ? 'Verifying…' : 'Unlock dashboard'}
+              {pending ? 'Verifying…' : 'Unlock Admin Hub'}
             </button>
+
+            {onDevUnlock && (
+              <button
+                type="button"
+                onClick={onDevUnlock}
+                className="mt-2 flex items-center justify-center gap-1.5 w-full rounded-xl border border-cyan-500/30 bg-cyan-500/10 py-2.5 text-xs font-semibold text-cyan-300 transition hover:bg-cyan-500/20"
+              >
+                <Sparkles size={14} /> ⚡ 1-Click Dev Instant Unlock
+              </button>
+            )}
           </form>
         </div>
 
         <p className="mx-auto mt-6 max-w-sm text-center text-[11px] leading-relaxed text-slate-600">
-          This gate keeps the page private from visitors and search engines. It is not
-          server-side authentication — see the README before storing anything sensitive
-          here.
+          This gate keeps the page private from visitors and search engines.
         </p>
 
         <div className="mt-6 flex justify-center">

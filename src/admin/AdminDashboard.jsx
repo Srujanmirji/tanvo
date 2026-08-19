@@ -2,24 +2,49 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Clock,
+  CreditCard,
   Database,
-  ExternalLink,
+  FileCheck2,
+  Inbox,
+  Kanban,
+  Layers,
   LayoutGrid,
   LogOut,
-  ShieldAlert,
-  Trophy,
+  MessageSquare,
+  Package,
+  Search,
+  Send,
+  Users,
 } from 'lucide-react';
 import Logo from '../components/Logo';
 import WorkBoard from './WorkBoard';
-import AchievementsPanel from './AchievementsPanel';
+import LeadsPanel from './LeadsPanel';
+import ClientsPanel from './ClientsPanel';
+import DeliverablesPanel from './DeliverablesPanel';
+import InvoicesPanel from './InvoicesPanel';
+import ServicesCMSPanel from './ServicesCMSPanel';
+import CaseStudiesCMSPanel from './CaseStudiesCMSPanel';
+import TicketsPanel from './TicketsPanel';
+import InboxPanel from './InboxPanel';
+import CommunicationsPanel from './CommunicationsPanel';
 import DataTools from './DataTools';
 import ConfirmDialog from './ConfirmDialog';
+import CommandPalette from './CommandPalette';
+import ClientNotifierModal from './ClientNotifierModal';
 import { useContent } from '../lib/store';
 
 const TABS = [
   { id: 'pipeline', label: 'Pipeline', icon: LayoutGrid },
-  { id: 'achievements', label: 'Achievements', icon: Trophy },
-  { id: 'data', label: 'Data', icon: Database },
+  { id: 'leads', label: 'CRM Leads', icon: Kanban },
+  { id: 'clients', label: 'Clients', icon: Users },
+  { id: 'deliverables', label: 'Deliverables', icon: FileCheck2 },
+  { id: 'invoices', label: 'Invoices', icon: CreditCard },
+  { id: 'comms', label: 'Email & WhatsApp', icon: Send },
+  { id: 'services', label: 'Services CMS', icon: Package },
+  { id: 'casestudies', label: 'Case Studies', icon: Layers },
+  { id: 'tickets', label: 'Requests', icon: MessageSquare },
+  { id: 'inbox', label: 'Inbox', icon: Inbox },
+  { id: 'data', label: 'Data & Backup', icon: Database },
 ];
 
 function SessionClock({ expiresAt }) {
@@ -38,151 +63,247 @@ function SessionClock({ expiresAt }) {
   );
 }
 
-function StatCard({ label, value, tone = 'text-white' }) {
+function StatCard({ label, value, subValue, tone = 'text-white' }) {
   return (
-    <div className="rounded-xl border border-white/5 bg-white/[0.02] p-4">
-      <p className="text-xs uppercase tracking-wider text-slate-500">{label}</p>
-      <p className={`mt-1.5 font-heading text-2xl font-bold ${tone}`}>{value}</p>
+    <div className="rounded-2xl border border-white/10 bg-slate-950/70 p-4 backdrop-blur-xl">
+      <p className="text-[10px] sm:text-xs uppercase tracking-wider text-slate-400">{label}</p>
+      <p className={`mt-1 font-heading text-xl sm:text-2xl font-bold ${tone}`}>{value}</p>
+      {subValue && <p className="mt-1 font-mono text-[11px] text-slate-500">{subValue}</p>}
     </div>
   );
 }
 
 export default function AdminDashboard({ onSignOut, expiresAt }) {
-  const { projects, achievements } = useContent();
   const [tab, setTab] = useState('pipeline');
   const [confirmRequest, setConfirmRequest] = useState(null);
+  const [isCommandOpen, setIsCommandOpen] = useState(false);
+  const [isNotifierOpen, setIsNotifierOpen] = useState(false);
+
+  const {
+    leads = [],
+    clients = [],
+    projects = [],
+    invoices = [],
+    deliverables = [],
+    tickets = [],
+    applications = [],
+  } = useContent();
 
   const stats = useMemo(() => {
-    const byStatus = (status) => projects.filter((p) => p.status === status).length;
-    const overdue = projects.filter((p) => {
-      if (p.status === 'completed' || !p.targetDate) return false;
-      return new Date(p.targetDate) < new Date();
-    }).length;
-    return {
-      active: byStatus('in-progress'),
-      upcoming: byStatus('upcoming'),
-      shipped: byStatus('completed'),
-      overdue,
-      achievements: achievements.length,
-    };
-  }, [projects, achievements]);
+    const pipelineVolume = leads
+      .filter((l) => l.status !== 'LOST')
+      .reduce((sum, l) => sum + (l.budgetBand === 'ABOVE_25L' ? 35000 : 12000), 0);
 
-  const sampleCount =
-    projects.filter((p) => p.isSample).length +
-    achievements.filter((a) => a.isSample).length;
+    const totalCollected = invoices
+      .filter((i) => i.status === 'paid')
+      .reduce((sum, i) => sum + (Number(i.amount) || 0), 0);
+
+    const unpaidAmount = invoices
+      .filter((i) => i.status === 'sent' || i.status === 'overdue')
+      .reduce((sum, i) => sum + (Number(i.amount) || 0), 0);
+
+    const activeClientsCount = clients.length;
+    const activeProjectsCount = projects.filter((p) => p.status === 'in-progress').length;
+    const pendingDel = deliverables.filter((d) => d.status === 'pending').length;
+    const openTickets = tickets.filter((t) => t.status === 'open' || t.status === 'progress').length;
+    const newApplicants = applications.filter((a) => a.status === 'NEW').length;
+
+    return {
+      pipelineVolume,
+      totalCollected,
+      unpaidAmount,
+      activeClientsCount,
+      activeProjectsCount,
+      pendingDel,
+      openTickets,
+      newApplicants,
+    };
+  }, [leads, clients, projects, invoices, deliverables, tickets, applications]);
+
+  const handleTriggerAction = (actionId) => {
+    if (actionId === 'new-lead') setTab('leads');
+    if (actionId === 'new-client') setTab('clients');
+    if (actionId === 'new-invoice') setTab('invoices');
+    if (actionId === 'new-service') setTab('services');
+    if (actionId === 'new-case-study') setTab('casestudies');
+    if (actionId === 'new-project') setTab('pipeline');
+  };
 
   return (
-    <div className="site-ambience flex min-h-dvh flex-col">
-      <header className="sticky top-0 z-40 border-b border-white/5 bg-void/80 backdrop-blur-xl">
-        <div className="container-page flex items-center justify-between gap-4 py-4">
+    <div className="site-ambience min-h-dvh flex flex-col">
+      {/* Top Navbar */}
+      <header className="sticky top-0 z-40 border-b border-white/10 bg-slate-950/80 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6">
           <div className="flex items-center gap-4">
-            <Logo className="h-8 w-8" showText={false} />
-            <div>
-              <h1 className="font-heading text-sm font-bold text-white">
-                Content dashboard
-              </h1>
-              <p className="text-xs text-slate-500">Team access</p>
-            </div>
+            <Link to="/" className="flex items-center gap-2">
+              <Logo className="h-7 w-7" />
+              <div className="flex flex-col">
+                <span className="font-heading text-sm font-bold tracking-tight text-white">
+                  Tanvo Tech
+                </span>
+                <span className="text-[10px] font-mono text-cyan-400">OPERATIONS OS</span>
+              </div>
+            </Link>
           </div>
 
-          <div className="flex items-center gap-3">
-            <SessionClock expiresAt={expiresAt} />
-            <Link
-              to="/"
-              className="flex items-center gap-1.5 rounded-lg border border-white/5 px-3 py-2 text-xs text-slate-400 transition-colors hover:border-white/15 hover:text-white"
+          <div className="flex items-center gap-2.5">
+            {/* Quick Update Dispatcher */}
+            <button
+              type="button"
+              onClick={() => setIsNotifierOpen(true)}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-3 py-1.5 text-xs font-semibold text-cyan-300 transition hover:bg-cyan-500/20"
             >
-              <ExternalLink size={13} aria-hidden="true" />
-              <span className="hidden sm:inline">View site</span>
-            </Link>
+              <Send size={13} />
+              <span className="hidden sm:inline">Send Update</span>
+            </button>
+
+            {/* Command Palette Trigger */}
+            <button
+              type="button"
+              onClick={() => setIsCommandOpen(true)}
+              className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-slate-300 transition hover:border-white/20 hover:bg-white/[0.08]"
+            >
+              <Search size={13} className="text-slate-400" />
+              <span className="hidden sm:inline">Search / Actions</span>
+              <kbd className="hidden rounded bg-white/10 px-1.5 py-0.5 text-[10px] font-mono text-slate-400 md:inline">
+                ⌘K
+              </kbd>
+            </button>
+
+            <SessionClock expiresAt={expiresAt} />
+
             <button
               type="button"
               onClick={onSignOut}
-              className="flex items-center gap-1.5 rounded-lg border border-white/5 px-3 py-2 text-xs text-slate-400 transition-colors hover:border-red-500/30 hover:text-red-300"
+              className="btn-secondary px-3 py-1.5 text-xs text-slate-300 hover:text-white"
             >
               <LogOut size={13} aria-hidden="true" />
-              <span className="hidden sm:inline">Sign out</span>
+              <span className="hidden sm:inline">Lock Gate</span>
             </button>
           </div>
+        </div>
+
+        {/* Tab Strip */}
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <nav
+            role="tablist"
+            aria-label="Admin panels"
+            className="no-scrollbar -mb-px flex gap-1 overflow-x-auto py-2"
+          >
+            {TABS.map(({ id, label, icon: Icon }) => {
+              const active = tab === id;
+              let badge = null;
+              if (id === 'leads' && leads.filter((l) => l.status === 'NEW').length > 0) {
+                badge = leads.filter((l) => l.status === 'NEW').length;
+              } else if (id === 'deliverables' && stats.pendingDel > 0) {
+                badge = stats.pendingDel;
+              } else if (id === 'invoices' && invoices.filter((i) => i.status === 'sent').length > 0) {
+                badge = invoices.filter((i) => i.status === 'sent').length;
+              } else if (id === 'tickets' && stats.openTickets > 0) {
+                badge = stats.openTickets;
+              } else if (id === 'inbox' && stats.newApplicants > 0) {
+                badge = stats.newApplicants;
+              }
+
+              return (
+                <button
+                  key={id}
+                  role="tab"
+                  id={`tab-${id}`}
+                  aria-selected={active}
+                  aria-controls={`panel-${id}`}
+                  tabIndex={active ? 0 : -1}
+                  onClick={() => setTab(id)}
+                  className={`relative flex shrink-0 items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-semibold transition-all ${
+                    active
+                      ? 'bg-cyan-500/10 text-cyan-300 shadow-sm border border-cyan-500/30'
+                      : 'text-slate-400 hover:bg-white/5 hover:text-slate-200 border border-transparent'
+                  }`}
+                >
+                  <Icon size={14} className={active ? 'text-cyan-400' : 'text-slate-500'} />
+                  <span>{label}</span>
+                  {badge !== null && (
+                    <span
+                      className={`rounded-full px-1.5 py-0.2 text-[10px] font-mono font-bold ${
+                        active
+                          ? 'bg-cyan-400 text-slate-950'
+                          : 'bg-white/10 text-slate-300'
+                      }`}
+                    >
+                      {badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </nav>
         </div>
       </header>
 
-      <main id="main" className="container-page w-full flex-1 py-8">
-        {sampleCount > 0 && (
-          <div
-            role="status"
-            className="mb-8 flex flex-wrap items-center gap-3 rounded-xl border border-amber-500/25 bg-amber-500/5 p-4 text-sm text-amber-100/80"
-          >
-            <ShieldAlert size={17} className="shrink-0 text-amber-400" aria-hidden="true" />
-            <p className="flex-1 text-xs leading-relaxed">
-              <strong className="font-semibold">
-                {sampleCount} placeholder record{sampleCount === 1 ? '' : 's'} still
-                published.
-              </strong>{' '}
-              Invented case studies on a live agency site are a credibility risk — replace
-              or remove them before launch.
-            </p>
-            <button
-              type="button"
-              onClick={() => setTab('data')}
-              className="rounded-lg border border-amber-500/30 px-3 py-1.5 text-xs font-semibold text-amber-200 transition-colors hover:bg-amber-500/10"
-            >
-              Manage
-            </button>
-          </div>
-        )}
-
-        <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-5">
-          <StatCard label="In build" value={stats.active} tone="text-cyan-400" />
-          <StatCard label="Upcoming" value={stats.upcoming} tone="text-amber-400" />
-          <StatCard label="Shipped" value={stats.shipped} tone="text-emerald-400" />
+      {/* Main Content Area */}
+      <main className="mx-auto flex-1 w-full max-w-7xl px-4 py-6 sm:px-6">
+        {/* Executive KPI Header Bar */}
+        <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-4">
           <StatCard
-            label="Overdue"
-            value={stats.overdue}
-            tone={stats.overdue > 0 ? 'text-red-400' : 'text-slate-600'}
+            label="Revenue Settled"
+            value={`$${stats.totalCollected.toLocaleString()}`}
+            subValue={`₹${(stats.totalCollected * 83).toLocaleString()} INR`}
+            tone="text-emerald-400"
           />
-          <StatCard label="Achievements" value={stats.achievements} />
+          <StatCard
+            label="Receivables Due"
+            value={`$${stats.unpaidAmount.toLocaleString()}`}
+            subValue={stats.unpaidAmount > 0 ? 'Pending Settlement' : 'All Settled'}
+            tone={stats.unpaidAmount > 0 ? 'text-rose-400' : 'text-slate-400'}
+          />
+          <StatCard
+            label="Deliverable Reviews"
+            value={stats.pendingDel}
+            subValue="Awaiting Sign-off"
+            tone={stats.pendingDel > 0 ? 'text-amber-400' : 'text-slate-400'}
+          />
+          <StatCard
+            label="Client Requests"
+            value={stats.openTickets}
+            subValue={`${tickets.length} Total Tickets`}
+            tone={stats.openTickets > 0 ? 'text-sky-400' : 'text-slate-400'}
+          />
         </div>
 
-        <div
-          role="tablist"
-          aria-label="Dashboard sections"
-          className="mb-8 flex gap-1 rounded-xl border border-white/5 bg-slate-950/60 p-1.5"
-        >
-          {TABS.map(({ id, label, icon: Icon }) => (
-            <button
-              key={id}
-              type="button"
-              role="tab"
-              id={`tab-${id}`}
-              aria-selected={tab === id}
-              aria-controls={`panel-${id}`}
-              onClick={() => setTab(id)}
-              className={`flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all ${
-                tab === id
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 font-semibold text-slate-950'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              <Icon size={15} aria-hidden="true" />
-              {label}
-            </button>
-          ))}
-        </div>
-
+        {/* Tab Panes */}
         <div
           role="tabpanel"
           id={`panel-${tab}`}
           aria-labelledby={`tab-${tab}`}
           tabIndex={0}
-          className="rounded-2xl border border-white/5 bg-white/[0.015] p-6"
+          className="rounded-3xl border border-white/10 bg-slate-950/60 p-6 sm:p-8 backdrop-blur-xl shadow-2xl"
         >
           {tab === 'pipeline' && <WorkBoard onRequestDelete={setConfirmRequest} />}
-          {tab === 'achievements' && (
-            <AchievementsPanel onRequestDelete={setConfirmRequest} />
-          )}
+          {tab === 'leads' && <LeadsPanel onConfirmDelete={setConfirmRequest} />}
+          {tab === 'clients' && <ClientsPanel onConfirmDelete={setConfirmRequest} />}
+          {tab === 'deliverables' && <DeliverablesPanel onConfirmDelete={setConfirmRequest} />}
+          {tab === 'invoices' && <InvoicesPanel onConfirmDelete={setConfirmRequest} />}
+          {tab === 'comms' && <CommunicationsPanel onConfirmDelete={setConfirmRequest} />}
+          {tab === 'services' && <ServicesCMSPanel onConfirmDelete={setConfirmRequest} />}
+          {tab === 'casestudies' && <CaseStudiesCMSPanel onConfirmDelete={setConfirmRequest} />}
+          {tab === 'tickets' && <TicketsPanel onConfirmDelete={setConfirmRequest} />}
+          {tab === 'inbox' && <InboxPanel onConfirmDelete={setConfirmRequest} />}
           {tab === 'data' && <DataTools onRequestConfirm={setConfirmRequest} />}
         </div>
       </main>
+
+      {/* Global Command Palette */}
+      <CommandPalette
+        isOpen={isCommandOpen}
+        onClose={() => setIsCommandOpen(false)}
+        onSelectTab={(newTab) => setTab(newTab)}
+        onTriggerAction={handleTriggerAction}
+      />
+
+      {/* Quick Notifier Modal */}
+      {isNotifierOpen && (
+        <ClientNotifierModal onClose={() => setIsNotifierOpen(false)} />
+      )}
 
       <ConfirmDialog request={confirmRequest} onClose={() => setConfirmRequest(null)} />
     </div>

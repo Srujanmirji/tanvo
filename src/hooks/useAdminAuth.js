@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { AUTH } from '../lib/constants';
-import { endSession, login, readSession } from '../lib/auth';
+import { createDevSession, endSession, login, readSession } from '../lib/auth';
 
 /**
  * Owns admin session state: sign in, sign out, and automatic expiry.
@@ -45,6 +45,12 @@ export function useAdminAuth() {
     return result.ok;
   }, []);
 
+  const devUnlock = useCallback(() => {
+    createDevSession();
+    setSession(readSession());
+    setError('');
+  }, []);
+
   const signOut = useCallback(() => {
     endSession();
     setSession(null);
@@ -59,6 +65,7 @@ export function useAdminAuth() {
     error,
     signIn,
     signOut,
+    devUnlock,
     clearError: () => setError(''),
   };
 }

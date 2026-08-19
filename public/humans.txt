@@ -1,0 +1,17 @@
+/* TEAM */
+Agency: Tanvo Tech
+Corporate Legal Name: Tanvo Tech Private Limited
+Location: Bengaluru, Karnataka, India
+Contact: hello@tanvo.tech
+Website: https://tanvo.tech
+
+/* TECH STACK */
+Frontend: React 19, Tailwind CSS v4, TypeScript, Vite, Three.js
+Backend: Node.js, Express, Python FastAPI, PostgreSQL, MongoDB
+Mobile: React Native, Flutter
+AI: OpenAI, Anthropic Claude, LangChain, Pinecone, ChromaDB
+Cloud: AWS, Vercel, Cloudflare, Docker
+Architecture: Modular Component-Driven, Sub-second Paint, Zero Vendor Lock-in
+
+/* STANDARDS */
+HTML5, CSS3, ES2024, Schema.org JSON-LD, PWA Manifest, LLMs.txt

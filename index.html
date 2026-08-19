@@ -1,17 +1,24 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" prefix="og: https://ogp.me/ns#">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    
+    <!-- Primary Favicons & App Icons -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- Color & Browser Scheme -->
     <meta name="theme-color" content="#030307" />
     <meta name="color-scheme" content="dark" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Tanvo Tech" />
+    <meta name="application-name" content="Tanvo Tech" />
+    <meta name="format-detection" content="telephone=no" />
 
-    <!--
-      Fonts are preconnected and loaded here rather than via @import in
-      CSS. An @import inside the stylesheet creates a request chain
-      (HTML → CSS → font CSS → font file) that delays first paint.
-    -->
+    <!-- Google Fonts Preconnect Pipeline -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -19,18 +26,18 @@
       href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
     />
 
-    <!--
-      Per-route <title>, description, canonical, Open Graph and Twitter
-      tags are rendered by src/components/Seo.jsx (React 19 hoists them
-      into <head>). The fallbacks below only matter before hydration and
-      for crawlers that do not execute JavaScript.
-    -->
-    <title>Tanvo Tech | Web, App, AI &amp; Digital Solutions Agency</title>
+    <!-- Static Meta Fallbacks (React 19 Seo.jsx dynamically manages per-route tags) -->
+    <title>Tanvo Tech — Web, App, AI &amp; Digital Solutions Agency</title>
     <meta
       name="description"
-      content="Tanvo Tech builds high-performance MERN web applications, cross-platform mobile apps, custom AI integrations, and business process automation."
+      content="Tanvo Tech builds high-performance MERN web applications, cross-platform mobile apps, custom AI integrations, and automated cloud workflows."
     />
-    <meta name="author" content="Tanvo Tech" />
+    <meta name="author" content="Tanvo Tech Private Limited" />
+    <meta name="keywords" content="MERN Stack, Web Development, React Native, Mobile Apps, AI Solutions, RAG Systems, Digital Marketing, Cloud Migrations, Agency Bengaluru" />
+    
+    <!-- Crawling & Discovery Links -->
+    <link rel="author" href="/humans.txt" />
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
   </head>
   <body>
     <div id="root"></div>
@@ -38,9 +45,9 @@
       <div style="padding: 3rem 1.5rem; text-align: center; color: #94a3b8; font-family: system-ui, sans-serif;">
         <h1 style="color: #fff; font-size: 1.5rem; margin-bottom: 0.75rem;">Tanvo Tech</h1>
         <p style="margin-bottom: 1rem;">
-          This site needs JavaScript enabled. Please turn it on, or email us directly.
+          This site requires JavaScript to deliver interactive 3D and real-time animations.
         </p>
-        <a href="mailto:hello@tanvo.tech" style="color: #00f2fe;">hello@tanvo.tech</a>
+        <a href="mailto:hello@tanvo.tech" style="color: #00f2fe; text-decoration: none; font-weight: bold;">hello@tanvo.tech</a>
       </div>
     </noscript>
     <script type="module" src="/src/main.jsx"></script>

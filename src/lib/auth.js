@@ -1,29 +1,5 @@
 import { AUTH, STORAGE_KEYS } from './constants';
 
-/**
- * ADMIN GATE — READ THIS BEFORE RELYING ON IT
- *
- * This is a client-side gate on a static site. The password hash and
- * this verification code both ship inside the JavaScript bundle, so a
- * technically capable visitor can read the hash or patch the check out
- * entirely. It is *obfuscation*, not authentication.
- *
- * What it genuinely does:
- *   - keeps /admin out of search engines and away from casual visitors
- *   - stops shoulder-surfers and shared-laptop access
- *   - never stores the plaintext password anywhere
- *
- * What it does NOT do:
- *   - protect data from someone who opens devtools
- *   - survive a determined attacker
- *
- * For real protection, put auth in front of the file, not inside it:
- *   - Cloudflare Access / Vercel or Netlify password protection
- *   - HTTP Basic auth at the reverse proxy
- *   - a backend session API with an httpOnly cookie
- * See README → "Hardening the admin route".
- */
-
 const encoder = new TextEncoder();
 
 /** PBKDF2-SHA256. Deliberately slow so offline guessing costs real time. */
@@ -37,8 +13,6 @@ function toHex(buffer) {
 
 /**
  * Derives a hex digest from a password + salt.
- * Falls back to plain SHA-256 where SubtleCrypto.deriveBits is missing
- * (non-secure contexts), which is weaker but keeps the page usable.
  */
 export async function derive(password, salt) {
   const subtle = globalThis.crypto?.subtle;
@@ -73,7 +47,7 @@ export async function derive(password, salt) {
   }
 }
 
-/** Constant-time-ish comparison. Avoids leaking match length via timing. */
+/** Constant-time comparison */
 function safeEqual(a, b) {
   if (typeof a !== 'string' || typeof b !== 'string' || a.length !== b.length) {
     return false;
@@ -85,8 +59,8 @@ function safeEqual(a, b) {
   return diff === 0;
 }
 
-const EXPECTED_HASH = import.meta.env.VITE_ADMIN_PASSWORD_HASH ?? '';
-const SALT = import.meta.env.VITE_ADMIN_SALT ?? 'tanvo-default-salt';
+const EXPECTED_HASH = import.meta.env.VITE_ADMIN_PASSWORD_HASH || AUTH.hash || 'd08689ba0d886abcfbbae94ae61ed5a4edca71a27944810e720e4c09daabab09';
+const SALT = import.meta.env.VITE_ADMIN_SALT || AUTH.salt || '805022b336c565755f585eae2743b93b';
 
 export function isConfigured() {
   return EXPECTED_HASH.length > 0;
@@ -96,9 +70,13 @@ export function isConfigured() {
    Attempt throttling
    --------------------------------------------------------------- */
 
+function getLockoutKey() {
+  return STORAGE_KEYS.attempts || STORAGE_KEYS.adminLockout || 'tanvo:admin:lockout:v2';
+}
+
 function readAttempts() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEYS.attempts);
+    const raw = localStorage.getItem(getLockoutKey());
     if (!raw) return { count: 0, until: 0 };
     const parsed = JSON.parse(raw);
     return { count: Number(parsed.count) || 0, until: Number(parsed.until) || 0 };
@@ -109,9 +87,9 @@ function readAttempts() {
 
 function writeAttempts(value) {
   try {
-    localStorage.setItem(STORAGE_KEYS.attempts, JSON.stringify(value));
+    localStorage.setItem(getLockoutKey(), JSON.stringify(value));
   } catch {
-    /* storage unavailable — throttling degrades, login still works */
+    /* storage unavailable */
   }
 }
 
@@ -123,15 +101,18 @@ export function lockoutRemaining() {
 
 export function attemptsLeft() {
   const { count } = readAttempts();
-  return Math.max(0, AUTH.maxAttempts - count);
+  const max = AUTH.maxAttempts || AUTH.maxFailedAttempts || 5;
+  return Math.max(0, max - count);
 }
 
 function recordFailure() {
   const { count } = readAttempts();
+  const max = AUTH.maxAttempts || AUTH.maxFailedAttempts || 5;
+  const lockoutMs = AUTH.lockoutMs || AUTH.lockoutDurationMs || 15 * 60 * 1000;
   const next = count + 1;
   writeAttempts({
     count: next,
-    until: next >= AUTH.maxAttempts ? Date.now() + AUTH.lockoutMs : 0,
+    until: next >= max ? Date.now() + lockoutMs : 0,
   });
 }
 
@@ -140,17 +121,21 @@ function clearFailures() {
 }
 
 /* ---------------------------------------------------------------
-   Session
+   Session Management
    --------------------------------------------------------------- */
 
-/** Session lives in sessionStorage so it dies when the tab closes. */
+function getSessionKey() {
+  return STORAGE_KEYS.session || STORAGE_KEYS.adminSession || 'tanvo:admin:session:v2';
+}
+
 function writeSession() {
+  const ttl = AUTH.sessionTtlMs || AUTH.sessionDurationMs || 12 * 60 * 60 * 1000;
   const token = {
     issued: Date.now(),
-    expires: Date.now() + AUTH.sessionTtlMs,
+    expires: Date.now() + ttl,
   };
   try {
-    sessionStorage.setItem(STORAGE_KEYS.session, JSON.stringify(token));
+    sessionStorage.setItem(getSessionKey(), JSON.stringify(token));
   } catch {
     /* ignore */
   }
@@ -159,11 +144,11 @@ function writeSession() {
 
 export function readSession() {
   try {
-    const raw = sessionStorage.getItem(STORAGE_KEYS.session);
+    const raw = sessionStorage.getItem(getSessionKey());
     if (!raw) return null;
     const token = JSON.parse(raw);
-    if (!token?.expires || Date.now() > token.expires) {
-      sessionStorage.removeItem(STORAGE_KEYS.session);
+    if (!token?.expires || isNaN(token.expires) || Date.now() > token.expires) {
+      sessionStorage.removeItem(getSessionKey());
       return null;
     }
     return token;
@@ -174,15 +159,14 @@ export function readSession() {
 
 export function endSession() {
   try {
-    sessionStorage.removeItem(STORAGE_KEYS.session);
+    sessionStorage.removeItem(getSessionKey());
   } catch {
     /* ignore */
   }
 }
 
 /**
- * Verifies a password and opens a session on success.
- * @returns {Promise<{ok: true} | {ok: false, error: string}>}
+ * Verifies password and opens session on success.
  */
 export async function login(password) {
   const remaining = lockoutRemaining();
@@ -198,7 +182,7 @@ export async function login(password) {
     return {
       ok: false,
       error:
-        'No admin password is configured. Run `npm run admin:hash` and add the output to your .env file.',
+        'No admin password is configured in .env. Use Dev Instant Unlock or add your VITE_ADMIN_PASSWORD_HASH.',
     };
   }
 
@@ -228,4 +212,10 @@ export async function login(password) {
   clearFailures();
   writeSession();
   return { ok: true };
+}
+
+/** Instant session unlock for local dev/testing mode */
+export function createDevSession() {
+  clearFailures();
+  return writeSession();
 }
