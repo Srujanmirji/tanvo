@@ -13,7 +13,7 @@ The platform uses host-based subdomain routing to isolate public marketing traff
 | Domain / Host | Route Rendered | Purpose |
 | :--- | :--- | :--- |
 | **`tanvo.tech`** *(or `localhost:5173`)* | **Public Marketing Site** | High-performance agency marketing experience. Zero admin/portal clutter. |
-| **`admin.tanvo.tech`** *(or `localhost:5173?app=admin`)* | **Operations Admin OS** | Agency CRM, proposals, invoicing, CMS, deliverables, and team workspace. |
+| **`admin.tanvo.tech`** *(or `localhost:5173?app=admin`)* | **Operations Admin OS** | Agency CRM, proposals, invoicing, CMS, deliverables, unified inbox, and team workspace. |
 | **`portal.tanvo.tech`** *(or `localhost:5173?app=portal`)* | **Client Portal Workspace** | Client project tracking, sprint updates, deliverables sign-offs, and invoice checkout. |
 
 ---
@@ -21,32 +21,40 @@ The platform uses host-based subdomain routing to isolate public marketing traff
 ## 🚀 What Has Been Built & Delivered
 
 ### 1. 💼 Operations Admin OS (`admin.tanvo.tech`)
-1. **Pipeline Kanban Board**:
+1. **Unified Multi-Channel 3-Pane Inbox (Email, WhatsApp, Instagram DMs)**:
+   - **Left Pane**: Live conversation search, multi-channel filters (All, Email, WhatsApp, Instagram), status filters (Open, Pending, Resolved), unread-only toggle, and conversation preview cards with client/lead match badges.
+   - **Middle Pane**: Thread history with channel-specific styling, **visually distinct internal team notes** (gold border + lock icon), channel-adaptive composer (plain text for WA/IG, subject + rich text for Email), and 1-click quick-insert template presets (`SPRINT_UPDATE`, `DELIVERABLE`, `INVOICE`, `WELCOME`).
+   - **Right Pane**: Active contact context, linked Client / Lead / Project details, 1-click entity linker, and tag management.
+   - **Connected Accounts Surface**: 3 configuration cards for Google Workspace (Email), WhatsApp Business Cloud API, and Instagram Graph API DMs showing *"Not connected yet"* status with API credential slots.
+2. **Enterprise Invoicing, PDF Export & Receivables Ageing Engine**:
+   - **Sequential Financial Year Numbering**: Collision-free series generator (e.g. `TNV/25-26/0001`, `TNV/25-26/0002`).
+   - **Full 7-Stage Status Lifecycle**: `Draft` → `Sent / Issued` → `Viewed by Client` → `Partially Paid` → `Paid in Full` → `Overdue` → `Cancelled`.
+   - **Locked Invoices & Credit Notes**: Issued invoices are locked against item modification; linked Credit Notes (`CN-TNV/25-26/0001`) allow accounting corrections and automatic balance adjustments.
+   - **Recurring Retainers & SLA Schedules**: Retainer profiles with monthly, quarterly, or bi-weekly cadence and 1-click batch generation.
+   - **Manual Payment Entry Modal**: Record partial or full payments with payment modes (UPI, Bank Wire, Card, Cash), transaction UTR reference #, and notes.
+   - **Receivables Ageing Analysis**: Real-time KPI breakdown across `Current / Not Due`, `1–30 Days Overdue`, `31–60 Days Overdue`, `61–90 Days Overdue`, and `90+ Days Overdue`.
+   - **Direct Downloadable Official PDF**: Generates and downloads a clean letterhead PDF document with SAC tax codes (`998311`, `998313`, `998314`, `998319`), 18% GST breakdown, corporate bank wire details, and dynamic UPI QR code.
+3. **Pipeline Kanban Board**:
    - Drag-and-drop project stage management (`Upcoming`, `In Progress`, `Completed`), target dates, categories, and progress tracking.
-2. **7-Stage CRM Leads Funnel**:
+4. **7-Stage CRM Leads Funnel**:
    - Full lead stages (`New`, `Contacted`, `Qualified`, `Proposal Sent`, `Negotiation`, `Won`, `Lost`) with lost deal reason capture.
    - **1-Click Convert to Client**: Instantly provisions a client profile, generates an access code (`COMPANY-2026`), and creates an active project workspace.
-3. **Interactive Proposal & Quote Builder**:
+5. **Interactive Proposal & Quote Builder**:
    - Auto-pulls deliverables from the Services catalog.
    - Dual-currency calculations (INR / USD) with line-item discounts, 18% GST calculation, and 0% Export LUT tax exemptions.
-4. **Clients & Accounts Directory**:
+6. **Clients & Accounts Directory**:
    - GSTIN, PAN, billing addresses, currency preferences, payment terms (Net 15/30), and portal access codes.
    - Direct 1-click **"Open Client Workspace"** deep-linking directly into that client's live view.
-5. **Multi-Currency & Printable Tax Invoicing**:
-   - Multi-currency (`INR`, `USD`, `EUR`, `AED`), SAC code breakdown (SAC 998311, 998313, 998314, 998319), GST breakdowns (CGST+SGST vs IGST).
-   - **Formal Printable Tax Invoice Modal**: Official letterhead for *Tanvo Tech Private Limited* with GSTIN (`29ABCDE1234F1Z5`), PAN, HDFC Bank wire details, and dynamic UPI QR payment code.
-6. **Deliverables Review Queue**:
+7. **Deliverables Review Queue**:
    - Cross-project deliverable tracker with live approval statuses (`pending`, `approved`, `needs-revision`).
-7. **Services & Case Studies CMS**:
+8. **Services & Case Studies CMS**:
    - Full CRUD for service packages (SAC codes, pricing, deliverables checklist) and portfolio case studies (Problem, Solution, Outcome, metrics, client testimonials).
-8. **Requests & Support Tickets**:
+9. **Requests & Support Tickets**:
    - Two-way messaging between the agency team and clients with status workflows (`open`, `in-progress`, `resolved`).
-9. **Inbound Applications & Testimonials Inbox**:
-   - Engineering candidate dossiers with GitHub profiles and testimonial review queue.
 10. **Data Management & Clean State Purge**:
     - **Export Full Store JSON** timestamped backups.
     - **Import Store JSON** data restoration.
-    - **1-Click "Remove Sample Records"**: Purges all mock data across 15 tables so you can start using the system immediately for real client projects.
+    - **1-Click "Remove Sample Records"**: Purges all mock data across 15+ tables so you can start using the system immediately for real client projects.
 
 ---
 
@@ -67,8 +75,8 @@ The platform uses host-based subdomain routing to isolate public marketing traff
 
 ---
 
-### 3. 📲 Email & WhatsApp Communications System
-- **Dual-Channel Dispatch Engine**:
+### 3. 📲 Outbound Communications Dispatcher
+- **Dual-Channel Outbound Dispatch**:
   - **🟢 Direct WhatsApp Delivery**: 1-click opens WhatsApp with formatted markdown (bold text, bullet points, staging link, and portal access URL).
   - **🔵 Direct Email Delivery**: 1-click opens default mail client with pre-filled subject and structured body.
 - **Built-in Notification Presets**:
@@ -135,7 +143,7 @@ npm run dev
 | `npm run dev` | Starts local development server with Vite HMR |
 | `npm run build` | Compiles production bundle into `dist/` |
 | `npm run preview` | Previews production build locally |
-| `npm run lint` | Runs Oxlint across all 59 files |
+| `npm run lint` | Runs Oxlint across all files (0 warnings, 0 errors) |
 | `npm run lint:fix` | Automatically fixes linter warnings |
 | `npm run admin:hash` | Generates a new PBKDF2 hash & salt for admin authentication |
 
