@@ -1,0 +1,186 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg-primary: #000000;
+  --color-bg-secondary: #06111F;
+  --color-bg-navy: #071A30;
+  --color-text-primary: #F5FAFF;
+  --color-text-muted: #8293AA;
+  --color-accent-blue: #168BFF;
+  --color-accent-cyan: #4DE8FF;
+  --color-accent-ice: #D6F8FF;
+  /* Legacy aliases keep existing utilities stable while the brand system moves
+     from violet/gold to the official blue/cyan TANVO palette. */
+  --color-accent-violet: #168BFF;
+  --color-accent-gold: #4DE8FF;
+  --color-border-subtle: rgba(150, 211, 255, 0.14);
+
+  --font-sans: "Space Grotesk", "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-editorial: "Instrument Serif", Georgia, serif;
+  --font-body: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+
+  --max-width-content: 1400px;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    scroll-behavior: auto; /* Handled smoothly by Lenis */
+  }
+
+  body {
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01" on, "cv01" on;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* Editorial Typography Helpers */
+.font-editorial {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.text-hero {
+  font-size: clamp(2.5rem, 7.5vw, 7.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  font-weight: 600;
+}
+
+.text-section-heading {
+  font-size: clamp(2.0rem, 5.5vw, 5.5rem);
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+}
+
+.text-display-large {
+  font-size: clamp(2.5rem, 9vw, 9rem);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  font-weight: 600;
+}
+
+.text-label {
+  font-size: clamp(0.6875rem, 0.8vw, 0.8125rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-family: var(--font-sans);
+  font-weight: 500;
+}
+
+.text-body {
+  font-size: clamp(1rem, 1.15vw, 1.25rem);
+  line-height: 1.6;
+  color: #8293AA;
+}
+
+/* 12-Column Responsive Layout Container */
+.site-container {
+  width: 100%;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: clamp(1.25rem, 4.5vw, 5rem);
+  padding-right: clamp(1.25rem, 4.5vw, 5rem);
+}
+
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 2rem);
+}
+
+/* Directional contrast field keeps editorial copy readable without framing it
+   as a card, while allowing the WebGL scene to remain full bleed. */
+.story-copy::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -4rem -7rem -4rem -4rem;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.98) 0%,
+    rgba(0, 0, 0, 0.9) 46%,
+    rgba(0, 0, 0, 0.46) 72%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  filter: blur(12px);
+}
+
+@media (max-width: 768px) {
+  .story-copy::before {
+    inset: -3.5rem -2.5rem -4.5rem -2.5rem;
+    background: radial-gradient(
+      ellipse at 28% 50%,
+      rgba(0, 0, 0, 0.96) 0%,
+      rgba(0, 0, 0, 0.84) 46%,
+      rgba(0, 0, 0, 0.34) 70%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    filter: blur(10px);
+  }
+}
+
+/* Glass & Border Utilities */
+.border-subtle {
+  border-color: rgba(150, 211, 255, 0.14);
+}
+
+.bg-subtle-card {
+  background: rgba(6, 17, 31, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(150, 211, 255, 0.1);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(245, 250, 255, 0.15);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(22, 139, 255, 0.4);
+}
+
+/* Lenis Recommended CSS */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
