@@ -6,6 +6,8 @@ export interface StorySectionData {
   titleLine2: string;
   description: string;
   visualTheme: string;
+  /** Breaks the chapter template: a wider, larger closing statement. */
+  emphasis?: boolean;
 }
 
 export const storySectionsData: StorySectionData[] = [
@@ -62,5 +64,6 @@ export const storySectionsData: StorySectionData[] = [
     titleLine2: "PEOPLE REMEMBER.",
     description: "Digital products that create impact, drive growth and change businesses.",
     visualTheme: "finished products ecosystem",
+    emphasis: true,
   },
 ];

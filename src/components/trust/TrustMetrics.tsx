@@ -99,7 +99,7 @@ export const TrustMetrics: React.FC = () => {
                   {cap.standards.map((std) => (
                     <span
                       key={std}
-                      className="text-[11px] font-mono text-[#F5FAFF]/80 px-2.5 py-1 rounded-sm bg-white/[0.03] border border-white/[0.05]"
+                      className="text-[12px] font-mono text-[#F5FAFF]/80 px-2.5 py-1 rounded-sm bg-white/[0.03] border border-white/[0.05]"
                     >
                       {std}
                     </span>
@@ -118,7 +118,7 @@ export const TrustMetrics: React.FC = () => {
         {/* Section End Transition Bridge into Final CTA */}
         <div className="pt-20 border-t border-white/[0.06] flex flex-col md:flex-row items-start md:items-end justify-between gap-8">
           <div>
-            <span className="text-[11px] font-mono text-[#8293AA] uppercase tracking-widest block mb-3">
+            <span className="text-[12px] font-mono text-[#8293AA] uppercase tracking-widest block mb-3">
               NEXT STEP // INITIATION
             </span>
             <div className="text-3xl md:text-5xl font-sans font-bold text-[#F5FAFF] tracking-tight">

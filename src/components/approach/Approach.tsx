@@ -102,7 +102,7 @@ export const Approach: React.FC = () => {
 
                     <div>
                       <div className="flex items-center justify-between mb-4">
-                        <span className="text-[10px] font-mono tracking-widest text-[#168BFF] uppercase">
+                        <span className="text-[12px] font-mono tracking-widest text-[#168BFF] uppercase">
                           PHASE {step.step} // {step.tagline}
                         </span>
                         <span className="text-xs font-mono text-[#8293AA]">
@@ -120,7 +120,7 @@ export const Approach: React.FC = () => {
 
                       {/* Deliverables */}
                       <div className="pt-4 border-t border-white/[0.06]">
-                        <span className="text-[10px] font-mono text-[#8293AA] tracking-widest uppercase block mb-2.5">
+                        <span className="text-[12px] font-mono text-[#8293AA] tracking-widest uppercase block mb-2.5">
                           KEY ARTIFACTS
                         </span>
                         <div className="flex flex-wrap gap-2">

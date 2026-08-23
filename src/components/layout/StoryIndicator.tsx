@@ -1,4 +1,7 @@
 import { forwardRef, useImperativeHandle, useRef } from "react";
+import { getChapterScrollPosition } from "../../animations/storyTimeline";
+import { scrollToTarget } from "../../hooks/useLenis";
+import { storySectionsData } from "../../data/story";
 
 export interface StoryIndicatorHandle {
   setActiveSection: (index: number) => void;
@@ -71,22 +74,38 @@ export const StoryIndicator = forwardRef<StoryIndicatorHandle>((_, ref) => {
         />
       </div>
 
-      {/* Stage Indicator Dots */}
-      <div className="flex flex-col gap-2 my-1">
-        {Array.from({ length: STORY_STAGE_COUNT }, (_, index) => (
-          <span
-            key={index}
-            ref={(element) => {
-              dotRefs.current[index] = element;
-            }}
-            className="w-1.5 h-1.5 rounded-full bg-[#168BFF] transition-[opacity,transform] duration-200"
-            style={{ opacity: index === 0 ? 1 : 0.25 }}
-          />
-        ))}
+      {/* Stage Indicator Dots — jump to a chapter's resting beat */}
+      <div className="flex flex-col gap-2 my-1 pointer-events-auto">
+        {Array.from({ length: STORY_STAGE_COUNT }, (_, index) => {
+          const chapter = storySectionsData[index];
+
+          return (
+            <button
+              key={index}
+              type="button"
+              onClick={() => {
+                const position = getChapterScrollPosition(index);
+                if (position !== null) scrollToTarget(position);
+              }}
+              aria-label={`Go to chapter ${index + 1}${
+                chapter ? `: ${chapter.badge}` : ""
+              }`}
+              className="p-1.5 -m-1.5 rounded-full focus:outline-hidden focus-visible:ring-1 focus-visible:ring-[#4DE8FF] cursor-pointer"
+            >
+              <span
+                ref={(element) => {
+                  dotRefs.current[index] = element;
+                }}
+                className="block w-1.5 h-1.5 rounded-full bg-[#168BFF] transition-[opacity,transform] duration-200"
+                style={{ opacity: index === 0 ? 1 : 0.25 }}
+              />
+            </button>
+          );
+        })}
       </div>
 
       {/* Vertical SCROLL Label */}
-      <span className="text-[9px] font-mono text-[#8293AA] tracking-[0.3em] [writing-mode:vertical-lr] rotate-180 uppercase font-medium">
+      <span className="text-[12px] font-mono text-[#8293AA] tracking-[0.3em] [writing-mode:vertical-lr] rotate-180 uppercase font-medium">
         SCROLL
       </span>
     </aside>

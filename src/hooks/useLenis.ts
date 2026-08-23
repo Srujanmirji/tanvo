@@ -12,17 +12,30 @@ export function getLenis(): Lenis | null {
   return globalLenis;
 }
 
-export function scrollToTarget(target: string | HTMLElement, options?: { offset?: number; duration?: number }) {
+export function scrollToTarget(
+  target: string | number | HTMLElement,
+  options?: { offset?: number; duration?: number }
+) {
   if (globalLenis) {
     globalLenis.scrollTo(target, {
       offset: options?.offset ?? 0,
       duration: options?.duration ?? 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     });
-  } else if (typeof document !== "undefined") {
-    const el = typeof target === "string" ? document.querySelector(target) : target;
-    el?.scrollIntoView({ behavior: "smooth" });
+    return;
   }
+
+  if (typeof document === "undefined") return;
+
+  // Pinned chapters share one document offset, so they are addressed by
+  // absolute scroll position rather than by selector.
+  if (typeof target === "number") {
+    window.scrollTo({ top: target, behavior: "smooth" });
+    return;
+  }
+
+  const el = typeof target === "string" ? document.querySelector(target) : target;
+  el?.scrollIntoView({ behavior: "smooth" });
 }
 
 export function useLenis() {
