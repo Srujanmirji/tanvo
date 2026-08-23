@@ -51,9 +51,12 @@ export const StoryIndicator = forwardRef<StoryIndicatorHandle>((_, ref) => {
       }
     },
     setVisible: (isVisible: boolean) => {
-      if (containerRef.current) {
-        containerRef.current.style.opacity = isVisible ? "1" : "0";
-      }
+      if (!containerRef.current) return;
+
+      containerRef.current.style.opacity = isVisible ? "1" : "0";
+      // The dots are buttons: fading them out is not enough, they must also
+      // leave the hit-testing and accessibility trees.
+      containerRef.current.style.visibility = isVisible ? "visible" : "hidden";
     },
   }), []);
 
@@ -62,7 +65,7 @@ export const StoryIndicator = forwardRef<StoryIndicatorHandle>((_, ref) => {
       ref={containerRef}
       data-active-section="01"
       data-progress="0.050"
-      className="hidden md:flex fixed right-8 top-1/2 -translate-y-1/2 z-30 flex-col items-center gap-4 pointer-events-none opacity-100 transition-opacity duration-500"
+      className="hidden md:flex fixed right-8 top-1/2 -translate-y-1/2 z-30 flex-col items-center gap-4 pointer-events-none opacity-100 visible transition-[opacity,visibility] duration-500"
       aria-label="Story progress: section 1 of 6"
     >
       {/* Top Vertical Progress Bar */}

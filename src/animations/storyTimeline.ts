@@ -9,6 +9,7 @@ export interface StoryAnimationOptions {
   sectionRefs: HTMLElement[];
   onProgressUpdate?: (progress: number) => void;
   onActiveSectionChange?: (index: number) => void;
+  onNarrativeVisibilityChange?: (isVisible: boolean) => void;
   prefersReducedMotion?: boolean;
 }
 
@@ -47,6 +48,7 @@ export function initStoryAnimations(options: StoryAnimationOptions): () => void 
     sectionRefs,
     onProgressUpdate,
     onActiveSectionChange,
+    onNarrativeVisibilityChange,
     prefersReducedMotion = false,
   } = options;
 
@@ -87,6 +89,7 @@ export function initStoryAnimations(options: StoryAnimationOptions): () => void 
         end: "bottom center",
         invalidateOnRefresh: true,
         refreshPriority: 5,
+        onToggle: (self) => onNarrativeVisibilityChange?.(self.isActive),
         onRefresh: () => {
           chapterScrollPositions = sectionRefs.map(
             (section) => section.getBoundingClientRect().top + window.scrollY
@@ -137,6 +140,9 @@ export function initStoryAnimations(options: StoryAnimationOptions): () => void 
         invalidateOnRefresh: true,
         refreshPriority: 5,
         onRefresh: mapChapters,
+        // The indicator is a control now, so it has to leave with the deck
+        // instead of trailing the reader down the rest of the page.
+        onToggle: (self) => onNarrativeVisibilityChange?.(self.isActive),
       },
     });
 

@@ -31,7 +31,10 @@ export const Home: React.FC = () => {
       canvasRef.current.setStoryProgress(continuousProgress);
     }
     storyIndicatorRef.current?.setProgress(continuousProgress / 6);
-    storyIndicatorRef.current?.setVisible(continuousProgress <= 6.05);
+  }, []);
+
+  const handleNarrativeVisibilityChange = useCallback((isVisible: boolean) => {
+    storyIndicatorRef.current?.setVisible(isVisible);
   }, []);
 
   const handleActiveSectionChange = useCallback((index: number) => {
@@ -52,6 +55,7 @@ export const Home: React.FC = () => {
       <StoryContainer
         onStoryProgress={handleStoryProgress}
         onActiveSectionChange={handleActiveSectionChange}
+        onNarrativeVisibilityChange={handleNarrativeVisibilityChange}
       />
 
       <SelectedWork />

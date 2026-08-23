@@ -7,11 +7,13 @@ import { useReducedMotion } from "../../hooks/useReducedMotion";
 interface StoryContainerProps {
   onStoryProgress?: (progress: number) => void;
   onActiveSectionChange?: (index: number) => void;
+  onNarrativeVisibilityChange?: (isVisible: boolean) => void;
 }
 
 export const StoryContainer: React.FC<StoryContainerProps> = ({
   onStoryProgress,
   onActiveSectionChange,
+  onNarrativeVisibilityChange,
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
@@ -36,11 +38,19 @@ export const StoryContainer: React.FC<StoryContainerProps> = ({
       onActiveSectionChange: (idx) => {
         onActiveSectionChange?.(idx);
       },
+      onNarrativeVisibilityChange: (visible) => {
+        onNarrativeVisibilityChange?.(visible);
+      },
       prefersReducedMotion,
     });
 
     return cleanup;
-  }, [onStoryProgress, onActiveSectionChange, prefersReducedMotion]);
+  }, [
+    onStoryProgress,
+    onActiveSectionChange,
+    onNarrativeVisibilityChange,
+    prefersReducedMotion,
+  ]);
 
   return (
     <section
