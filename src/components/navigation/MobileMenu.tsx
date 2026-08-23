@@ -8,9 +8,15 @@ interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
   onNavClick: (e: React.MouseEvent<HTMLAnchorElement>, href: string) => void;
+  activeHref?: string | null;
 }
 
-export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onNavClick }) => {
+export const MobileMenu: React.FC<MobileMenuProps> = ({
+  isOpen,
+  onClose,
+  onNavClick,
+  activeHref = null,
+}) => {
   // Prevent scrolling when mobile drawer is open
   useEffect(() => {
     if (isOpen) {
@@ -58,18 +64,27 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onNavCl
 
         {/* Navigation Items */}
         <nav className="flex flex-col gap-6 my-auto">
-          {navItems.map((item, index) => (
-            <a
-              key={item.label}
-              href={item.href}
-              onClick={(e) => handleLinkClick(e, item.href)}
-              className="text-3xl font-sans font-semibold tracking-tight text-[#F5FAFF] hover:text-[#168BFF] transition-colors py-2 flex items-center justify-between border-b border-white/[0.06]"
-              style={{ transitionDelay: `${index * 50}ms` }}
-            >
-              <span>{item.label}</span>
-              <span className="text-xs text-[#8293AA] font-mono">0{index + 1}</span>
-            </a>
-          ))}
+          {navItems.map((item, index) => {
+            const isActive = activeHref === item.href;
+
+            return (
+              <a
+                key={item.label}
+                href={item.href}
+                onClick={(e) => handleLinkClick(e, item.href)}
+                aria-current={isActive ? "true" : undefined}
+                className={`text-3xl font-sans font-semibold tracking-tight transition-colors py-2 flex items-center justify-between border-b ${
+                  isActive
+                    ? "text-[#168BFF] border-[#168BFF]/40"
+                    : "text-[#F5FAFF] hover:text-[#168BFF] border-white/[0.06]"
+                }`}
+                style={{ transitionDelay: `${index * 50}ms` }}
+              >
+                <span>{item.label}</span>
+                <span className="text-xs text-[#8293AA] font-mono">0{index + 1}</span>
+              </a>
+            );
+          })}
         </nav>
 
         {/* Bottom CTA and Socials */}

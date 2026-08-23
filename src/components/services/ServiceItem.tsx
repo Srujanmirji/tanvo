@@ -111,7 +111,7 @@ export const ServiceItem: React.FC<ServiceItemProps> = ({
 
               {/* Deliverables tags */}
               <div className="mb-6">
-                <span className="text-[10px] font-mono text-[#8293AA] tracking-widest uppercase block mb-3">
+                <span className="text-[12px] font-mono text-[#8293AA] tracking-widest uppercase block mb-3">
                   CORE DELIVERABLES
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -132,7 +132,7 @@ export const ServiceItem: React.FC<ServiceItemProps> = ({
                 {service.capabilities.map((cap) => (
                   <span
                     key={cap}
-                    className="text-[11px] font-mono text-[#8293AA] px-2.5 py-0.5 rounded-sm bg-white/[0.02]"
+                    className="text-[12px] font-mono text-[#8293AA] px-2.5 py-0.5 rounded-sm bg-white/[0.02]"
                   >
                     {cap}
                   </span>

@@ -68,7 +68,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
               </span>
               <span className="w-1 h-1 rounded-full bg-white/[0.2]" />
               <span
-                className="text-[11px] font-mono tracking-widest uppercase px-3 py-1 rounded-full border"
+                className="text-[12px] font-mono tracking-widest uppercase px-3 py-1 rounded-full border"
                 style={{
                   color: project.visualTheme.accent,
                   borderColor: `${project.visualTheme.accent}33`,
@@ -91,7 +91,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
 
             {/* Services & Deliverables */}
             <div className="mb-6">
-              <span className="text-[10px] font-mono text-[#8293AA] tracking-widest uppercase block mb-2.5">
+              <span className="text-[12px] font-mono text-[#8293AA] tracking-widest uppercase block mb-2.5">
                 DELIVERABLES
               </span>
               <div className="flex flex-wrap gap-2">
@@ -108,14 +108,14 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
 
             {/* Technologies */}
             <div className="mb-8">
-              <span className="text-[10px] font-mono text-[#8293AA] tracking-widest uppercase block mb-2.5">
+              <span className="text-[12px] font-mono text-[#8293AA] tracking-widest uppercase block mb-2.5">
                 STACK
               </span>
               <div className="flex flex-wrap gap-2">
                 {project.technologies.map((tech) => (
                   <span
                     key={tech}
-                    className="text-[11px] font-mono text-[#8293AA] px-2.5 py-0.5 rounded-sm bg-white/[0.02]"
+                    className="text-[12px] font-mono text-[#8293AA] px-2.5 py-0.5 rounded-sm bg-white/[0.02]"
                   >
                     {tech}
                   </span>
@@ -127,7 +127,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
           {/* Bottom Metric & Action CTA */}
           <div className="pt-6 border-t border-white/[0.06] flex items-center justify-between">
             <div>
-              <span className="text-[10px] font-mono text-[#8293AA] block">
+              <span className="text-[12px] font-mono text-[#8293AA] block">
                 {project.metricsPlaceholder.label}
               </span>
               <span
@@ -143,7 +143,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
               onClick={handleCtaClick}
               data-cursor="project"
               className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-white/[0.04] hover:bg-[#168BFF] border border-white/[0.12] hover:border-transparent text-[#F5FAFF] hover:text-[#000000] transition-all duration-300 font-semibold text-xs tracking-wider uppercase group/btn focus:outline-hidden focus:ring-1 focus:ring-[#168BFF]"
-              aria-label={`View ${project.title} project details`}
+              aria-label={`${project.ctaLabel} — opens the contact form`}
             >
               <span>{project.ctaLabel}</span>
               <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />

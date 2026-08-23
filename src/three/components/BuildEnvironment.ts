@@ -5,7 +5,8 @@ export class BuildEnvironment {
   private dataGrid: THREE.LineSegments;
   private streamLines: THREE.LineSegments;
   private glyphPoints: THREE.Points;
-  private centralCoreMesh: THREE.Mesh;
+  private centralCoreMesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>;
+  private coreWire: THREE.LineSegments<THREE.BufferGeometry, THREE.LineBasicMaterial>;
 
   constructor() {
     this.group = new THREE.Group();
@@ -95,8 +96,16 @@ export class BuildEnvironment {
       opacity: 0.0,
       blending: THREE.AdditiveBlending,
     });
-    this.centralCoreMesh = new THREE.Mesh(coreGeom, new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true }));
-    this.centralCoreMesh.add(new THREE.LineSegments(coreWire, coreMat));
+    // Solid black body so the core occludes the data rain behind it and reads
+    // as a mass, with the emissive edges carrying the colour.
+    this.centralCoreMesh = new THREE.Mesh(
+      coreGeom,
+      new THREE.MeshBasicMaterial({ color: 0x02060d, transparent: true, opacity: 0 })
+    );
+    this.coreWire = new THREE.LineSegments(coreWire, coreMat);
+    // Sit the edges just outside the solid body so they don't z-fight with it.
+    this.coreWire.scale.setScalar(1.02);
+    this.centralCoreMesh.add(this.coreWire);
     this.group.add(this.centralCoreMesh);
 
     this.group.position.set(1.3, -0.1, -2.5);
@@ -121,6 +130,8 @@ export class BuildEnvironment {
     (this.dataGrid.material as THREE.LineBasicMaterial).opacity = opacity * 0.24;
     (this.streamLines.material as THREE.LineBasicMaterial).opacity = opacity * 0.55;
     (this.glyphPoints.material as THREE.PointsMaterial).opacity = opacity * 0.4;
+    this.centralCoreMesh.material.opacity = opacity * 0.92;
+    this.coreWire.material.opacity = opacity * (0.85 + Math.sin(time * 2.2) * 0.12);
 
     // Animate vertical data streams flowing upwards
     const streamPos = this.streamLines.geometry.attributes.position.array as Float32Array;
@@ -154,6 +165,8 @@ export class BuildEnvironment {
     this.glyphPoints.geometry.dispose();
     (this.glyphPoints.material as THREE.Material).dispose();
     this.centralCoreMesh.geometry.dispose();
-    (this.centralCoreMesh.material as THREE.Material).dispose();
+    this.centralCoreMesh.material.dispose();
+    this.coreWire.geometry.dispose();
+    this.coreWire.material.dispose();
   }
 }

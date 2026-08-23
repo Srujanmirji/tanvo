@@ -125,6 +125,20 @@ export const Hero: React.FC<HeroProps> = ({ onHeroProgress }) => {
                   <span className="w-2 h-2 rounded-full bg-[#168BFF] shadow-[0_0_8px_#168BFF]" />
                 </div>
               </a>
+
+              {/* Escape hatch to the proof, for readers who don't want the
+                  full narrative first. */}
+              <a
+                href={siteConfig.secondaryCta.href}
+                onClick={(e) => handleCtaClick(e, siteConfig.secondaryCta.href)}
+                data-cursor="cta"
+                className="group inline-flex items-center gap-2 px-5 py-3.5 rounded-full border border-white/[0.12] hover:border-[#168BFF]/50 text-[#8293AA] hover:text-[#F5FAFF] transition-all duration-300 pointer-events-auto focus:outline-hidden focus-visible:ring-1 focus-visible:ring-[#4DE8FF]"
+              >
+                <span className="text-xs font-mono tracking-widest uppercase font-semibold">
+                  {siteConfig.secondaryCta.label}
+                </span>
+                <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
             </div>
           </div>
 
@@ -148,7 +162,7 @@ export const Hero: React.FC<HeroProps> = ({ onHeroProgress }) => {
           ref={scrollIndicatorRef}
           href="#idea"
           onClick={(e) => handleCtaClick(e, "#idea")}
-          className="flex flex-col items-center gap-2 text-[10px] font-mono tracking-[0.25em] text-[#8293AA] hover:text-[#F5FAFF] transition-colors uppercase group pointer-events-auto"
+          className="flex flex-col items-center gap-2 text-[12px] font-mono tracking-[0.25em] text-[#8293AA] hover:text-[#F5FAFF] transition-colors uppercase group pointer-events-auto"
         >
           <div className="w-5 h-9 rounded-full border border-white/[0.15] flex items-start justify-center p-1.5 group-hover:border-[#168BFF] transition-colors">
             <span className="w-1.5 h-1.5 rounded-full bg-[#168BFF] animate-bounce" />
@@ -160,11 +174,11 @@ export const Hero: React.FC<HeroProps> = ({ onHeroProgress }) => {
         <div className="flex items-center gap-8 text-right font-mono">
           <div className="border-r border-white/[0.1] pr-8">
             <div className="text-2xl md:text-3xl font-sans font-bold text-[#F5FAFF]">50+</div>
-            <div className="text-[9px] text-[#8293AA] tracking-widest uppercase">PROJECTS DELIVERED</div>
+            <div className="text-[12px] text-[#8293AA] tracking-widest uppercase">PROJECTS DELIVERED</div>
           </div>
           <div>
             <div className="text-2xl md:text-3xl font-sans font-bold text-[#F5FAFF]">98%</div>
-            <div className="text-[9px] text-[#8293AA] tracking-widest uppercase">CLIENT SATISFACTION</div>
+            <div className="text-[12px] text-[#8293AA] tracking-widest uppercase">CLIENT SATISFACTION</div>
           </div>
         </div>
       </div>
@@ -172,7 +186,7 @@ export const Hero: React.FC<HeroProps> = ({ onHeroProgress }) => {
       {/* Brand Trust Strip */}
       <div className="w-full bg-[#000000]/95 border-t border-white/[0.06] py-5 pointer-events-auto">
         <div className="site-container flex flex-wrap items-center justify-between gap-8 text-[#8293AA]/70">
-          <span className="text-[10px] font-mono tracking-[0.25em] uppercase text-[#8293AA]">
+          <span className="text-[12px] font-mono tracking-[0.25em] uppercase text-[#8293AA]">
             TRUSTED BY INNOVATIVE BRANDS
           </span>
 

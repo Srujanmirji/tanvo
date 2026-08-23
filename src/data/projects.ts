@@ -41,7 +41,7 @@ export const projectsData: ProjectData[] = [
       value: "14ms",
       label: "INFERENCE LATENCY",
     },
-    ctaLabel: "EXPLORE NOVA",
+    ctaLabel: "DISCUSS A PROJECT LIKE NOVA",
     href: "#contact",
   },
   {
@@ -63,7 +63,7 @@ export const projectsData: ProjectData[] = [
       value: "$4.2B+",
       label: "DAILY LIQUIDITY PIPELINE",
     },
-    ctaLabel: "EXPLORE ARC",
+    ctaLabel: "DISCUSS A PROJECT LIKE ARC",
     href: "#contact",
   },
   {
@@ -85,7 +85,7 @@ export const projectsData: ProjectData[] = [
       value: "99.99%",
       label: "SYNC UPTIME",
     },
-    ctaLabel: "EXPLORE ORBIT",
+    ctaLabel: "DISCUSS A PROJECT LIKE ORBIT",
     href: "#contact",
   },
   {
@@ -107,7 +107,7 @@ export const projectsData: ProjectData[] = [
       value: "3.4x",
       label: "CONVERSION VELOCITY",
     },
-    ctaLabel: "EXPLORE MONO",
+    ctaLabel: "DISCUSS A PROJECT LIKE MONO",
     href: "#contact",
   },
 ];

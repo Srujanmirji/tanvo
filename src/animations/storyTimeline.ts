@@ -5,6 +5,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 export interface StoryAnimationOptions {
   containerRef: HTMLElement;
+  trackRef: HTMLElement;
   sectionRefs: HTMLElement[];
   onProgressUpdate?: (progress: number) => void;
   onActiveSectionChange?: (index: number) => void;
@@ -12,11 +13,37 @@ export interface StoryAnimationOptions {
 }
 
 /**
- * Initializes continuous storytelling GSAP ScrollTriggers and text choreography.
+ * Scroll budget per chapter, in viewport heights. A slide locks in place for
+ * HOLD_VH of scrolling before it travels to the next one over TRANSITION_VH,
+ * so the narrative reads as a series of beats rather than a continuous drift.
+ *
+ * TRANSITION_VH stays at 1 so a slide covers one viewport of travel per
+ * viewport of scrolling: the step reads at normal scroll speed instead of
+ * whipping past. Shortening it makes the content outrun the wheel.
+ */
+const HOLD_VH = 0.5;
+const TRANSITION_VH = 1;
+
+const COPY_SELECTOR =
+  ".story-badge, .story-heading-line, .story-desc, .story-tags";
+
+/**
+ * Scroll position that parks each chapter in view. Chapters live inside a pin,
+ * so their document offsets are all identical and cannot be linked to directly.
+ */
+let chapterScrollPositions: number[] = [];
+
+export function getChapterScrollPosition(index: number): number | null {
+  return chapterScrollPositions[index] ?? null;
+}
+
+/**
+ * Initializes the pinned story deck and its text choreography.
  */
 export function initStoryAnimations(options: StoryAnimationOptions): () => void {
   const {
     containerRef,
+    trackRef,
     sectionRefs,
     onProgressUpdate,
     onActiveSectionChange,
@@ -24,147 +51,168 @@ export function initStoryAnimations(options: StoryAnimationOptions): () => void 
   } = options;
 
   const ctx = gsap.context(() => {
+    const slideCount = sectionRefs.length;
+    if (!slideCount) return;
+
+    let lastActiveIndex = -1;
+
+    // Chapter progress is published on the same 1..6 axis the WebGL stage and
+    // the story indicator already expect.
+    const publish = (chapterProgress: number) => {
+      onProgressUpdate?.(1 + chapterProgress);
+
+      const activeIndex = gsap.utils.clamp(
+        0,
+        slideCount - 1,
+        Math.round(chapterProgress)
+      );
+
+      if (activeIndex !== lastActiveIndex) {
+        lastActiveIndex = activeIndex;
+        onActiveSectionChange?.(activeIndex);
+      }
+    };
+
+    // Reduced motion never pins: the slides stay in normal document flow and
+    // the stage simply tracks how far through the section the reader is.
     if (prefersReducedMotion) {
-      sectionRefs.forEach((sec) => {
-        gsap.set(
-          sec.querySelectorAll(
-            ".story-badge, .story-heading-line, .story-desc, .story-tags"
-          ),
-          { opacity: 1, y: 0 }
-        );
-      });
-    } else {
-      // 1. Text entrance and exit animations per story section
       sectionRefs.forEach((section) => {
-        const badge = section.querySelector(".story-badge");
-        const headingLines = section.querySelectorAll(".story-heading-line");
-        const description = section.querySelector(".story-desc");
-        const tags = section.querySelector(".story-tags");
-
-        if (badge && headingLines.length && description) {
-          // Initial hidden state
-          gsap.set(badge, { opacity: 0, y: 12 });
-          gsap.set(headingLines, { opacity: 0, y: 24 });
-          gsap.set(description, { opacity: 0, y: 18 });
-          if (tags) gsap.set(tags, { opacity: 0, y: 12 });
-
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: section,
-              start: "top 75%",
-              end: "bottom 25%",
-              toggleActions: "play reverse play reverse",
-            },
-          });
-
-          tl.to(badge, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" })
-            .to(
-              headingLines,
-              {
-                opacity: 1,
-                y: 0,
-                duration: 0.65,
-                stagger: 0.08,
-                ease: "power3.out",
-              },
-              "-=0.3"
-            )
-            .to(
-              description,
-              { opacity: 1, y: 0, duration: 0.55, ease: "power2.out" },
-              "-=0.4"
-            );
-
-          if (tags) {
-            tl.to(
-              tags,
-              { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
-              "-=0.4"
-            );
-          }
-        }
+        gsap.set(section.querySelectorAll(COPY_SELECTOR), { opacity: 1, y: 0 });
       });
-    }
-
-    // 2. Keep the WebGL stage and active chapter on the same center-to-center
-    // scroll axis. Each integer progress value now lands exactly when its
-    // corresponding slide is centered in the viewport.
-    if (containerRef && sectionRefs.length > 0) {
-      const firstSection = sectionRefs[0];
-      const lastSection = sectionRefs[sectionRefs.length - 1];
-      let sectionCenters: number[] = [];
-      let lastActiveIndex = -1;
-
-      const measureSectionCenters = () => {
-        const scrollY = window.scrollY;
-        sectionCenters = sectionRefs.map((section) => {
-          const rect = section.getBoundingClientRect();
-          return scrollY + rect.top + rect.height / 2;
-        });
-      };
-
-      const syncStoryState = (viewportCenter: number) => {
-        if (!sectionCenters.length) return;
-
-        let sectionProgress = 0;
-        const finalIndex = sectionCenters.length - 1;
-
-        if (viewportCenter >= sectionCenters[finalIndex]) {
-          sectionProgress = finalIndex;
-        } else if (viewportCenter > sectionCenters[0]) {
-          const nextIndex = sectionCenters.findIndex(
-            (center) => center >= viewportCenter
-          );
-          const previousIndex = Math.max(0, nextIndex - 1);
-          const segmentStart = sectionCenters[previousIndex];
-          const segmentEnd = sectionCenters[nextIndex];
-          const segmentProgress = gsap.utils.clamp(
-            0,
-            1,
-            (viewportCenter - segmentStart) / (segmentEnd - segmentStart)
-          );
-
-          sectionProgress = previousIndex + segmentProgress;
-        }
-
-        const continuousProgress = 1 + sectionProgress;
-        const activeIndex = gsap.utils.clamp(
-          0,
-          finalIndex,
-          Math.round(sectionProgress)
-        );
-
-        onProgressUpdate?.(continuousProgress);
-
-        if (activeIndex !== lastActiveIndex) {
-          lastActiveIndex = activeIndex;
-          onActiveSectionChange?.(activeIndex);
-        }
-      };
-
-      measureSectionCenters();
 
       ScrollTrigger.create({
         id: "tanvo-story-sync",
-        trigger: firstSection,
-        start: "center center",
-        endTrigger: lastSection,
-        end: "center center",
+        trigger: containerRef,
+        start: "top center",
+        end: "bottom center",
         invalidateOnRefresh: true,
         refreshPriority: 5,
-        onRefresh: measureSectionCenters,
-        onUpdate: (self) => {
-          if (!self.isActive && self.progress === 0) return;
-          syncStoryState(self.scroll() + window.innerHeight / 2);
+        onRefresh: () => {
+          chapterScrollPositions = sectionRefs.map(
+            (section) => section.getBoundingClientRect().top + window.scrollY
+          );
         },
-        onEnter: (self) =>
-          syncStoryState(self.scroll() + window.innerHeight / 2),
-        onEnterBack: (self) =>
-          syncStoryState(self.scroll() + window.innerHeight / 2),
-        onLeave: () => syncStoryState(sectionCenters[sectionCenters.length - 1]),
+        onUpdate: (self) => publish(self.progress * (slideCount - 1)),
       });
+
+      return;
     }
+
+    sectionRefs.forEach((section, index) => {
+      if (index === 0) return;
+      gsap.set(section.querySelectorAll(COPY_SELECTOR), { opacity: 0, y: 24 });
+    });
+
+    const totalScroll = () =>
+      window.innerHeight *
+      (slideCount * HOLD_VH + (slideCount - 1) * TRANSITION_VH);
+
+    // The stage progress rides its own tween inside the timeline, so it holds
+    // while the slide holds and eases exactly when the slide travels.
+    const chapter = { progress: 0 };
+
+    const mapChapters = (self: ScrollTrigger) => {
+      const span = self.end - self.start;
+      const duration = tl.duration();
+      if (!span || !duration) return;
+
+      chapterScrollPositions = sectionRefs.map((_, index) => {
+        // Aim at the middle of the chapter's hold, so a jump lands on a beat
+        // rather than mid-travel.
+        const holdMiddle = index * (HOLD_VH + TRANSITION_VH) + HOLD_VH * 0.5;
+        return self.start + (holdMiddle / duration) * span;
+      });
+    };
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        id: "tanvo-story-deck",
+        trigger: containerRef,
+        start: "top top",
+        end: () => `+=${totalScroll()}`,
+        pin: true,
+        pinSpacing: true,
+        anticipatePin: 1,
+        scrub: true,
+        invalidateOnRefresh: true,
+        refreshPriority: 5,
+        onRefresh: mapChapters,
+      },
+    });
+
+    // First chapter assembles as the deck locks in.
+    tl.from(
+      sectionRefs[0].querySelectorAll(COPY_SELECTOR),
+      {
+        opacity: 0,
+        y: 24,
+        duration: HOLD_VH * 0.5,
+        stagger: 0.05,
+        ease: "power3.out",
+      },
+      0
+    );
+
+    let cursor = HOLD_VH;
+
+    for (let index = 1; index < slideCount; index++) {
+      const outgoing = sectionRefs[index - 1].querySelectorAll(COPY_SELECTOR);
+      const incoming = sectionRefs[index].querySelectorAll(COPY_SELECTOR);
+
+      tl.to(
+        trackRef,
+        {
+          // Measured from layout, so it survives resizes and any slide height.
+          y: () => -sectionRefs[index].offsetTop,
+          duration: TRANSITION_VH,
+          ease: "sine.inOut",
+        },
+        cursor
+      )
+        .to(
+          chapter,
+          {
+            progress: index,
+            duration: TRANSITION_VH,
+            ease: "sine.inOut",
+            onUpdate: () => publish(chapter.progress),
+          },
+          cursor
+        )
+        .to(
+          outgoing,
+          {
+            opacity: 0,
+            y: -18,
+            duration: TRANSITION_VH * 0.45,
+            ease: "power2.in",
+          },
+          cursor
+        )
+        .to(
+          incoming,
+          {
+            opacity: 1,
+            y: 0,
+            duration: TRANSITION_VH * 0.55,
+            stagger: 0.04,
+            ease: "power3.out",
+          },
+          cursor + TRANSITION_VH * 0.45
+        );
+
+      cursor += TRANSITION_VH + HOLD_VH;
+    }
+
+    // The final chapter earns the same beat as the others before the deck
+    // releases; without it the timeline ends the instant slide six arrives.
+    tl.to({}, { duration: HOLD_VH });
+
+    if (tl.scrollTrigger) mapChapters(tl.scrollTrigger);
   }, containerRef);
 
-  return () => ctx.revert();
+  return () => {
+    chapterScrollPositions = [];
+    ctx.revert();
+  };
 }

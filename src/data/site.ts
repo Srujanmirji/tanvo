@@ -52,8 +52,8 @@ export const siteConfig: SiteConfig = {
     href: "#contact",
   },
   secondaryCta: {
-    label: "SCROLL TO EXPLORE",
-    href: "#idea",
+    label: "SEE THE WORK",
+    href: "#work",
   },
   finalCta: {
     badge: "13 / CONTACT",

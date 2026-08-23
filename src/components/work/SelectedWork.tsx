@@ -73,7 +73,7 @@ export const SelectedWork: React.FC = () => {
         {/* Section End Transition Statement into Services */}
         <div className="mt-32 pt-20 border-t border-white/[0.06] flex flex-col md:flex-row items-start md:items-end justify-between gap-8">
           <div>
-            <span className="text-[11px] font-mono text-[#8293AA] uppercase tracking-widest block mb-3">
+            <span className="text-[12px] font-mono text-[#8293AA] uppercase tracking-widest block mb-3">
               NEXT UP // CAPABILITIES
             </span>
             <div className="text-2xl md:text-4xl font-sans font-medium text-[#F5FAFF]">

@@ -124,7 +124,7 @@ export const CustomCursor: React.FC = () => {
         {isLarge && (
           <span
             ref={textRef}
-            className="text-[9px] font-bold tracking-widest text-center px-2 uppercase text-[#000000] font-sans select-none"
+            className="text-[12px] font-bold tracking-widest text-center px-2 uppercase text-[#000000] font-sans select-none"
           >
             {cursorText}
           </span>
