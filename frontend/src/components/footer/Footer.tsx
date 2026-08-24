@@ -23,8 +23,12 @@ export const Footer: React.FC = () => {
       {/* Subtle Geometric Background Grid */}
       <div className="absolute inset-0 opacity-[0.02] bg-[linear-gradient(to_right,#F5FAFF_1px,transparent_1px),linear-gradient(to_bottom,#F5FAFF_1px,transparent_1px)] bg-[size:48px_48px] pointer-events-none" />
 
-      {/* Massive Understated TANVO Wordmark in Background */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 select-none pointer-events-none text-[18vw] font-sans font-bold tracking-tighter text-white/[0.015] leading-none whitespace-nowrap overflow-hidden">
+      {/* Massive TANVO Wordmark — letterforms cut out of the brand's own
+          atmosphere rather than painted a flat grey. */}
+      <div
+        aria-hidden="true"
+        className="footer-wordmark absolute bottom-0 left-1/2 -translate-x-1/2 select-none pointer-events-none text-[18vw] font-sans font-bold tracking-tighter leading-none whitespace-nowrap"
+      >
         TANVO
       </div>
 

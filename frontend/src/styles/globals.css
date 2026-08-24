@@ -184,3 +184,48 @@ html.lenis, html.lenis body {
 .lenis.lenis-smooth iframe {
   pointer-events: none;
 }
+
+/* Footer wordmark ---------------------------------------------------------
+   The letterforms are a window onto a drifting field of TANVO blues, clipped
+   to the glyphs, instead of flat low-opacity text. Swap the layered gradients
+   below for a single `url(...)` to fill the letters with photography. */
+.footer-wordmark {
+  background-image:
+    /* Facet edges: the crystal's angular structure, read as thin light seams. */
+    repeating-linear-gradient(
+      118deg,
+      rgba(245, 250, 255, 0.11) 0 1px,
+      transparent 1px 74px
+    ),
+    repeating-linear-gradient(
+      -34deg,
+      rgba(120, 223, 255, 0.08) 0 1px,
+      transparent 1px 112px
+    ),
+    /* Energy pooling inside the letterforms. */
+    radial-gradient(ellipse at 16% 42%, rgba(22, 139, 255, 0.95) 0%, transparent 55%),
+    radial-gradient(ellipse at 52% 74%, rgba(77, 232, 255, 0.65) 0%, transparent 52%),
+    radial-gradient(ellipse at 84% 28%, rgba(120, 223, 255, 0.6) 0%, transparent 55%),
+    linear-gradient(170deg, #12243c 0%, #06111f 60%, #02060d 100%);
+  background-size: 220% 220%;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: footer-wordmark-drift 22s ease-in-out infinite alternate;
+}
+
+@keyframes footer-wordmark-drift {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 100% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-wordmark {
+    animation: none;
+  }
+}
