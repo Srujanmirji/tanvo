@@ -150,6 +150,7 @@ Not "later" as a polite refusal — these are real, and each has a trigger.
 
 - [ ] GST registration status, and whether e-invoicing applies — **confirm
       with your CA before the first live invoice**
-- [ ] Does `hello@tanvo.in` exist as a mailbox? The site links to it
+- [ ] Confirm `support@tanvo.in` can receive mail — the site links to it and
+      the contact form falls back to it
 - [ ] Payment terms: net 15, net 30, or per project?
 - [ ] Who else needs admin access, now and in six months?
