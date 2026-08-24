@@ -5,8 +5,9 @@ gsap.registerPlugin(ScrollTrigger);
 
 export interface FooterAnimationOptions {
   containerRef: HTMLElement;
+  ctaRef?: HTMLElement | null;
+  portalRef?: HTMLElement | null;
   brandRef?: HTMLElement | null;
-  inviteRef?: HTMLElement | null;
   columnRefs?: (HTMLElement | null)[];
   bottomRef?: HTMLElement | null;
   wordmarkRef?: HTMLElement | null;
@@ -23,8 +24,9 @@ export function initFooterAnimations(
 ): () => void {
   const {
     containerRef,
+    ctaRef,
+    portalRef,
     brandRef,
-    inviteRef,
     columnRefs = [],
     bottomRef,
     wordmarkRef,
@@ -33,7 +35,7 @@ export function initFooterAnimations(
 
   const ctx = gsap.context(() => {
     const columns = columnRefs.filter((el): el is HTMLElement => Boolean(el));
-    const blocks = [brandRef, inviteRef, ...columns, bottomRef].filter(
+    const blocks = [ctaRef, portalRef, brandRef, ...columns, bottomRef].filter(
       (el): el is HTMLElement => Boolean(el)
     );
 
@@ -58,27 +60,27 @@ export function initFooterAnimations(
     });
 
     if (wordmarkRef) {
-      tl.to(wordmarkRef, { opacity: 1, duration: 1.6, ease: "power2.out" }, 0);
+      tl.to(wordmarkRef, { opacity: 1, duration: 1.8, ease: "power2.out" }, 0.25);
+    }
+
+    if (ctaRef) {
+      tl.to(ctaRef, { opacity: 1, y: 0, duration: 0.9 }, 0.05);
+    }
+
+    if (portalRef) {
+      tl.to(portalRef, { opacity: 1, y: 0, duration: 1.1 }, 0.16);
     }
 
     if (brandRef) {
-      tl.to(brandRef, { opacity: 1, y: 0, duration: 0.9 }, 0.05);
-    }
-
-    if (inviteRef) {
-      tl.to(inviteRef, { opacity: 1, y: 0, duration: 0.9 }, 0.22);
+      tl.to(brandRef, { opacity: 1, y: 0, duration: 0.85 }, 0.3);
     }
 
     if (columns.length) {
-      tl.to(
-        columns,
-        { opacity: 1, y: 0, duration: 0.75, stagger: 0.08 },
-        0.34
-      );
+      tl.to(columns, { opacity: 1, y: 0, duration: 0.75, stagger: 0.07 }, 0.4);
     }
 
     if (bottomRef) {
-      tl.to(bottomRef, { opacity: 1, y: 0, duration: 0.7 }, 0.62);
+      tl.to(bottomRef, { opacity: 1, y: 0, duration: 0.7 }, 0.7);
     }
   }, containerRef);
 
