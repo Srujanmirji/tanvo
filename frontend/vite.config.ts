@@ -15,6 +15,15 @@ export default defineConfig({
       ],
     }),
   ],
+  resolve: {
+    // One React instance, always. A second copy makes every hook call throw.
+    dedupe: ['react', 'react-dom'],
+  },
+  optimizeDeps: {
+    // Vite's dependency scanner does not reach this subpath on its own, so in
+    // dev it was served unbundled and resolved its own React.
+    include: ['@vercel/analytics/react'],
+  },
   build: {
     rollupOptions: {
       output: {
