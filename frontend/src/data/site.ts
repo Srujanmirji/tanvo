@@ -67,7 +67,7 @@ export const siteConfig: SiteConfig = {
     secondaryBtn: "VIEW SELECTED WORK",
   },
   contact: {
-    email: "hello@tanvo.tech",
+    email: "hello@tanvo.in",
     location: "SINGAPORE • SAN FRANCISCO • LONDON",
   },
   socials: [

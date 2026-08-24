@@ -12,10 +12,17 @@ dist
 dist-ssr
 *.local
 
-# Environment — contains the admin password hash. Never commit.
+# Environment. Never commit.
 .env
 .env.*
 !.env.example
+
+# Credentials. Never commit a key file, wherever it lands.
+# See backend/SECURITY.md section 0.
+*.csv
+*-key*
+*.pem
+*.p12
 
 # Uncompressed image masters kept by `npm run images`.
 # Keep your real masters in design storage, not the repo.
