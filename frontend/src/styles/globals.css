@@ -185,47 +185,236 @@ html.lenis, html.lenis body {
   pointer-events: none;
 }
 
-/* Footer wordmark ---------------------------------------------------------
-   The letterforms are a window onto a drifting field of TANVO blues, clipped
-   to the glyphs, instead of flat low-opacity text. Swap the layered gradients
-   below for a single `url(...)` to fill the letters with photography. */
-.footer-wordmark {
+/* ==========================================================================
+   Footer
+   The closing chapter. Its palette is scoped to .site-footer so the violet /
+   champagne accents never leak into the rest of the site, which stays blue.
+   ========================================================================== */
+.site-footer {
+  --footer-bg: #05070b;
+  --footer-violet: #8b5cf6;
+  --footer-blue: #3b82f6;
+  --footer-gold: #c9a56a;
+  --footer-text: #f5f3ee;
+  --footer-muted: #97a3b8;
+  --footer-dim: #6b7789;
+  --footer-rule: rgba(245, 243, 238, 0.08);
+
+  background-color: var(--footer-bg);
+  border-top: 1px solid var(--footer-rule);
+  color: var(--footer-text);
+}
+
+/* Technical grid, kept faint enough to read as texture rather than pattern. */
+.footer-grid {
   background-image:
-    /* Facet edges: the crystal's angular structure, read as thin light seams. */
-    repeating-linear-gradient(
-      118deg,
-      rgba(245, 250, 255, 0.11) 0 1px,
-      transparent 1px 74px
-    ),
-    repeating-linear-gradient(
-      -34deg,
-      rgba(120, 223, 255, 0.08) 0 1px,
-      transparent 1px 112px
-    ),
-    /* Energy pooling inside the letterforms. */
-    radial-gradient(ellipse at 16% 42%, rgba(22, 139, 255, 0.95) 0%, transparent 55%),
-    radial-gradient(ellipse at 52% 74%, rgba(77, 232, 255, 0.65) 0%, transparent 52%),
-    radial-gradient(ellipse at 84% 28%, rgba(120, 223, 255, 0.6) 0%, transparent 55%),
-    linear-gradient(170deg, #12243c 0%, #06111f 60%, #02060d 100%);
-  background-size: 220% 220%;
-  background-position: 0% 50%;
+    linear-gradient(to right, rgba(245, 243, 238, 0.5) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(245, 243, 238, 0.5) 1px, transparent 1px);
+  background-size: 64px 64px;
+  opacity: 0.022;
+  mask-image: radial-gradient(ellipse at 50% 0%, #000 0%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 0%, #000 0%, transparent 78%);
+}
+
+/* One soft atmospheric pool behind the brand row. */
+.footer-glow {
+  height: 460px;
+  background:
+    radial-gradient(ellipse 55% 100% at 50% 0%, rgba(139, 92, 246, 0.13) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 90% at 22% 8%, rgba(59, 130, 246, 0.09) 0%, transparent 72%);
+}
+
+.footer-wordmark {
+  background-image: linear-gradient(
+    100deg,
+    rgba(59, 130, 246, 0.5) 0%,
+    rgba(139, 92, 246, 0.62) 46%,
+    rgba(201, 165, 106, 0.3) 100%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: footer-wordmark-drift 22s ease-in-out infinite alternate;
+  opacity: 0.11;
 }
 
-@keyframes footer-wordmark-drift {
-  from {
-    background-position: 0% 50%;
+.footer-eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.footer-rule {
+  border: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    var(--footer-rule) 12%,
+    var(--footer-rule) 88%,
+    transparent 100%
+  );
+}
+
+/* --- Links ---------------------------------------------------------------
+   Touch targets stay at 48px on coarse pointers without inflating the
+   desktop rhythm. */
+.footer-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0;
+  font-size: 0.875rem;
+  color: var(--footer-muted);
+  transition: color 240ms ease, transform 240ms ease;
+}
+
+.footer-link-arrow {
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 240ms ease, transform 240ms ease;
+}
+
+a.footer-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0.125rem;
+  height: 1px;
+  width: 0;
+  background: linear-gradient(to right, var(--footer-violet), var(--footer-blue));
+  transition: width 260ms ease;
+}
+
+a.footer-link:hover,
+a.footer-link:focus-visible {
+  color: var(--footer-text);
+}
+
+a.footer-link:hover .footer-link-arrow,
+a.footer-link:focus-visible .footer-link-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+a.footer-link:hover::after,
+a.footer-link:focus-visible::after {
+  width: calc(100% - 1.5rem);
+}
+
+/* Entries with no destination: readable, but never dressed as links. */
+.footer-link-pending {
+  color: var(--footer-dim);
+  cursor: default;
+}
+
+.footer-link-inline {
+  color: var(--footer-muted);
+  border-bottom: 1px solid rgba(139, 92, 246, 0.4);
+  transition: color 240ms ease, border-color 240ms ease;
+}
+
+.footer-link-inline:hover {
+  color: var(--footer-text);
+  border-color: var(--footer-violet);
+}
+
+/* --- Controls ------------------------------------------------------------ */
+.footer-invite {
+  border: 1px solid rgba(139, 92, 246, 0.38);
+  background: rgba(139, 92, 246, 0.06);
+  color: var(--footer-text);
+  transition: border-color 260ms ease, background-color 260ms ease,
+    box-shadow 260ms ease;
+}
+
+.footer-invite:hover {
+  border-color: var(--footer-violet);
+  background: rgba(139, 92, 246, 0.14);
+  box-shadow: 0 0 28px rgba(139, 92, 246, 0.18);
+}
+
+.footer-social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  border: 1px solid var(--footer-rule);
+  color: var(--footer-dim);
+  transition: color 240ms ease, border-color 240ms ease,
+    background-color 240ms ease;
+}
+
+.footer-social:hover {
+  color: var(--footer-text);
+  border-color: rgba(139, 92, 246, 0.5);
+  background: rgba(139, 92, 246, 0.08);
+}
+
+.footer-top {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 9999px;
+  border: 1px solid rgba(139, 92, 246, 0.45);
+  color: var(--footer-text);
+  transition: border-color 260ms ease, box-shadow 260ms ease,
+    background-color 260ms ease;
+}
+
+.footer-top:hover {
+  border-color: var(--footer-violet);
+  background: rgba(139, 92, 246, 0.1);
+  box-shadow: 0 0 26px rgba(139, 92, 246, 0.22);
+}
+
+.footer-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--footer-violet);
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.9);
+  animation: footer-pulse 3.2s ease-in-out infinite;
+}
+
+@keyframes footer-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
   }
-  to {
-    background-position: 100% 50%;
+  50% {
+    opacity: 1;
+  }
+}
+
+.footer-focus:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.6);
+  border-radius: 6px;
+}
+
+@media (pointer: coarse) {
+  .footer-link {
+    padding: 0.75rem 0;
+    min-height: 48px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .footer-wordmark {
+  .footer-pulse {
     animation: none;
+    opacity: 0.9;
+  }
+
+  .footer-link,
+  .footer-link-arrow,
+  a.footer-link::after {
+    transition-duration: 1ms;
   }
 }
