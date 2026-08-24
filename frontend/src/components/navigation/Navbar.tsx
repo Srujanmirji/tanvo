@@ -32,11 +32,15 @@ export const Navbar: React.FC = () => {
 
   return (
     <>
+      {/* The bottom border is declared in both states so its colour only ever
+          animates transparent <-> 6% white. Omitting it from the unscrolled
+          state left the colour inheriting currentColor (#F5FAFF), and
+          transition-all then faded a solid white line in on first scroll. */}
       <header
-        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-40 border-b transition-all duration-500 ${
           isScrolled
-            ? "py-4 bg-[#000000]/85 backdrop-blur-md border-b border-white/[0.06]"
-            : "py-6 md:py-8 bg-transparent"
+            ? "py-4 bg-[#000000]/85 backdrop-blur-md border-white/[0.06]"
+            : "py-6 md:py-8 bg-transparent border-transparent"
         }`}
       >
         <div className="site-container flex items-center justify-between">
