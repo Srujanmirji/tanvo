@@ -138,6 +138,7 @@ function initServicesAccordion() {
    ========================================================================== */
 function initProjectModal() {
   const modal = document.getElementById('project-modal');
+  const openButtons = document.querySelectorAll('[data-open-modal="project"]');
   const closeButton = modal ? modal.querySelector('.modal-close-btn') : null;
   const projectForm = document.getElementById('project-inquiry-form');
   const successState = document.getElementById('modal-success-state');
@@ -165,10 +166,11 @@ function initProjectModal() {
     }, 350);
   }
 
-  document.addEventListener('click', (e) => {
-    if (!(e.target instanceof Element) || !e.target.closest('[data-open-modal="project"]')) return;
-    e.preventDefault();
-    openModal();
+  openButtons.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openModal();
+    });
   });
 
   if (closeButton) {
