@@ -1256,209 +1256,402 @@ body::before {
 }
 
 /* --------------------------------------------------------------------------
-   07 CONTACT & CTA BANNER SECTION
+   Footer — burnt-orange project invitation and editorial close
    -------------------------------------------------------------------------- */
-.cta-section {
-  padding: 30px 32px 60px;
-  max-width: var(--container-max);
-  margin: 0 auto;
-}
-
-.cta-banner {
-  border-radius: var(--radius-lg);
+.site-footer {
+  --footer-orange: #d95f26;
+  --footer-ink: #11100f;
+  --footer-ivory: #f4eee5;
+  --footer-muted: #b9b0a5;
   position: relative;
+  z-index: 10;
   overflow: hidden;
-  background: linear-gradient(135deg, #071e4a 0%, #0d3885 50%, #051433 100%);
-  padding: 56px 50px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 40px;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(32, 128, 252, 0.35);
+  background: var(--footer-ink);
+  color: var(--footer-ivory);
+  scroll-margin-top: var(--nav-height);
 }
 
-.cta-badge {
-  display: inline-block;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: #6ae8fc;
-  margin-bottom: 10px;
+.footer-shell {
+  width: min(100%, 1440px);
+  margin: 0 auto;
+  padding: 64px clamp(24px, 5vw, 80px) 36px;
 }
 
-.cta-contact-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
-  margin-top: 20px;
+.footer-cta {
+  position: relative;
+  isolation: isolate;
+  min-height: 300px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+  align-items: end;
+  gap: clamp(48px, 8vw, 120px);
+  padding: clamp(40px, 5vw, 68px);
+  border-radius: 28px;
+  background-color: var(--footer-orange);
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.09) 0.7px, transparent 0.7px),
+    radial-gradient(rgba(32, 20, 15, 0.09) 0.7px, transparent 0.7px);
+  background-position: 0 0, 4px 4px;
+  background-size: 8px 8px;
+  color: #17100d;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
 }
 
-.cta-meta-item {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.meta-label {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.6);
-  font-weight: 600;
-}
-
-.meta-link,
-.meta-text {
-  font-size: 0.9375rem;
-  color: #ffffff;
-  font-weight: 600;
-}
-
-.meta-link:hover {
-  color: #6ae8fc;
-  text-decoration: underline;
-}
-
-.cta-botanical-svg {
+.footer-cta::after {
+  content: '';
   position: absolute;
-  right: -20px;
-  bottom: -40px;
-  height: 140%;
-  opacity: 0.25;
+  z-index: -1;
+  width: 560px;
+  height: 560px;
+  right: -210px;
+  top: -330px;
+  border: 72px solid rgba(76, 25, 9, 0.12);
+  border-radius: 50%;
   pointer-events: none;
 }
 
-.cta-banner-left {
+.footer-cta-heading,
+.footer-cta-side {
   position: relative;
-  z-index: 2;
-  max-width: 540px;
+  z-index: 1;
 }
 
-.cta-banner-title {
-  font-size: clamp(2rem, 3.8vw, 3rem);
+.footer-cta-label,
+.footer-col-title {
+  font-size: 0.7rem;
   font-weight: 700;
-  color: #ffffff;
-  line-height: 1.15;
-  letter-spacing: -0.025em;
+  line-height: 1.2;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
-.cta-banner-right {
-  position: relative;
-  z-index: 2;
+.footer-cta-label {
+  margin-bottom: 20px;
+  color: rgba(23, 16, 13, 0.72);
+}
+
+.footer-cta-title {
+  max-width: 730px;
+  font-size: clamp(3rem, 5.3vw, 5rem);
+  font-weight: 700;
+  line-height: 0.94;
+  letter-spacing: -0.055em;
+}
+
+.footer-cta-title em {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-weight: 400;
+}
+
+.footer-cta-side {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 16px;
+  gap: 26px;
 }
 
-.cta-banner-sub {
-  font-size: 1.15rem;
+.footer-cta-copy {
+  max-width: 410px;
+  font-size: 1rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.55;
 }
 
-/* --------------------------------------------------------------------------
-   FOOTER
-   -------------------------------------------------------------------------- */
-.site-footer {
-  border-top: 1px solid var(--border-subtle);
-  background-color: #08080a;
-  padding: 80px 32px 40px;
-  position: relative;
-  z-index: 10;
-}
-
-.footer-inner {
-  max-width: var(--container-max);
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-}
-
-.footer-main-grid {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr 1.2fr 1fr;
-  gap: 40px;
-}
-
-.footer-brand {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.footer-logo {
-  font-size: 2.5rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: #ffffff;
-}
-
-.footer-tagline {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-}
-
-.footer-col {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.footer-col-title {
-  font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 6px;
-}
-
-.footer-text {
-  font-size: 0.9375rem;
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
-
-.footer-links-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  list-style: none;
-}
-
-.footer-links-list a {
-  font-size: 0.9375rem;
-  color: var(--text-secondary);
-  transition: color var(--transition-fast);
-}
-
-.footer-links-list a:hover {
-  color: var(--text-accent);
-}
-
-.footer-bottom {
+.footer-cta-actions {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding-top: 32px;
-  border-top: 1px solid var(--border-subtle);
-  font-size: 0.8125rem;
-  color: var(--text-muted);
   flex-wrap: wrap;
   gap: 20px;
 }
 
-.footer-legal-links {
+.footer-project-button {
+  min-height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 14px 24px;
+  border-radius: 10px;
+  background: #191716;
+  color: var(--footer-ivory);
+  font-size: 0.88rem;
+  font-weight: 650;
+  box-shadow: 0 10px 24px rgba(28, 12, 5, 0.24);
+  transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.footer-project-button span:last-child {
+  transition: transform 0.25s ease;
+}
+
+.footer-project-button:hover {
+  background: #080707;
+  box-shadow: 0 13px 28px rgba(28, 12, 5, 0.3);
+}
+
+.footer-project-button:hover span:last-child {
+  transform: translateX(4px);
+}
+
+.footer-support-link {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  border-bottom: 1px solid rgba(23, 16, 13, 0.45);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.footer-main {
+  padding-top: 80px;
+}
+
+.footer-main-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: clamp(24px, 3vw, 48px);
+}
+
+.footer-brand {
+  grid-column: span 5;
   display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.footer-brand-lockup {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.footer-brand-lockup img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.footer-tagline {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: var(--footer-muted);
+}
+
+.footer-brand-rule {
+  width: 50px;
+  height: 2px;
+  margin: 24px 0;
+  background: var(--footer-orange);
+}
+
+.footer-closing {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: clamp(2.1rem, 3.2vw, 3.4rem);
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+}
+
+.footer-site-link {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  margin-top: 26px;
+  color: var(--footer-orange);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.footer-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 24px;
 }
 
-.footer-legal-links a:hover {
-  color: var(--text-primary);
+.footer-explore,
+.footer-services {
+  grid-column: span 2;
+}
+
+.footer-contact {
+  grid-column: span 3;
+}
+
+.footer-col-title {
+  color: #d7cfc5;
+}
+
+.footer-links-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  list-style: none;
+}
+
+.footer-links-list a {
+  position: relative;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  color: var(--footer-muted);
+  font-size: 0.9rem;
+}
+
+.footer-links-list a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 5px;
+  width: 100%;
+  height: 1px;
+  background: var(--footer-orange);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.35s var(--ease-out-cubic);
+}
+
+.footer-links-list a span:last-child {
+  color: var(--footer-orange);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.footer-links-list a:hover,
+.footer-links-list a:focus-visible {
+  color: var(--footer-ivory);
+}
+
+.footer-links-list a:hover::after,
+.footer-links-list a:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.footer-links-list a:hover span:last-child,
+.footer-links-list a:focus-visible span:last-child {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.footer-contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-style: normal;
+  color: var(--footer-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.footer-contact-list a {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.footer-contact-list a:hover,
+.footer-contact-list a:focus-visible,
+.footer-socials a:hover,
+.footer-socials a:focus-visible {
+  color: var(--footer-orange);
+}
+
+.footer-contact-list span {
+  margin-top: 12px;
+}
+
+.footer-socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.footer-socials a,
+.footer-legal-links a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.82rem;
+}
+
+.footer-bottom {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 24px;
+  margin-top: 68px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  color: #aaa196;
+  font-size: 0.78rem;
+}
+
+.footer-legal-links,
+.footer-availability,
+.footer-status {
+  display: flex;
+  align-items: center;
+}
+
+.footer-legal-links {
+  gap: 22px;
+}
+
+.footer-legal-links a:hover,
+.footer-legal-links a:focus-visible {
+  color: var(--footer-ivory);
+}
+
+.footer-availability {
+  justify-self: end;
+  gap: 18px;
+}
+
+.footer-status {
+  gap: 9px;
+  white-space: nowrap;
+}
+
+.footer-status > span {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--footer-orange);
+  box-shadow: 0 0 0 4px rgba(217, 95, 38, 0.12);
+}
+
+.footer-back-top {
+  width: 46px;
+  height: 46px;
+  flex: none;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 50%;
+  color: var(--footer-ivory);
+  font-size: 1rem;
+  transition: transform 0.25s var(--ease-out-cubic), border-color 0.25s ease, color 0.25s ease;
+}
+
+.footer-back-top:hover {
+  transform: translateY(-3px) rotate(8deg);
+  border-color: var(--footer-orange);
+  color: var(--footer-orange);
+}
+
+.site-footer a:focus-visible,
+.site-footer button:focus-visible {
+  outline: 2px solid var(--footer-orange);
+  outline-offset: 4px;
 }
 
 /* --------------------------------------------------------------------------
@@ -1796,15 +1989,40 @@ body::before {
     border-right: none;
   }
 
-  .cta-banner {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 48px 36px;
+  .footer-main-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 40px;
   }
 
-  .footer-main-grid {
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+
+  .footer-explore,
+  .footer-services,
+  .footer-contact {
+    grid-column: auto;
+  }
+
+  .footer-cta {
+    min-height: 0;
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 36px;
+  }
+
+  .footer-bottom {
     grid-template-columns: 1fr 1fr;
-    gap: 40px;
+  }
+
+  .footer-legal-links {
+    justify-self: end;
+  }
+
+  .footer-availability {
+    grid-column: 1 / -1;
+    justify-self: stretch;
+    justify-content: space-between;
   }
 }
 
@@ -1875,11 +2093,6 @@ body::before {
     padding: 24px 20px;
   }
 
-  .cta-contact-meta {
-    flex-direction: column;
-    gap: 16px;
-  }
-
   .about-stats {
     flex-direction: column;
     gap: 24px;
@@ -1892,13 +2105,63 @@ body::before {
     padding-right: 0;
   }
 
-  .cta-banner {
-    padding: 40px 24px;
-  }
-
   .footer-main-grid {
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: 40px;
+  }
+
+  .footer-brand,
+  .footer-explore,
+  .footer-services,
+  .footer-contact {
+    grid-column: 1;
+  }
+
+  .footer-shell {
+    padding: 36px 20px 28px;
+  }
+
+  .footer-cta {
+    gap: 28px;
+    padding: 34px 24px;
+    border-radius: 24px;
+  }
+
+  .footer-cta-title {
+    font-size: clamp(2.55rem, 13vw, 3.8rem);
+  }
+
+  .footer-cta-actions,
+  .footer-project-button {
+    width: 100%;
+  }
+
+  .footer-main {
+    padding-top: 58px;
+  }
+
+  .footer-bottom {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'legal'
+      'copyright'
+      'availability';
+    gap: 10px;
+    margin-top: 50px;
+  }
+
+  .footer-copyright {
+    grid-area: copyright;
+  }
+
+  .footer-legal-links {
+    grid-area: legal;
+    justify-self: start;
+  }
+
+  .footer-availability {
+    grid-area: availability;
+    margin-top: 8px;
   }
 
   .form-grid-2 {
@@ -2304,6 +2567,17 @@ body.has-cursor .cursor-spotlight {
    working bundle still gets the headline, the pitch and a way to contact us.
    Hidden the moment we know JS is alive — see the inline scripts in index.html.
    ========================================================================== */
+
+/* Reserve the hero's height on the mount point itself.
+
+   Without this, the sequence on every load is: the inline <head> script adds
+   .js -> the rule below hides the fallback -> React has not mounted yet, so
+   #hero-root is empty and collapses to 0px -> the Manifesto section renders
+   directly under the header -> React mounts and shoves everything down again.
+   Measured shift: 842px, ~0.97 viewports. Reserving the space removes it. */
+#hero-root {
+  min-height: calc(100svh - 88px);
+}
 
 .js .hero-fallback {
   display: none;
