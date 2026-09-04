@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TANVO — Digital Experiences People Remember</title>
+  <meta name="description" content="TANVO is an elite digital strategy, design, and development agency crafting memorable web experiences and scalable products for ambitious brands.">
+  <link rel="icon" type="image/png" href="assets/images/Tanvo.png">
+  <script>document.documentElement.classList.add('js');</script>
+  <link rel="canonical" href="https://www.tanvo.in/">
+  <meta name="theme-color" content="#0B0B0D">
+
+  <!-- Fonts: linked here rather than @import-ed from CSS so the request is
+       discovered on the first HTML parse instead of after CSS downloads. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600;1,700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="TANVO">
+  <meta property="og:url" content="https://www.tanvo.in/">
+  <meta property="og:title" content="TANVO — Digital Experiences People Remember">
+  <meta property="og:description" content="Strategy, design and development for ambitious brands. We build digital platforms, headless commerce systems and flagship brand identities.">
+  <meta property="og:image" content="https://www.tanvo.in/assets/images/og-card.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="The TANVO team working together on client projects.">
+  <meta property="og:locale" content="en_IN">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="TANVO — Digital Experiences People Remember">
+  <meta name="twitter:description" content="Strategy, design and development for ambitious brands.">
+  <meta name="twitter:image" content="https://www.tanvo.in/assets/images/og-card.jpg">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="assets/style.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "@id": "https://www.tanvo.in/#organization",
+    "name": "TANVO",
+    "description": "Digital strategy, design and development agency building web experiences and scalable products for ambitious brands.",
+    "url": "https://www.tanvo.in/",
+    "logo": "https://www.tanvo.in/assets/images/Tanvo.png",
+    "image": "https://www.tanvo.in/assets/images/og-card.jpg",
+    "email": "support@tanvo.in",
+    "telephone": "+91-988-123-4567",
+    "priceRange": "$$$",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Hubli-Dharwad",
+      "addressRegion": "Karnataka",
+      "addressCountry": "IN"
+    },
+    "areaServed": "Worldwide",
+    "sameAs": [
+      "https://www.instagram.com/tanvo.in/",
+      "https://www.linkedin.com/company/tanvoin/"
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Top Global Scroll Progress Bar -->
+  <div class="scroll-progress-bar" id="scrollProgressBar" aria-hidden="true"></div>
+
+  <!-- Ambient Spotlight Torch Effect -->
+  <div class="cursor-spotlight" id="cursorSpotlight" aria-hidden="true"></div>
+
+
+  <!-- =========================================================================
+       Header & Navigation
+       ========================================================================= -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="#intro" class="brand-logo" aria-label="TANVO Home">
+        <img src="assets/images/Tanvo.png" alt="TANVO Mark" width="34" height="34">
+        <span>TANVO</span>
+      </a>
+
+      <nav aria-label="Main Navigation">
+        <ul class="nav-menu">
+          <li><a href="#work" class="nav-link">Work</a></li>
+          <li><a href="#services" class="nav-link">Services</a></li>
+          <li><a href="#process" class="nav-link">Process</a></li>
+          <li><a href="#about" class="nav-link">About</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-cta">
+        <button type="button" class="btn-primary" data-open-modal="project">
+          <span>Start a project</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </button>
+
+        <button type="button" class="menu-toggle" aria-label="Toggle navigation menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Navigation Drawer -->
+  <div class="mobile-drawer-overlay"></div>
+  <div class="mobile-drawer">
+    <div class="mobile-drawer-top">
+      <div class="mobile-drawer-brand">
+        <img src="assets/images/Tanvo.png" alt="TANVO Mark" width="28" height="28">
+        <span style="font-weight: 700; color: #fff; font-size: 1.1rem; letter-spacing: 0.04em;">TANVO</span>
+      </div>
+      <ul class="mobile-nav-list">
+        <li><a href="#intro" class="mobile-nav-link">Intro</a></li>
+        <li><a href="#work" class="mobile-nav-link">Work</a></li>
+        <li><a href="#services" class="mobile-nav-link">Services</a></li>
+        <li><a href="#process" class="mobile-nav-link">Process</a></li>
+        <li><a href="#about" class="mobile-nav-link">About</a></li>
+        <li><a href="#contact" class="mobile-nav-link">Contact</a></li>
+      </ul>
+      <div class="mobile-drawer-contact">
+        <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 6px;">Inquiries</span>
+        <a href="mailto:support@tanvo.in" style="color: var(--text-white); font-size: 0.95rem; text-decoration: underline;">support@tanvo.in</a>
+        <span style="display: block; font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px;">Hubli–Dharwad, Karnataka</span>
+      </div>
+    </div>
+    <div class="mobile-drawer-bottom">
+      <button type="button" class="btn-primary" style="width: 100%;" data-open-modal="project">
+        <span>Start a project</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       Main Content Wrapper
+       ========================================================================= -->
+  <main class="main-wrapper">
+
+    <!-- -----------------------------------------------------------------------
+         01 INTRO (HERO SECTION - REACT + VITE + TS + GSAP)
+         ----------------------------------------------------------------------- -->
+    <div id="hero-root">
+      <!-- ==================================================================
+           No-JS / failed-bundle fallback for the React hero.
+
+           Visible by default. An inline script in <head> adds .js to <html>,
+           which hides this before first paint, so users with working JS never
+           see it flash. If the bundle fails to execute, the watchdog at the
+           bottom of <body> removes .js again and this reappears.
+
+           React clears #hero-root when it mounts, so this never coexists with
+           the real hero and the duplicate id="intro" can never collide.
+
+           Keep the copy here in sync with src/components/Hero.tsx.
+           =================================================================== -->
+      <section id="intro" class="hero-fallback" aria-label="Tanvo agency hero intro">
+        <div class="hero-fallback-panel">
+          <div class="hero-fallback-label">
+            <span class="hero-fallback-dot" aria-hidden="true"></span>
+            <span>01 / INTRO</span>
+          </div>
+          <h1 class="hero-fallback-title">
+            We build digital experiences
+            <span class="hero-fallback-serif">people remember.</span>
+          </h1>
+          <p class="hero-fallback-desc">Strategy, design and development for ambitious brands.</p>
+          <div class="hero-fallback-actions">
+            <a class="hero-fallback-btn" href="#work">Explore our work</a>
+            <a class="hero-fallback-btn hero-fallback-btn--primary" href="mailto:support@tanvo.in">Start a project</a>
+          </div>
+          <div class="hero-fallback-location">
+            <span class="hero-fallback-dot" aria-hidden="true"></span>
+            <span>Hubli–Dharwad, Karnataka, India</span>
+          </div>
+        </div>
+        <div class="hero-fallback-media">
+          <img src="assets/images/tanvo-hero-team.webp" width="1024" height="576"
+               alt="The TANVO team collaborating on client work.">
+        </div>
+      </section>
+    </div>
+
+    <!-- -----------------------------------------------------------------------
+         02 MANIFESTO SECTION
+         ----------------------------------------------------------------------- -->
+    <section id="manifesto" class="manifesto-section" data-rail-index="02">
+      <div class="section-container">
+        <div class="manifesto-grid">
+          <div class="manifesto-left reveal-on-scroll">
+            <span class="section-index">02 MANIFESTO</span>
+            <h2 class="manifesto-headline">
+              Good design<br>
+              gets attention.<br>
+              Good strategy<br>
+              builds growth.
+            </h2>
+            <p class="manifesto-body">
+              We combine deep user empathy, modern engineering, and systematic brand architecture to craft digital platforms that scale with your ambitions.
+            </p>
+            <div>
+              <a href="#about" class="link-arrow">
+                <span>Learn more about our philosophy</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </a>
+            </div>
+          </div>
+
+          <div class="manifesto-image-wrapper reveal-on-scroll delay-2">
+            <img src="assets/images/manifesto-sketches.webp" alt="Authentic TANVO studio design wireframes, user journeys, and architectural diagrams" width="800" height="550" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- -----------------------------------------------------------------------
+         03 SELECTED WORK SECTION
+         ----------------------------------------------------------------------- -->
+    <section id="work" class="work-section">
+      <div class="section-container">
+        <span class="section-index">02 SELECTED WORK</span>
+
+        <div class="work-header reveal-on-scroll">
+          <div class="work-header-left">
+            <h2 class="section-title">Selected Work</h2>
+            <p class="section-desc" style="margin-top: 12px;">
+              Digital platforms, headless commerce systems, and flagship brand identities engineered for enduring market impact.
+            </p>
+          </div>
+          <div>
+            <button type="button" class="btn-outline" data-open-modal="project">
+              <span>Start your project</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="work-showcase">
+          <!-- Featured Flagship Project: Buy N Build -->
+          <article class="work-featured-card reveal-on-scroll" data-open-case="buy-n-build">
+            <div class="work-featured-grid">
+              <div class="work-featured-content">
+                <div class="work-category-chip">Architectural Platform &amp; CRM</div>
+                <h3 class="work-featured-title">Buy N Build</h3>
+                <p class="work-featured-desc">
+                  High-performance web platform featuring interactive 3D spatial configurators, real-time material previews, and automated client inquiry pipelines for prime architectural developments.
+                </p>
+                <div class="work-tags-row">
+                  <span class="work-tag">Next.js 14</span>
+                  <span class="work-tag">WebGL / Three.js</span>
+                  <span class="work-tag">Tailwind CSS</span>
+                  <span class="work-tag">Supabase CRM</span>
+                </div>
+                <div class="work-featured-outcomes">
+                  <div class="outcome-item">
+                    <span class="outcome-title">3D Material Configurator</span>
+                    <span class="outcome-sub">Interactive spatial finishes &amp; floor plan explorer</span>
+                  </div>
+                  <div class="outcome-item">
+                    <span class="outcome-title">Automated Lead Pipeline</span>
+                    <span class="outcome-sub">Direct CRM sync with automated WhatsApp/Email triggers</span>
+                  </div>
+                </div>
+                <div class="work-card-action">
+                  <span class="link-arrow">
+                    <span>Explore architecture study</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                  </span>
+                </div>
+              </div>
+
+              <div class="work-featured-visual">
+                <div class="mockup-frame">
+                  <div class="card-glare" aria-hidden="true"></div>
+                  <div class="mockup-bar">
+                    <div class="mockup-dots">
+                      <span class="mockup-dot"></span>
+                      <span class="mockup-dot"></span>
+                      <span class="mockup-dot"></span>
+                    </div>
+                    <div class="mockup-address">buynbuild.com</div>
+                  </div>
+                  <div class="mockup-viewport">
+                    <img src="assets/images/case-architecture.webp" alt="Buy N Build architectural platform preview" width="800" height="500" loading="lazy">
+                    <div class="mockup-content-overlay">
+                      <span class="mockup-overlay-brand">BUY N BUILD</span>
+                      <div class="mockup-overlay-hero">
+                        <h4>Spaces engineered for ambitious living.</h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Complementary Secondary Grid: The Slow House & Shivakrupa -->
+          <div class="work-secondary-grid">
+            <!-- Project 2: The Slow House -->
+            <article class="work-card work-card-editorial reveal-on-scroll delay-1" data-open-case="the-slow-house">
+              <div class="mockup-frame theme-light">
+                <div class="card-glare" aria-hidden="true"></div>
+                <div class="mockup-bar">
+                  <div class="mockup-dots">
+                    <span class="mockup-dot"></span>
+                    <span class="mockup-dot"></span>
+                    <span class="mockup-dot"></span>
+                  </div>
+                  <div class="mockup-address">theslowhouse.co</div>
+                </div>
+                <div class="mockup-viewport">
+                  <img src="assets/images/case-furniture.webp" alt="The Slow House minimalist furniture website mockup" width="600" height="420" loading="lazy">
+                  <div class="mockup-content-overlay">
+                    <span class="mockup-overlay-brand">THE SLOW HOUSE</span>
+                    <div class="mockup-overlay-hero">
+                      <h4 style="color: #ffffff;">Furniture made to live with.</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="work-card-info">
+                <div class="work-category-chip">Headless E-Commerce &amp; Flagship</div>
+                <h3 class="work-client-name">The Slow House</h3>
+                <p class="work-brief-desc">
+                  Sub-second headless Shopify storefront pairing tactile Scandinavian editorial design with fluid catalog filtering and instant checkout.
+                </p>
+                <div class="work-tags-row">
+                  <span class="work-tag">Shopify Plus</span>
+                  <span class="work-tag">Headless Storefront</span>
+                  <span class="work-tag">Sub-second Speed</span>
+                </div>
+                <div class="work-card-footer">
+                  <span class="link-arrow">
+                    <span>View case study</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                  </span>
+                </div>
+              </div>
+            </article>
+
+            <!-- Project 3: Shivakrupa -->
+            <article class="work-card work-card-editorial reveal-on-scroll delay-2" data-open-case="shivakrupa">
+              <div class="mockup-frame">
+                <div class="card-glare" aria-hidden="true"></div>
+                <div class="mockup-bar">
+                  <div class="mockup-dots">
+                    <span class="mockup-dot"></span>
+                    <span class="mockup-dot"></span>
+                    <span class="mockup-dot"></span>
+                  </div>
+                  <div class="mockup-address">shivakrupa.in</div>
+                </div>
+                <div class="mockup-viewport">
+                  <img src="assets/images/service-branding.webp" alt="Shivakrupa luxury jewelry brand system mockup" width="600" height="420" loading="lazy">
+                  <div class="mockup-content-overlay">
+                    <span class="mockup-overlay-brand">SHIVAKRUPA</span>
+                    <div class="mockup-overlay-hero">
+                      <h4>Heritage that shines forever.</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="work-card-info">
+                <div class="work-category-chip">Heritage Brand &amp; Digital Archive</div>
+                <h3 class="work-client-name">Shivakrupa</h3>
+                <p class="work-brief-desc">
+                  Bespoke digital catalog, high-resolution craftsmanship archive, and private VIP consultation booking system for generational jewellery.
+                </p>
+                <div class="work-tags-row">
+                  <span class="work-tag">Brand Strategy</span>
+                  <span class="work-tag">Custom CMS</span>
+                  <span class="work-tag">VIP Appointments</span>
+                </div>
+                <div class="work-card-footer">
+                  <span class="link-arrow">
+                    <span>View case study</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                  </span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- -----------------------------------------------------------------------
+         04 SERVICES SECTION
+         ----------------------------------------------------------------------- -->
+    <section id="services" class="services-section">
+      <div class="section-container">
+        <div class="services-grid">
+          <!-- Left Column: Title & Dynamic Preview Visual -->
+          <div class="services-left reveal-on-scroll">
+            <div>
+              <span class="section-index">03 CAPABILITIES</span>
+              <h2 class="section-title">Capabilities &amp; Services</h2>
+              <p class="section-desc" style="margin-top: 14px;">
+                End-to-end digital engineering and brand systems tailored for high-growth enterprises.
+              </p>
+            </div>
+
+            <div class="services-laptop-visual">
+              <img id="services-laptop-img" src="assets/images/laptop-mockup.webp" alt="Preview of digital platforms engineered by TANVO" width="600" height="375" loading="lazy">
+            </div>
+          </div>
+
+          <!-- Right Column: Interactive Accordion -->
+          <div class="services-accordion reveal-on-scroll delay-2" role="region" aria-label="Services List">
+            
+            <!-- Service 01 -->
+            <div class="service-item active" data-service="01">
+              <button class="service-header" aria-expanded="true">
+                <div class="service-header-left">
+                  <span class="service-num">01</span>
+                  <span class="service-name">Web Design &amp; Development</span>
+                </div>
+                <div class="service-icon">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+                </div>
+              </button>
+              <div class="service-body">
+                <div class="service-body-inner">
+                  <p class="service-desc">
+                    Fast, responsive and scalable websites engineered to convert and scale with your business. Built with modern framework architecture, fluid responsive typography, and bespoke interactive details.
+                  </p>
+                  <div class="service-tags">
+                    <span class="service-tag">Next.js &amp; React</span>
+                    <span class="service-tag">Headless CMS</span>
+                    <span class="service-tag">Core Web Vitals 100</span>
+                    <span class="service-tag">Tailwind CSS</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Service 02 -->
+            <div class="service-item" data-service="02">
+              <button class="service-header" aria-expanded="false">
+                <div class="service-header-left">
+                  <span class="service-num">02</span>
+                  <span class="service-name">E-Commerce Flagships</span>
+                </div>
+                <div class="service-icon">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </div>
+              </button>
+              <div class="service-body">
+                <div class="service-body-inner">
+                  <p class="service-desc">
+                    Custom headless e-commerce storefronts delivering tactile shopping experiences, sub-second product filtering, and friction-free checkout workflows that elevate average order value.
+                  </p>
+                  <div class="service-tags">
+                    <span class="service-tag">Shopify Plus</span>
+                    <span class="service-tag">Custom Cart &amp; Checkout</span>
+                    <span class="service-tag">ERP / Inventory Sync</span>
+                    <span class="service-tag">Global Multi-Currency</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Service 03 -->
+            <div class="service-item" data-service="03">
+              <button class="service-header" aria-expanded="false">
+                <div class="service-header-left">
+                  <span class="service-num">03</span>
+                  <span class="service-name">UI/UX Design &amp; Prototyping</span>
+                </div>
+                <div class="service-icon">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </div>
+              </button>
+              <div class="service-body">
+                <div class="service-body-inner">
+                  <p class="service-desc">
+                    User-centric product architecture, deep customer journey mapping, and systematic design libraries that bring crystalline clarity to complex digital experiences.
+                  </p>
+                  <div class="service-tags">
+                    <span class="service-tag">Figma Design Systems</span>
+                    <span class="service-tag">Wireframing &amp; UX Research</span>
+                    <span class="service-tag">Interactive Prototypes</span>
+                    <span class="service-tag">WCAG 2.1 Accessibility</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Service 04 -->
+            <div class="service-item" data-service="04">
+              <button class="service-header" aria-expanded="false">
+                <div class="service-header-left">
+                  <span class="service-num">04</span>
+                  <span class="service-name">Brand Identity &amp; Systems</span>
+                </div>
+                <div class="service-icon">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </div>
+              </button>
+              <div class="service-body">
+                <div class="service-body-inner">
+                  <p class="service-desc">
+                    Enduring visual identities, vector logo constructions, editorial typography hierarchies, and complete design token systems that communicate authority and earn lasting client trust.
+                  </p>
+                  <div class="service-tags">
+                    <span class="service-tag">Logo Grid Construction</span>
+                    <span class="service-tag">Typography Tokens</span>
+                    <span class="service-tag">Brand Guidelines</span>
+                    <span class="service-tag">Visual Identity Kits</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Service 05 -->
+            <div class="service-item" data-service="05">
+              <button class="service-header" aria-expanded="false">
+                <div class="service-header-left">
+                  <span class="service-num">05</span>
+                  <span class="service-name">Custom Web Apps &amp; SaaS</span>
+                </div>
+                <div class="service-icon">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </div>
+              </button>
+              <div class="service-body">
+                <div class="service-body-inner">
+                  <p class="service-desc">
+                    Bespoke web applications, internal operational dashboards, and customer portals engineered with robust API backends, real-time analytics, and high-concurrency cloud infrastructure.
+                  </p>
+                  <div class="service-tags">
+                    <span class="service-tag">Full-Stack Architecture</span>
+                    <span class="service-tag">REST &amp; GraphQL APIs</span>
+                    <span class="service-tag">Real-Time Dashboards</span>
+                    <span class="service-tag">Cloud Infrastructure</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- -----------------------------------------------------------------------
+         05 PROCESS SECTION (STICKY SCROLL STORYTELLING)
+         ----------------------------------------------------------------------- -->
+    <section id="process" class="process-section">
+      <div class="section-container">
+        <div class="process-story-layout">
+          <!-- Pinned Left Heading & Progress Indicator -->
+          <aside class="process-story-sticky">
+            <span class="section-index">04 METHODOLOGY</span>
+            <h2 class="section-title">How we bring vision to life.</h2>
+            <p class="section-desc">
+              A disciplined four-stage framework engineered to turn ambitious brand objectives into resilient, high-converting digital realities.
+            </p>
+
+            <div class="process-story-tracker" aria-hidden="true">
+              <div class="process-track-item active" data-step-target="01">
+                <span class="tracker-bullet"></span>
+                <span class="tracker-text">01 Discover</span>
+              </div>
+              <div class="process-track-item" data-step-target="02">
+                <span class="tracker-bullet"></span>
+                <span class="tracker-text">02 Define</span>
+              </div>
+              <div class="process-track-item" data-step-target="03">
+                <span class="tracker-bullet"></span>
+                <span class="tracker-text">03 Design</span>
+              </div>
+              <div class="process-track-item" data-step-target="04">
+                <span class="tracker-bullet"></span>
+                <span class="tracker-text">04 Deliver</span>
+              </div>
+            </div>
+
+            <div class="process-sticky-action">
+              <button type="button" class="btn-primary" data-open-modal="project">
+                <span>Start your project</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </button>
+            </div>
+          </aside>
+
+          <!-- Right Scroll Story Cards -->
+          <div class="process-story-flow">
+            <!-- Step 01: Discover -->
+            <article class="process-card active reveal-on-scroll" data-process-step="01">
+              <div class="process-card-header">
+                <span class="process-phase-badge">Phase 01</span>
+                <span class="process-step-num">01</span>
+              </div>
+              <h3 class="process-card-title">Discover &amp; Immerse</h3>
+              <p class="process-card-desc">
+                We begin by immersing ourselves in your business goals, target audience behaviors, technical landscape, and competitive advantages. Through collaborative discovery workshops and telemetry audits, we define the foundational opportunities.
+              </p>
+              <div class="process-deliverables">
+                <span class="deliverable-label">Key Milestones:</span>
+                <ul class="deliverable-list">
+                  <li>Stakeholder Discovery Workshops</li>
+                  <li>User Persona &amp; Journey Mapping</li>
+                  <li>Technical Architecture &amp; SEO Audit</li>
+                </ul>
+              </div>
+            </article>
+
+            <!-- Step 02: Define -->
+            <article class="process-card reveal-on-scroll" data-process-step="02">
+              <div class="process-card-header">
+                <span class="process-phase-badge">Phase 02</span>
+                <span class="process-step-num">02</span>
+              </div>
+              <h3 class="process-card-title">Define &amp; Strategize</h3>
+              <p class="process-card-desc">
+                Strategy bridges creative ambition and commercial execution. We architect the information hierarchy, select the ideal technology stack (Next.js, Headless CMS, APIs), and build a sprint roadmap with transparent deliverables.
+              </p>
+              <div class="process-deliverables">
+                <span class="deliverable-label">Key Milestones:</span>
+                <ul class="deliverable-list">
+                  <li>Information Architecture &amp; User Flows</li>
+                  <li>Technology Stack Specification</li>
+                  <li>Scoped Sprint Roadmap &amp; Milestones</li>
+                </ul>
+              </div>
+            </article>
+
+            <!-- Step 03: Design -->
+            <article class="process-card reveal-on-scroll" data-process-step="03">
+              <div class="process-card-header">
+                <span class="process-phase-badge">Phase 03</span>
+                <span class="process-step-num">03</span>
+              </div>
+              <h3 class="process-card-title">Design &amp; Prototype</h3>
+              <p class="process-card-desc">
+                Crafting interfaces that feel natural, tactile, and memorable. We create interactive prototypes in Figma, establishing comprehensive design tokens, responsive typography scales, and fluid micro-interaction behaviors.
+              </p>
+              <div class="process-deliverables">
+                <span class="deliverable-label">Key Milestones:</span>
+                <ul class="deliverable-list">
+                  <li>Comprehensive Figma Component System</li>
+                  <li>High-Fidelity Interactive Prototypes</li>
+                  <li>Design Tokens &amp; Motion Choreography</li>
+                </ul>
+              </div>
+            </article>
+
+            <!-- Step 04: Deliver -->
+            <article class="process-card reveal-on-scroll" data-process-step="04">
+              <div class="process-card-header">
+                <span class="process-phase-badge">Phase 04</span>
+                <span class="process-step-num">04</span>
+              </div>
+              <h3 class="process-card-title">Deliver &amp; Scale</h3>
+              <p class="process-card-desc">
+                Engineering with clean, modular, production-ready code. We execute rigorous cross-browser testing, automated CI/CD deployment, 100 Core Web Vitals performance tuning, and post-launch maintenance.
+              </p>
+              <div class="process-deliverables">
+                <span class="deliverable-label">Key Milestones:</span>
+                <ul class="deliverable-list">
+                  <li>Production Build &amp; Cloud Deployment</li>
+                  <li>Cross-Browser &amp; WCAG Accessibility QA</li>
+                  <li>Core Web Vitals 100 &amp; Ongoing Support</li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- -----------------------------------------------------------------------
+         06 ABOUT US SECTION
+         ----------------------------------------------------------------------- -->
+    <section id="about" class="about-section">
+      <div class="section-container">
+        <span class="section-index">05 ABOUT US</span>
+
+        <div class="about-grid">
+          <!-- Left Column -->
+          <div class="about-left reveal-on-scroll">
+            <h2 class="section-title">
+              Small team.<br>
+              Serious outcomes.
+            </h2>
+            <p class="section-desc">
+              We are a focused studio of strategists, designers, and software engineers based in Hubli–Dharwad. We partner with ambitious regional and global founders to engineer digital products that build real authority.
+            </p>
+            <div>
+              <button type="button" class="link-arrow" data-open-modal="project">
+                <span>Start a conversation with us</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Center Column: Team Photography -->
+          <div class="about-center-img reveal-on-scroll delay-1">
+            <img src="assets/images/about-team.webp" alt="TANVO core engineering and design team in studio" width="700" height="525" loading="lazy">
+          </div>
+
+          <!-- Right Column: Key Metrics -->
+          <div class="about-stats reveal-on-scroll delay-2">
+            <div class="about-stat-item">
+              <span class="about-stat-val">Hubli–Dharwad</span>
+              <span class="about-stat-label">Headquarters in Karnataka</span>
+            </div>
+            <div class="about-stat-item">
+              <span class="about-stat-val">End-to-End</span>
+              <span class="about-stat-label">From concept to deployment &amp; scale</span>
+            </div>
+            <div class="about-stat-item">
+              <span class="about-stat-val">100% Focused</span>
+              <span class="about-stat-label">Dedicated craft on every build</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- -----------------------------------------------------------------------
+         07 CONTACT & CTA SECTION
+         ----------------------------------------------------------------------- -->
+    <section id="contact" class="cta-section">
+      <div class="cta-banner reveal-on-scroll">
+        <!-- Decorative Ambient Graphic -->
+        <svg class="cta-botanical-svg" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="150" cy="150" r="130" stroke="rgba(32, 128, 252, 0.25)" stroke-width="1.5" />
+          <circle cx="150" cy="150" r="90" stroke="rgba(32, 128, 252, 0.4)" stroke-width="1.5" stroke-dasharray="8 6" />
+          <circle cx="150" cy="150" r="50" stroke="rgba(106, 232, 252, 0.6)" stroke-width="2" />
+        </svg>
+
+        <div class="cta-banner-left">
+          <span class="cta-badge">Let's Build</span>
+          <h2 class="cta-banner-title">
+            Have something ambitious in mind?
+          </h2>
+          <div class="cta-contact-meta">
+            <div class="cta-meta-item">
+              <span class="meta-label">Email Support</span>
+              <a href="mailto:support@tanvo.in" class="meta-link">support@tanvo.in</a>
+            </div>
+            <div class="cta-meta-item">
+              <span class="meta-label">Headquarters</span>
+              <span class="meta-text">Hubli–Dharwad, Karnataka</span>
+            </div>
+            <div class="cta-meta-item">
+              <span class="meta-label">Official Domain</span>
+              <a href="https://www.tanvo.in" target="_blank" rel="noreferrer" class="meta-link">www.tanvo.in</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="cta-banner-right">
+          <p class="cta-banner-sub">Let's build it together.</p>
+          <button type="button" class="btn-primary" data-open-modal="project" style="background: #ffffff; color: #0b0b0e; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+            <span>Start a project</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================================
+       FOOTER
+       ========================================================================= -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-main-grid">
+        <!-- Col 1: Brand -->
+        <div class="footer-brand">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+            <img src="assets/images/Tanvo.png" alt="TANVO Mark" width="30" height="30">
+            <span style="font-size: 1.4rem; font-weight: 800; color: #fff; letter-spacing: 0.04em;">TANVO</span>
+          </div>
+          <p class="footer-tagline">Products. Platforms. Possibilities.</p>
+          <p style="font-size: 0.875rem; color: var(--text-secondary); margin-top: 12px;">
+            <a href="https://www.tanvo.in" target="_blank" rel="noreferrer" style="color: var(--text-accent); text-decoration: underline;">www.tanvo.in</a>
+          </p>
+        </div>
+
+        <!-- Col 2: Location -->
+        <div class="footer-col">
+          <span class="footer-col-title">Location</span>
+          <p class="footer-text">
+            Hubli–Dharwad,<br>
+            Karnataka, India
+          </p>
+        </div>
+
+        <!-- Col 3: Contact -->
+        <div class="footer-col">
+          <span class="footer-col-title">Inquiries</span>
+          <p class="footer-text">
+            <a href="mailto:support@tanvo.in" style="color: #ffffff; text-decoration: underline;">support@tanvo.in</a><br>
+            <a href="tel:+919881234567">+91 988 123 4567</a>
+          </p>
+        </div>
+
+        <!-- Col 4: Socials -->
+        <div class="footer-col">
+          <span class="footer-col-title">Connect</span>
+          <ul class="footer-links-list">
+            <li><a href="https://www.linkedin.com/company/tanvoin/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+            <li><a href="https://www.instagram.com/tanvo.in/" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-legal-links">
+          <a href="https://www.tanvo.in">www.tanvo.in</a>
+          <a href="#intro">Privacy Policy</a>
+          <a href="#intro">Terms of Service</a>
+        </div>
+        <p class="footer-copyright">
+          &copy; 2026 TANVO. Hubli–Dharwad. All rights reserved.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       Modal 1: "Start a Project" Inquiry Dialog
+       ========================================================================= -->
+  <div id="project-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="project-modal-title">
+    <div class="modal-dialog">
+      <button type="button" class="modal-close-btn" aria-label="Close dialog">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+
+      <form id="project-inquiry-form">
+        <div class="modal-header">
+          <h3 id="project-modal-title" class="modal-title">Let's build something remarkable.</h3>
+          <p class="modal-sub">Tell us about your company and project goals. We reply within 24 hours.</p>
+        </div>
+
+        <!-- Service Interest Multi-select -->
+        <div class="form-group">
+          <label class="form-label">What capabilities do you need?</label>
+          <div class="pill-group" data-select-mode="multi">
+            <span class="pill-option selected">Web Design &amp; Dev</span>
+            <span class="pill-option">Mobile Application</span>
+            <span class="pill-option">UI/UX Design</span>
+            <span class="pill-option">Brand Identity</span>
+            <span class="pill-option">Growth &amp; SEO</span>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label" for="client-name">Your Name</label>
+            <input type="text" id="client-name" name="name" autocomplete="name" class="form-input" placeholder="e.g. Alex Rivera" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="client-email">Email Address</label>
+            <input type="email" id="client-email" name="email" autocomplete="email" class="form-input" placeholder="alex@company.com" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="client-phone">Phone Number</label>
+          <input type="tel" id="client-phone" name="phone" autocomplete="tel" class="form-input" placeholder="+91 98812 34567">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="project-description">Project Brief</label>
+          <textarea id="project-description" name="message" class="form-textarea" rows="3" placeholder="Describe your vision, timeline, and key goals..." required></textarea>
+        </div>
+
+        <!-- Honeypot. Deliberately meaningless name and no <label>: anything that
+             reads like a real field ("Company website") gets filled by browser
+             autofill and password managers, which would flag a real visitor as
+             a bot. The server records flagged rows rather than dropping them. -->
+        <div class="form-honeypot" aria-hidden="true">
+          <input type="text" id="tv-hp" name="tv_hp" tabindex="-1" autocomplete="off">
+        </div>
+
+        <p id="form-error" class="form-error" role="alert" hidden></p>
+
+        <div class="form-submit-row">
+          <button type="submit" class="btn-primary">
+            <span>Send project inquiry</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </button>
+        </div>
+      </form>
+
+      <!-- Success message upon submission -->
+      <div id="modal-success-state" class="modal-success-state">
+        <div class="success-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <h4 style="font-size: 1.5rem; font-weight: 700; color: #fff;">Inquiry Received!</h4>
+        <p style="color: var(--text-secondary); max-width: 420px; line-height: 1.6;">
+          Thank you for reaching out to TANVO. Our creative director and lead engineer will review your project brief and get back to you shortly.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       Modal 2: Case Study Quick View Dialog
+       ========================================================================= -->
+  <div id="case-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="case-modal-title">
+    <div class="modal-dialog case-modal-dialog">
+      <button type="button" class="modal-close-btn" aria-label="Close dialog">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+
+      <div class="case-modal-hero">
+        <img id="case-modal-image" src="assets/images/case-architecture.webp" alt="Case study hero preview">
+      </div>
+
+      <div class="case-modal-body">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <span id="case-modal-category" style="font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; color: var(--text-accent); letter-spacing: 0.08em;">Real Estate &amp; Architecture</span>
+            <h3 id="case-modal-title" style="font-size: 1.8rem; font-weight: 800; color: #fff; margin-top: 4px;">Buy N Build</h3>
+          </div>
+          <div style="text-align: right;">
+            <span id="case-modal-stat" style="display: inline-block; font-size: 0.875rem; font-weight: 700; color: var(--text-accent); background: rgba(32, 128, 252, 0.12); border: 1px solid rgba(32, 128, 252, 0.35); padding: 4px 12px; border-radius: 9999px;">Verified Outcome</span>
+          </div>
+        </div>
+
+        <h4 id="case-modal-headline" style="font-size: 1.15rem; color: #fff; font-weight: 600; line-height: 1.4;">
+          Modern digital storefront for prime architectural real estate.
+        </h4>
+
+        <p id="case-modal-overview" style="color: var(--text-secondary); line-height: 1.7; font-size: 0.95rem;">
+          Detailed case study narrative describing client goals, design decisions, and measured performance impact.
+        </p>
+
+        <div>
+          <span style="display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; color: var(--text-muted); margin-bottom: 8px;">Scope &amp; Deliverables</span>
+          <div id="case-modal-deliverables" class="service-tags">
+            <!-- Populated via script.js -->
+          </div>
+        </div>
+
+        <div style="margin-top: 10px; display: flex; gap: 16px;">
+          <button type="button" class="btn-primary" data-open-modal="project">
+            <span>Build something like this</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Magnetic Cursor Elements (Desktop) -->
+  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+  <div class="cursor-follower" id="cursorFollower" aria-hidden="true">
+    <span class="cursor-label" id="cursorLabel"></span>
+  </div>
+
+  <!-- Scripts -->
+  <script type="module" src="/src/main.tsx"></script>
+  <script type="module" src="/assets/script.js"></script>
+  <script>
+    // If the module bundle never executes — network failure, a blocked script,
+    // a runtime error before mount — main.tsx never sets .hero-ready. Drop the
+    // .js flag so the static hero above becomes visible again rather than
+    // leaving a black rectangle where the hero should be.
+    setTimeout(function () {
+      var root = document.documentElement;
+      if (!root.classList.contains('hero-ready')) root.classList.remove('js');
+    }, 2500);
+  </script>
+</body>
+</html>
