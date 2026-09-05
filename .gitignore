@@ -2,3 +2,6 @@ node_modules/
 dist/
 .DS_Store
 *.local
+
+# SEO audit artifacts (large; regenerate with /seo-audit)
+tanvo.in-audit/

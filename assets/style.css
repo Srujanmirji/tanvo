@@ -2305,8 +2305,13 @@ body.has-cursor .cursor-spotlight {
    Hidden the moment we know JS is alive — see the inline scripts in index.html.
    ========================================================================== */
 
+/* visibility, not display: the fallback keeps its box in the layout so it
+   reserves the hero's real height until React mounts and replaces it. With
+   display:none the mount point collapsed to 0 and everything below jumped
+   ~842px. The hero image also stays in the preload path, and React reuses the
+   identical URL. Hidden from assistive tech, so no duplicate announcement. */
 .js .hero-fallback {
-  display: none;
+  visibility: hidden;
 }
 
 .hero-fallback {

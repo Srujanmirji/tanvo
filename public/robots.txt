@@ -1,0 +1,24 @@
+# https://www.tanvo.in/robots.txt
+
+User-agent: *
+Allow: /
+
+# AI crawlers are welcome — TANVO wants to be citable in AI search.
+# These are explicit rather than relying on the default-allow, so the
+# intent is readable to anyone auditing the site.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://www.tanvo.in/sitemap.xml
