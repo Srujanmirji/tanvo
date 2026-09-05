@@ -15,9 +15,9 @@
 
   <!-- Fonts: linked here rather than @import-ed from CSS so the request is
        discovered on the first HTML parse instead of after CSS downloads. -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  <!-- Self-hosted; see the @font-face block in assets/style.css -->
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="/assets/fonts/plus-jakarta-sans-normal-400-800-latin.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="/assets/fonts/instrument-serif-italic-400-latin.woff2">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
