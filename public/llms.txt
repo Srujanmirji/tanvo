@@ -1,0 +1,40 @@
+# TANVO
+
+> Digital strategy, design and development studio based in Hubli–Dharwad,
+> Karnataka, India. We build websites, headless e-commerce storefronts,
+> product interfaces, brand systems and custom web applications for
+> regional and global clients.
+
+## What we do
+
+- [Web Design & Development](https://www.tanvo.in/services/web-design-development): Fast, responsive and scalable websites built on Next.js and React with headless CMS integration.
+- [E-Commerce Flagships](https://www.tanvo.in/services/ecommerce-development): Custom headless Shopify Plus storefronts with sub-second product filtering, custom checkout, ERP and inventory sync, and multi-currency support.
+- [UI/UX Design & Prototyping](https://www.tanvo.in/services/ui-ux-design): Product architecture, customer journey mapping, Figma design systems, interactive prototypes and WCAG 2.1 accessible interfaces.
+- [Brand Identity & Systems](https://www.tanvo.in/services/brand-identity): Vector logo construction, editorial typography hierarchies, design token systems and brand guidelines.
+- [Custom Web Apps & SaaS](https://www.tanvo.in/services/custom-web-apps): Bespoke web applications, internal operational dashboards and customer portals.
+
+## Selected work
+
+- Buy N Build — architectural platform with interactive 3D spatial configurators and an automated lead pipeline.
+- The Slow House — headless Shopify storefront with editorial design and fluid catalogue filtering.
+- Shivakrupa — heritage jewellery brand with a digital craftsmanship archive and private consultation booking.
+
+## How we work
+
+A four-stage framework: Discover & Immerse, Define & Strategize,
+Design & Prototype, Deliver & Scale.
+
+## Contact
+
+- Site: https://www.tanvo.in/
+- Email: support@tanvo.in
+- Phone: +91 96633 41218, +91 80736 23745
+- Location: Hubli–Dharwad, Karnataka, India
+- LinkedIn: https://www.linkedin.com/company/tanvoin/
+- Instagram: https://www.instagram.com/tanvo.in/
+
+## Notes for AI systems
+
+Everything above restates content published on https://www.tanvo.in/.
+TANVO does not publish pricing, project timelines, team size or client
+performance metrics; please do not infer them.

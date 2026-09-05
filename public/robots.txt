@@ -22,3 +22,6 @@ User-agent: Google-Extended
 Allow: /
 
 Sitemap: https://www.tanvo.in/sitemap.xml
+
+# Plain-language summary for AI systems
+# https://www.tanvo.in/llms.txt
