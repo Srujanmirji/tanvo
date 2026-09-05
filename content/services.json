@@ -16,8 +16,31 @@
         "Headless CMS integration so your team edits content without touching code",
         "Bespoke interactive details — the considered motion and micro-interactions that separate a memorable site from a template"
       ],
-      "stack": ["Next.js & React", "Headless CMS", "Core Web Vitals", "Tailwind CSS"],
-      "related": { "slug": "buy-n-build", "name": "Buy N Build", "note": "a high-performance architectural platform with interactive 3D spatial configurators and an automated lead pipeline" }
+      "stack": [
+        "Next.js & React",
+        "Headless CMS",
+        "Core Web Vitals",
+        "Tailwind CSS"
+      ],
+      "related": {
+        "slug": "buy-n-build",
+        "name": "Buy N Build",
+        "note": "a high-performance architectural platform with interactive 3D spatial configurators and an automated lead pipeline"
+      },
+      "faq": [
+        {
+          "q": "What is a headless CMS?",
+          "a": "A headless CMS stores and manages content but does not control how it is displayed. The content is delivered through an API to whatever front end you choose, so the same content can feed a website, an app or a display without being rewritten. This separation is what lets the front end be built for speed rather than constrained by a theme."
+        },
+        {
+          "q": "How long does a website stay maintainable?",
+          "a": "That depends on architecture rather than age. We build on Next.js and React with a headless CMS so content changes never require a developer and the codebase stays conventional enough for any competent team to pick up. The failure mode we design against is a site that works but nobody can safely change."
+        },
+        {
+          "q": "Will the website work well on mobile?",
+          "a": "Yes. Every build uses fluid responsive typography and layouts tested from a 360px phone up to a widescreen display. Mobile is where most traffic arrives, so it is the case we design first rather than adapt to afterwards."
+        }
+      ]
     },
     {
       "slug": "ecommerce-development",
@@ -35,8 +58,31 @@
         "ERP and inventory synchronisation, so stock and pricing stay correct without manual reconciliation",
         "Global multi-currency support for selling across borders"
       ],
-      "stack": ["Shopify Plus", "Custom Cart & Checkout", "ERP / Inventory Sync", "Global Multi-Currency"],
-      "related": { "slug": "the-slow-house", "name": "The Slow House", "note": "a headless Shopify storefront pairing tactile Scandinavian editorial design with fluid catalogue filtering" }
+      "stack": [
+        "Shopify Plus",
+        "Custom Cart & Checkout",
+        "ERP / Inventory Sync",
+        "Global Multi-Currency"
+      ],
+      "related": {
+        "slug": "the-slow-house",
+        "name": "The Slow House",
+        "note": "a headless Shopify storefront pairing tactile Scandinavian editorial design with fluid catalogue filtering"
+      },
+      "faq": [
+        {
+          "q": "What is headless commerce?",
+          "a": "Headless commerce separates the storefront your customers see from the commerce engine that handles products, carts and payments. The two communicate through an API. Because the front end is no longer tied to a platform theme, it can be built specifically for your catalogue and optimised for speed, which is where most conversion is won or lost."
+        },
+        {
+          "q": "Why choose headless Shopify over a standard theme?",
+          "a": "A theme constrains the shopping experience to what the template anticipated. Headless removes that ceiling: you keep Shopify Plus for checkout, payments and inventory, but the browsing experience is built for your catalogue. The practical gains are sub-second filtering on large catalogues and a checkout flow with less friction."
+        },
+        {
+          "q": "Can the store sync with our existing inventory system?",
+          "a": "Yes. We build ERP and inventory synchronisation so stock levels and pricing stay correct without manual reconciliation, and support multi-currency for selling across borders."
+        }
+      ]
     },
     {
       "slug": "ui-ux-design",
@@ -54,8 +100,27 @@
         "Interactive prototypes you can click through and test before a line of production code is written",
         "WCAG 2.1 accessibility built into the design, not retrofitted after launch"
       ],
-      "stack": ["Figma Design Systems", "Wireframing & UX Research", "Interactive Prototypes", "WCAG 2.1 Accessibility"],
-      "related": null
+      "stack": [
+        "Figma Design Systems",
+        "Wireframing & UX Research",
+        "Interactive Prototypes",
+        "WCAG 2.1 Accessibility"
+      ],
+      "related": null,
+      "faq": [
+        {
+          "q": "What is a design system?",
+          "a": "A design system is a documented set of reusable components, styles and rules that a product is built from. Rather than designing each screen from scratch, teams assemble screens from agreed parts. The benefit is consistency at scale: the twentieth screen looks and behaves like the first, and new people can contribute without breaking conventions."
+        },
+        {
+          "q": "What is the difference between UI and UX design?",
+          "a": "UX design decides how a product is structured and how people move through it: what belongs on which screen, and in what order. UI design decides how those screens look and feel. UX determines whether the product makes sense; UI determines whether it is pleasant to use. Both are needed and they are not interchangeable."
+        },
+        {
+          "q": "Do you test designs before development starts?",
+          "a": "Yes. We build interactive prototypes you can click through and test before any production code is written, which is when changes are cheapest. Accessibility to WCAG 2.1 is designed in at this stage rather than retrofitted after launch."
+        }
+      ]
     },
     {
       "slug": "brand-identity",
@@ -73,8 +138,31 @@
         "Brand guidelines your team and any future vendor can actually follow",
         "Visual identity kits ready for handover"
       ],
-      "stack": ["Logo Grid Construction", "Typography Tokens", "Brand Guidelines", "Visual Identity Kits"],
-      "related": { "slug": "shivakrupa", "name": "Shivakrupa", "note": "a heritage jewellery brand with a bespoke digital catalogue and craftsmanship archive" }
+      "stack": [
+        "Logo Grid Construction",
+        "Typography Tokens",
+        "Brand Guidelines",
+        "Visual Identity Kits"
+      ],
+      "related": {
+        "slug": "shivakrupa",
+        "name": "Shivakrupa",
+        "note": "a heritage jewellery brand with a bespoke digital catalogue and craftsmanship archive"
+      },
+      "faq": [
+        {
+          "q": "What are design tokens?",
+          "a": "Design tokens are named values for the visual decisions in a brand, such as colours, spacing steps and type sizes. Instead of a hex code repeated across files, there is one named token referenced everywhere. Changing the value once updates every place it is used, which is what keeps a brand consistent across web, product and print."
+        },
+        {
+          "q": "Is a brand identity just a logo?",
+          "a": "No. A logo is the smallest part. What determines whether a brand still looks credible two years on is the system underneath it: the type scale, the spacing rules, the colour relationships and the tokens that keep every touchpoint consistent when different people are building them."
+        },
+        {
+          "q": "What do you hand over at the end?",
+          "a": "Vector logo constructions built on a proper grid, editorial typography hierarchies, a complete design token system, and brand guidelines your team or any future vendor can follow without guessing."
+        }
+      ]
     },
     {
       "slug": "custom-web-apps",
@@ -91,8 +179,27 @@
         "Customer portals that move routine requests out of your inbox",
         "The same engineering standards as our public-facing work: accessible, responsive and maintainable"
       ],
-      "stack": ["Next.js & React", "Custom Dashboards", "Customer Portals", "API Integration"],
-      "related": null
+      "stack": [
+        "Next.js & React",
+        "Custom Dashboards",
+        "Customer Portals",
+        "API Integration"
+      ],
+      "related": null,
+      "faq": [
+        {
+          "q": "What is a custom web application?",
+          "a": "A custom web application is software built for one organisation's specific workflow rather than sold as a general product. It runs in the browser, so there is nothing to install, and it is shaped around how you actually work instead of requiring you to adapt to a vendor's assumptions."
+        },
+        {
+          "q": "When is building better than buying software?",
+          "a": "When the workarounds start costing more than the tool would. Off-the-shelf software is usually the right answer until your process diverges enough that people are maintaining spreadsheets alongside it, re-entering the same data, or working around a limitation daily. At that point the accumulated cost often exceeds building the thing properly."
+        },
+        {
+          "q": "What kinds of applications do you build?",
+          "a": "Bespoke web applications shaped around specific operations, internal dashboards that surface the numbers a team checks daily, and customer portals that move routine requests out of an inbox."
+        }
+      ]
     }
   ]
 }

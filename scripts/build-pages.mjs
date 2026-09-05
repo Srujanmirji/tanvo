@@ -32,6 +32,33 @@ for (const svc of services) {
         areaServed: { '@type': 'Country', name: 'India' },
         url: `https://www.tanvo.in/services/${svc.slug}`,
       },
+      // The four stages are on every service page as an ordered list. Marking
+      // them up helps AI answer engines extract the process as steps.
+      // Note: Google retired HowTo *rich results* in 2023, so this will not
+      // produce a Google search feature — it is here for machine extraction.
+      {
+        '@type': 'HowTo',
+        '@id': `https://www.tanvo.in/services/${svc.slug}#process`,
+        name: `How TANVO delivers ${svc.name}`,
+        description: 'The four-stage framework every TANVO engagement runs through.',
+        step: [
+          { '@type': 'HowToStep', position: 1, name: 'Discover & Immerse', text: 'Discovery workshops, telemetry audits and journey mapping to establish what actually needs solving.' },
+          { '@type': 'HowToStep', position: 2, name: 'Define & Strategize', text: 'Turning those findings into an architecture and a plan you can sign off on.' },
+          { '@type': 'HowToStep', position: 3, name: 'Design & Prototype', text: 'Interactive prototypes and systematic design libraries, tested before production code.' },
+          { '@type': 'HowToStep', position: 4, name: 'Deliver & Scale', text: 'Build, launch, and the ongoing work of scaling it.' },
+        ],
+      },
+      ...((svc.faq || []).length
+        ? [{
+            '@type': 'FAQPage',
+            '@id': `https://www.tanvo.in/services/${svc.slug}#faq`,
+            mainEntity: svc.faq.map((f) => ({
+              '@type': 'Question',
+              name: f.q,
+              acceptedAnswer: { '@type': 'Answer', text: f.a },
+            })),
+          }]
+        : []),
       {
         '@type': 'BreadcrumbList',
         itemListElement: [
@@ -55,7 +82,15 @@ for (const svc of services) {
     .map((s) => `            <li><a href="/services/${s.slug}">${esc(s.name)}</a></li>`)
     .join('\n');
 
+  const faqHtml = (svc.faq || [])
+    .map((f) => `            <details class="faq-item">
+              <summary class="faq-q">${esc(f.q)}</summary>
+              <div class="faq-a"><p>${esc(f.a)}</p></div>
+            </details>`)
+    .join('\n');
+
   const html = template
+    .replace('{{faq}}', faqHtml)
     .replaceAll('{{slug}}', esc(svc.slug))
     .replaceAll('{{num}}', esc(svc.num))
     .replaceAll('{{name}}', esc(svc.name))
