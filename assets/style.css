@@ -3030,3 +3030,45 @@ body.has-cursor .cursor-spotlight {
 
 /* Keep place names from breaking across lines. */
 .nowrap { white-space: nowrap; }
+
+/* ==========================================================================
+   Review fixes — 2026-09-05
+   ========================================================================== */
+
+/* Hero: at desktop sizes the panel is ~990px tall but the content clustered at
+   the top, leaving ~436px of dead space above the bottom-anchored location
+   stamp. Two auto margins split the free space evenly instead, so the block
+   reads as deliberately composed rather than unfinished. */
+@media (min-width: 769px) {
+  .hero-static-label { margin-top: auto; }
+  .hero-static-location { padding-top: 1.25rem; }
+}
+
+/* Case-study card captions sat hard against the bottom edge of the image and
+   wrapped tightly. More inset, a wider measure and a little more leading. */
+.mockup-content-overlay { padding: 22px 24px 26px; }
+
+.mockup-overlay-hero h4 {
+  max-width: 300px;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+/* The word-reveal masks every section heading until it scrolls into view.
+   Anything that renders without scrolling — printing, full-page screenshot
+   tools, some preview bots — would otherwise capture blank headings. */
+@media print {
+  .hw-word-inner {
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+  .hero-static-media,
+  .hero-static-panel,
+  .reveal-on-scroll {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+    animation: none !important;
+  }
+}
