@@ -1,0 +1,51 @@
+{
+  "_comment": "Legal page content. DRAFTED, NOT LAWYER-REVIEWED. Every factual claim about data handling was verified against the actual code on 2026-09-05: no cookies, no localStorage, no analytics, no trackers; the only third parties contacted are Google Fonts and Google Apps Script. If the site's behaviour changes (adding analytics, a cookie banner, a CRM), this file must change with it.",
+  "effectiveDate": "5 September 2026",
+  "pages": [
+    {
+      "slug": "privacy",
+      "name": "Privacy Policy",
+      "title": "Privacy Policy | TANVO",
+      "metaDescription": "How TANVO collects, uses and protects personal data submitted through tanvo.in. We set no cookies and run no analytics or advertising trackers.",
+      "lede": "What we collect, why we collect it, and what you can ask us to do with it.",
+      "sections": [
+        { "h": "Who we are", "p": ["TANVO is a digital strategy, design and development studio based in Hubli–Dharwad, Karnataka, India. This policy covers the website at www.tanvo.in.", "For anything in this policy, contact us at <a href=\"mailto:support@tanvo.in\">support@tanvo.in</a>."] },
+        { "h": "The short version", "p": ["We set no cookies. We run no analytics, advertising or behavioural tracking of any kind. The only personal data we receive is what you deliberately type into our enquiry form and send us."] },
+        { "h": "What we collect", "p": ["<strong>When you submit the project enquiry form</strong>, we receive exactly the fields you filled in:"],
+          "ul": ["Your name", "Your email address", "Your phone number, if you choose to provide it — this field is optional", "The project brief you write", "Which capabilities you selected", "The page address you submitted from"],
+          "p2": ["<strong>When you simply visit the site</strong>, our hosting provider records standard server logs, which include IP address, browser user-agent, requested page and timestamp. This is ordinary web-server operation and we do not use it to build a profile of you.", "We do not ask for, want, or knowingly store any special category data — health, financial, biometric or similar. Please do not include such information in your project brief."] },
+        { "h": "Why we collect it", "p": ["Solely to read your enquiry, reply to it, and keep a record of business correspondence. We do not sell personal data. We do not share it for advertising. We do not use it to train machine-learning models."] },
+        { "h": "Where it goes", "p": ["Enquiry submissions are transmitted over HTTPS to a Google Apps Script endpoint under our control, which records them in a Google Sheet in our Google Workspace account and sends a notification email to support@tanvo.in. Access is limited to TANVO personnel who need it to respond to you.", "The site is hosted on Vercel, which processes server logs as described above.", "Typefaces are served by Google Fonts (fonts.googleapis.com and fonts.gstatic.com). When your browser fetches them, Google receives your IP address as part of that request. We do not control and do not receive that data.", "That is the complete list of third parties. There are no others."] },
+        { "h": "How long we keep it", "p": ["We keep enquiry records for as long as they remain useful for the business relationship or correspondence they relate to, and delete them when they no longer are. You can ask us to erase your enquiry at any time and we will do so unless we are legally required to keep it."] },
+        { "h": "Your rights", "p": ["Under India's Digital Personal Data Protection Act 2023, and comparable laws elsewhere, you may ask us to:"],
+          "ul": ["Confirm what personal data of yours we hold, and give you a copy", "Correct anything inaccurate or incomplete", "Erase your data where we have no continuing need for it", "Withdraw consent you previously gave, without affecting processing already carried out"],
+          "p2": ["Email <a href=\"mailto:support@tanvo.in\">support@tanvo.in</a> and we will respond within 30 days. If you are not satisfied with our response, you may complain to the Data Protection Board of India. If you are in the UK or EEA, you may complain to your local supervisory authority."] },
+        { "h": "Security", "p": ["The site is served only over HTTPS with HSTS. Form submissions travel over TLS. We apply a Content Security Policy and related protective headers. Records are held in access-controlled Google Workspace accounts.", "No system is perfectly secure, and we will not claim otherwise. If we become aware of a breach affecting your personal data, we will notify you and the relevant authority as required by law."] },
+        { "h": "Children", "p": ["This site is aimed at businesses and is not directed at children. We do not knowingly collect personal data from anyone under 18. If you believe a child has sent us personal data, email us and we will delete it."] },
+        { "h": "Changes", "p": ["If we change what we collect or who we share it with, we will update this page and change the effective date above. Material changes to how we handle data already collected will be notified to affected individuals where we hold contact details."] }
+      ]
+    },
+    {
+      "slug": "terms",
+      "name": "Terms of Service",
+      "title": "Terms of Service | TANVO",
+      "metaDescription": "The terms governing use of the TANVO website at tanvo.in, including intellectual property, acceptable use and limitation of liability.",
+      "lede": "The terms on which you may use this website.",
+      "sections": [
+        { "h": "Agreement", "p": ["These terms govern your use of www.tanvo.in, operated by TANVO, Hubli–Dharwad, Karnataka, India. By using the site you accept them. If you do not accept them, please do not use the site."] },
+        { "h": "What this site is", "p": ["This website describes TANVO's services and published work. It is informational.", "Nothing on this site is an offer, a quotation, or a binding commitment to provide services. Any engagement between us is governed by a separate written agreement signed by both parties. If those terms and these ever conflict, the signed agreement prevails."] },
+        { "h": "Enquiries", "p": ["Submitting the enquiry form starts a conversation; it does not create a contract, reserve capacity, or oblige us to take on your project. We may decline any enquiry.", "Please send accurate information, and do not send confidential material through the form. If you need to share something sensitive, tell us and we will arrange a suitable channel and, where appropriate, a non-disclosure agreement first."] },
+        { "h": "Intellectual property", "p": ["The design, code, text, imagery and the TANVO name and marks on this site are owned by TANVO or used with permission, and are protected by applicable law.", "You may view and share links to the site, and quote short extracts with attribution. You may not copy, republish, or reuse substantial parts of the site's content or design for commercial purposes without our written permission.", "Client names, marks and project imagery shown in our work are the property of those clients and appear here to describe work we carried out."] },
+        { "h": "Acceptable use", "p": ["Please do not:"],
+          "ul": ["Use the site unlawfully, or to send unlawful, abusive, deceptive or infringing material", "Submit the enquiry form for spam, bulk messaging or automated abuse", "Attempt to gain unauthorised access to the site, its infrastructure, or any connected system", "Probe, scan or stress-test the site, or interfere with its normal operation", "Scrape or harvest content or contact details at scale"],
+          "p2": ["We may block access where we reasonably believe any of the above is happening."] },
+        { "h": "Accuracy and availability", "p": ["We take care to keep the site accurate, but we do not warrant that it is complete, current or error-free. Descriptions of capabilities and past work are summaries, not specifications.", "We do not guarantee that the site will be uninterrupted or available at any particular time. We may change, suspend or withdraw any part of it without notice."] },
+        { "h": "External links", "p": ["This site links to external sites we do not control, including our profiles on LinkedIn and Instagram. We are not responsible for their content or their privacy practices."] },
+        { "h": "Limitation of liability", "p": ["To the fullest extent permitted by law, TANVO is not liable for any indirect, incidental, special or consequential loss, or for loss of profits, revenue, data or goodwill, arising from your use of this website.", "Nothing in these terms excludes or limits liability that cannot lawfully be excluded or limited, including liability for death or personal injury caused by negligence, or for fraud."] },
+        { "h": "Privacy", "p": ["Our handling of personal data is described in the <a href=\"/privacy\">Privacy Policy</a>, which forms part of these terms."] },
+        { "h": "Governing law", "p": ["These terms are governed by the laws of India. The courts at Hubli–Dharwad, Karnataka, India have exclusive jurisdiction over any dispute arising from them or from use of this site."] },
+        { "h": "Changes and contact", "p": ["We may update these terms; the effective date above shows when they last changed. Continued use of the site after a change means you accept the updated terms.", "Questions: <a href=\"mailto:support@tanvo.in\">support@tanvo.in</a>."] }
+      ]
+    }
+  ]
+}

@@ -2911,3 +2911,98 @@ body.has-cursor .cursor-spotlight {
   text-decoration: underline;
   text-underline-offset: 4px;
 }
+
+/* ==========================================================================
+   Legal pages (/privacy, /terms) — generated from content/legal.json
+   ========================================================================== */
+
+.legal-page {
+  padding: clamp(6rem, 12vw, 9rem) 0 clamp(4rem, 8vw, 6rem);
+  background: var(--bg-primary);
+}
+
+.legal-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 clamp(1.5rem, 5vw, 2.5rem);
+}
+
+.legal-title {
+  margin: 0.75rem 0 0;
+  font-family: var(--font-sans);
+  font-size: clamp(2rem, 4.5vw, 2.9rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: var(--text-white);
+}
+
+.legal-lede {
+  margin: 0.9rem 0 0;
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  line-height: 1.55;
+  color: var(--text-accent);
+}
+
+.legal-date {
+  margin: 1.25rem 0 0;
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.legal-h2 {
+  margin: clamp(2.25rem, 4.5vw, 3rem) 0 0;
+  font-size: clamp(1.15rem, 2vw, 1.4rem);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--text-white);
+}
+
+.legal-p {
+  margin: 1rem 0 0;
+  font-size: clamp(0.96rem, 1.15vw, 1.03rem);
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+
+.legal-ul {
+  margin: 1rem 0 0;
+  padding-left: 1.25rem;
+  color: var(--text-secondary);
+}
+
+.legal-ul li {
+  margin-bottom: 0.6rem;
+  font-size: clamp(0.96rem, 1.15vw, 1.03rem);
+  line-height: 1.7;
+}
+
+.legal-ul li::marker { color: var(--text-accent); }
+
+.legal-p a,
+.legal-ul a,
+.legal-foot a {
+  color: var(--text-white);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.legal-p a:hover,
+.legal-foot a:hover { color: var(--text-accent); }
+
+.legal-p strong { color: var(--text-white); font-weight: 600; }
+
+.legal-foot {
+  margin-top: clamp(3rem, 6vw, 4rem);
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.legal-foot p { margin: 0 0 0.5rem; }

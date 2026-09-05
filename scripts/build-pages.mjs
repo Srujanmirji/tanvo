@@ -76,3 +76,56 @@ for (const svc of services) {
   console.log(`  services/${svc.slug}.html`);
 }
 console.log(`Generated ${services.length} service pages.`);
+
+// ---------------------------------------------------------------------------
+// Legal pages (/privacy, /terms) from content/legal.json + templates/legal.html
+// ---------------------------------------------------------------------------
+
+const legal = JSON.parse(readFileSync(resolve(root, 'content/legal.json'), 'utf8'));
+const legalTemplate = readFileSync(resolve(root, 'templates/legal.html'), 'utf8');
+
+for (const page of legal.pages) {
+  const sections = page.sections
+    .map((sec) => {
+      const parts = [`        <h2 class="legal-h2">${esc(sec.h)}</h2>`];
+      // Section prose is authored HTML (it contains deliberate <a> and <strong>),
+      // so it is intentionally not escaped. Headings and list items are.
+      for (const para of sec.p || []) parts.push(`        <p class="legal-p">${para}</p>`);
+      if (sec.ul) {
+        parts.push('        <ul class="legal-ul">');
+        for (const li of sec.ul) parts.push(`          <li>${li}</li>`);
+        parts.push('        </ul>');
+      }
+      for (const para of sec.p2 || []) parts.push(`        <p class="legal-p">${para}</p>`);
+      return parts.join('\n');
+    })
+    .join('\n\n');
+
+  const jsonld = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    '@id': `https://www.tanvo.in/${page.slug}#webpage`,
+    name: page.name,
+    description: page.metaDescription,
+    url: `https://www.tanvo.in/${page.slug}`,
+    isPartOf: { '@id': 'https://www.tanvo.in/#organization' },
+    publisher: { '@id': 'https://www.tanvo.in/#organization' },
+  };
+
+  const html = legalTemplate
+    .replaceAll('{{slug}}', esc(page.slug))
+    .replaceAll('{{name}}', esc(page.name))
+    .replaceAll('{{title}}', esc(page.title))
+    .replaceAll('{{metaDescription}}', esc(page.metaDescription))
+    .replaceAll('{{lede}}', esc(page.lede))
+    .replaceAll('{{effectiveDate}}', esc(legal.effectiveDate))
+    .replace('{{sections}}', sections)
+    .replace('{{jsonld}}', JSON.stringify(jsonld, null, 2));
+
+  const unresolved = html.match(/\{\{[a-zA-Z]+\}\}/g);
+  if (unresolved) throw new Error(`Unreplaced placeholders in ${page.slug}: ${[...new Set(unresolved)].join(', ')}`);
+
+  writeFileSync(resolve(root, `${page.slug}.html`), html);
+  console.log(`  ${page.slug}.html`);
+}
+console.log(`Generated ${legal.pages.length} legal pages.`);

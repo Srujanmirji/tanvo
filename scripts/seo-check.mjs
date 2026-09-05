@@ -15,6 +15,8 @@ const PAGES = [
   '/services/ui-ux-design',
   '/services/brand-identity',
   '/services/custom-web-apps',
+  '/privacy',
+  '/terms',
 ];
 
 let failed = 0;
@@ -57,7 +59,11 @@ check('real phone numbers', home.body.includes('9663341218') && home.body.includ
 check('placeholder phone gone', !home.body.includes('9881234567'));
 check('hero is in the HTML (no JS needed)', home.body.includes('hero-static'));
 check('links to all 5 service pages',
-  PAGES.slice(1).every((p) => home.body.includes(`href="${p}"`)));
+  PAGES.slice(1, 6).every((p) => home.body.includes(`href="${p}"`)));
+// These were dead (href="#intro") for a long time while the form collected
+// personal data — assert they stay pointed at real pages.
+check('privacy + terms links are live, not anchors',
+  home.body.includes('href="/privacy"') && home.body.includes('href="/terms"'));
 
 console.log('\nSecurity headers');
 for (const h of ['content-security-policy', 'x-content-type-options', 'x-frame-options',
