@@ -6,6 +6,9 @@
   <title>Web Design &amp; Development Agency in Hubli–Dharwad | TANVO</title>
   <meta name="description" content="TANVO is an elite digital strategy, design, and development agency crafting memorable web experiences and scalable products for ambitious brands.">
   <link rel="icon" type="image/png" href="assets/images/Tanvo.png">
+  <!-- LCP image: preloaded so it is fetched from the first HTML parse
+       rather than after the stylesheet resolves. -->
+  <link rel="preload" as="image" href="assets/images/tanvo-hero-team.webp" fetchpriority="high">
   <link rel="canonical" href="https://www.tanvo.in/">
   <meta name="theme-color" content="#0B0B0D">
 
@@ -312,6 +315,7 @@
         </div>
         <div class="hero-static-media">
           <img src="assets/images/tanvo-hero-team.webp" width="1024" height="576"
+               fetchpriority="high" decoding="async" loading="eager"
                alt="The TANVO team collaborating on client work.">
         </div>
     </section>
