@@ -1,0 +1,4 @@
+# IndexNow host key for www.tanvo.in
+# The matching key file is public/591e7695658320cd8ceaa395669a5435.txt and must stay published.
+INDEXNOW_KEY=591e7695658320cd8ceaa395669a5435
+INDEXNOW_KEY_LOCATION=https://www.tanvo.in/591e7695658320cd8ceaa395669a5435.txt
