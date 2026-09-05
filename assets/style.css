@@ -3006,3 +3006,27 @@ body.has-cursor .cursor-spotlight {
 }
 
 .legal-foot p { margin: 0 0 0.5rem; }
+
+/* Keyword line inside the hero h1 — carries the primary term and location
+   for crawlers while staying visually subordinate to the display headline. */
+.hero-static-kicker {
+  display: block;
+  margin-top: 0.9rem;
+  font-family: var(--font-sans);
+  font-size: clamp(0.78rem, 1vw, 0.86rem);
+  font-weight: 600;
+  font-style: normal;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-static-kicker {
+    animation: hero-rise 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.78s both;
+  }
+}
+
+/* Keep place names from breaking across lines. */
+.nowrap { white-space: nowrap; }
