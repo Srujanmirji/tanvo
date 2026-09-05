@@ -1,0 +1,98 @@
+{
+  "_comment": "Source of truth for the service pages. Every field below is derived from copy already published on the homepage. Nothing here asserts pricing, timelines, team size, client metrics or guarantees, because the site states none of those. Edit this file and re-run the build to regenerate the pages.",
+  "services": [
+    {
+      "slug": "web-design-development",
+      "num": "01",
+      "name": "Web Design & Development",
+      "title": "Web Design & Development Company in Hubli–Dharwad | TANVO",
+      "metaDescription": "TANVO builds fast, responsive and scalable websites for ambitious brands, using Next.js, React and headless CMS architecture. Based in Hubli–Dharwad, Karnataka.",
+      "serviceType": "Web Design and Development",
+      "lede": "Fast, responsive and scalable websites engineered to convert and scale with your business.",
+      "intro": "A website is the one asset that works for you continuously, and most fail quietly — slow on the connections your customers actually use, awkward on the devices they actually hold, and impossible to update without a developer. We build sites that avoid all three.",
+      "whatYouGet": [
+        "Modern framework architecture built on Next.js and React, so the site stays maintainable as it grows",
+        "Fluid responsive typography that reads correctly from a 360px phone to a widescreen display",
+        "Headless CMS integration so your team edits content without touching code",
+        "Bespoke interactive details — the considered motion and micro-interactions that separate a memorable site from a template"
+      ],
+      "stack": ["Next.js & React", "Headless CMS", "Core Web Vitals", "Tailwind CSS"],
+      "related": { "slug": "buy-n-build", "name": "Buy N Build", "note": "a high-performance architectural platform with interactive 3D spatial configurators and an automated lead pipeline" }
+    },
+    {
+      "slug": "ecommerce-development",
+      "num": "02",
+      "name": "E-Commerce Flagships",
+      "title": "Headless Shopify & E-Commerce Development | TANVO",
+      "metaDescription": "Custom headless e-commerce storefronts on Shopify Plus — sub-second product filtering, custom checkout, ERP sync and multi-currency. Built by TANVO in Karnataka, India.",
+      "serviceType": "E-Commerce Development",
+      "lede": "Custom headless storefronts delivering tactile shopping experiences and friction-free checkout.",
+      "intro": "Most storefronts lose customers in two places: a catalogue that takes too long to filter, and a checkout that asks too much. A headless build lets us fix both, because the shopping experience is no longer constrained by a theme.",
+      "whatYouGet": [
+        "Headless Shopify Plus storefronts, where the front end is built for your catalogue rather than adapted from a template",
+        "Sub-second product filtering, so browsing a large catalogue does not feel like waiting",
+        "Custom cart and checkout workflows designed to remove friction at the point of purchase",
+        "ERP and inventory synchronisation, so stock and pricing stay correct without manual reconciliation",
+        "Global multi-currency support for selling across borders"
+      ],
+      "stack": ["Shopify Plus", "Custom Cart & Checkout", "ERP / Inventory Sync", "Global Multi-Currency"],
+      "related": { "slug": "the-slow-house", "name": "The Slow House", "note": "a headless Shopify storefront pairing tactile Scandinavian editorial design with fluid catalogue filtering" }
+    },
+    {
+      "slug": "ui-ux-design",
+      "num": "03",
+      "name": "UI/UX Design & Prototyping",
+      "title": "UI/UX Design & Prototyping Studio | TANVO",
+      "metaDescription": "User-centric product architecture, customer journey mapping, systematic design libraries and WCAG 2.1 accessible interfaces. UI/UX design by TANVO, Hubli–Dharwad.",
+      "serviceType": "UI/UX Design",
+      "lede": "Product architecture and design systems that bring clarity to complex digital experiences.",
+      "intro": "Complexity is not the enemy — unexplained complexity is. We map how people actually move through a product, then design the structure that makes the complicated parts feel obvious.",
+      "whatYouGet": [
+        "User-centric product architecture: what belongs on which screen, and why",
+        "Deep customer journey mapping grounded in how your users actually behave, not how we assume they do",
+        "Systematic design libraries in Figma, so the twentieth screen is as consistent as the first",
+        "Interactive prototypes you can click through and test before a line of production code is written",
+        "WCAG 2.1 accessibility built into the design, not retrofitted after launch"
+      ],
+      "stack": ["Figma Design Systems", "Wireframing & UX Research", "Interactive Prototypes", "WCAG 2.1 Accessibility"],
+      "related": null
+    },
+    {
+      "slug": "brand-identity",
+      "num": "04",
+      "name": "Brand Identity & Systems",
+      "title": "Brand Identity & Design Systems Agency | TANVO",
+      "metaDescription": "Enduring visual identities, vector logo construction, editorial typography hierarchies and complete design token systems. Brand identity by TANVO, Karnataka, India.",
+      "serviceType": "Brand Identity Design",
+      "lede": "Visual identities and design systems that communicate authority and earn lasting trust.",
+      "intro": "A logo is the smallest part of an identity. What determines whether a brand looks credible two years in is the system underneath it — the type scale, the spacing rules, the tokens that keep every touchpoint consistent when different people are building them.",
+      "whatYouGet": [
+        "Vector logo construction on a proper grid, so the mark holds up at every size it will ever be used at",
+        "Editorial typography hierarchies — a real type scale, not a handful of arbitrary sizes",
+        "Complete design token systems that keep colour, spacing and type consistent across web, product and print",
+        "Brand guidelines your team and any future vendor can actually follow",
+        "Visual identity kits ready for handover"
+      ],
+      "stack": ["Logo Grid Construction", "Typography Tokens", "Brand Guidelines", "Visual Identity Kits"],
+      "related": { "slug": "shivakrupa", "name": "Shivakrupa", "note": "a heritage jewellery brand with a bespoke digital catalogue and craftsmanship archive" }
+    },
+    {
+      "slug": "custom-web-apps",
+      "num": "05",
+      "name": "Custom Web Apps & SaaS",
+      "title": "Custom Web Application & SaaS Development | TANVO",
+      "metaDescription": "Bespoke web applications, internal operational dashboards and customer portals engineered by TANVO — a digital product studio in Hubli–Dharwad, Karnataka.",
+      "serviceType": "Custom Software Development",
+      "lede": "Bespoke web applications, operational dashboards and customer portals.",
+      "intro": "When off-the-shelf software stops fitting how you actually work, the usual response is to change how you work. Building the tool instead is often cheaper than the accumulated cost of the workaround.",
+      "whatYouGet": [
+        "Bespoke web applications shaped around your operations rather than a vendor's assumptions",
+        "Internal operational dashboards that surface the numbers your team checks daily",
+        "Customer portals that move routine requests out of your inbox",
+        "The same engineering standards as our public-facing work: accessible, responsive and maintainable"
+      ],
+      "stack": ["Next.js & React", "Custom Dashboards", "Customer Portals", "API Integration"],
+      "related": null
+    }
+  ]
+}

@@ -32,7 +32,7 @@
 
   /* Typography Families */
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-serif: 'Playfair Display', 'Instrument Serif', Georgia, serif;
+  --font-serif: 'Instrument Serif', Georgia, serif;   /* Playfair dropped: nothing in the markup used it */
 
   /* Spacings */
   --container-max: 1320px;
@@ -2745,4 +2745,169 @@ body.has-cursor .cursor-spotlight {
       animation-range: entry 0% exit 100%;
     }
   }
+}
+
+/* ==========================================================================
+   Service pages (generated from content/services.json)
+   ========================================================================== */
+
+.svc-page {
+  padding: clamp(6rem, 12vw, 9rem) 0 clamp(4rem, 8vw, 6rem);
+  background: var(--bg-primary);
+}
+
+.svc-inner {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 clamp(1.5rem, 5vw, 2.5rem);
+}
+
+.svc-crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.svc-crumbs a { color: var(--text-muted); text-decoration: none; }
+.svc-crumbs a:hover { color: var(--text-accent); text-decoration: underline; }
+.svc-crumbs [aria-current="page"] { color: var(--text-primary); }
+
+.svc-title {
+  margin: 0.75rem 0 0;
+  font-family: var(--font-sans);
+  font-size: clamp(2.1rem, 5vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--text-white);
+}
+
+.svc-lede {
+  margin: 1rem 0 0;
+  font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+  line-height: 1.5;
+  color: var(--text-accent);
+}
+
+.svc-intro,
+.svc-body {
+  margin: 1.5rem 0 0;
+  font-size: clamp(0.98rem, 1.2vw, 1.08rem);
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+
+.svc-h2 {
+  margin: clamp(2.5rem, 5vw, 3.5rem) 0 0;
+  font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-white);
+}
+
+.svc-list,
+.svc-steps {
+  margin: 1.25rem 0 0;
+  padding-left: 1.25rem;
+  color: var(--text-secondary);
+}
+
+.svc-list li,
+.svc-steps li {
+  margin-bottom: 0.85rem;
+  font-size: clamp(0.98rem, 1.2vw, 1.05rem);
+  line-height: 1.7;
+}
+
+.svc-list li::marker { color: var(--text-accent); }
+.svc-steps li::marker { color: var(--text-accent); font-weight: 700; }
+.svc-steps strong,
+.svc-body strong { color: var(--text-white); }
+
+.svc-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.svc-chips li {
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.svc-cta {
+  margin-top: clamp(3rem, 6vw, 4.5rem);
+  padding: clamp(1.75rem, 4vw, 2.5rem);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  background: var(--bg-card);
+}
+
+.svc-cta .svc-h2 { margin-top: 0; }
+
+.svc-cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.875rem;
+  margin-top: 1.5rem;
+}
+
+.svc-meta { font-size: 0.85rem; }
+.svc-meta a { color: var(--text-secondary); }
+
+.svc-siblings { margin-top: clamp(3rem, 6vw, 4rem); }
+
+.svc-siblings ul {
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.svc-siblings li { border-bottom: 1px solid var(--border-subtle); }
+
+.svc-siblings a {
+  display: block;
+  min-height: 44px;
+  padding: 1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.svc-siblings a:hover,
+.svc-siblings a:focus-visible { color: var(--text-accent); }
+
+/* Homepage -> service page link inside each accordion panel */
+.service-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  margin-top: 1.1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-accent);
+  text-decoration: none;
+  transition: gap 0.2s ease;
+}
+
+.service-more:hover,
+.service-more:focus-visible {
+  gap: 0.75rem;
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }

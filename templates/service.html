@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<!-- GENERATED FILE — do not edit.
+     Source: content/services.json + templates/service.html
+     Regenerate: npm run build (runs scripts/build-pages.mjs first) -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{title}}</title>
+<meta name="description" content="{{metaDescription}}">
+<link rel="icon" type="image/png" href="/assets/images/Tanvo.png">
+<link rel="canonical" href="https://www.tanvo.in/services/{{slug}}">
+<meta name="theme-color" content="#0B0B0D">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="TANVO">
+<meta property="og:url" content="https://www.tanvo.in/services/{{slug}}">
+<meta property="og:title" content="{{title}}">
+<meta property="og:description" content="{{metaDescription}}">
+<meta property="og:image" content="https://www.tanvo.in/assets/images/og-card.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{title}}">
+<meta name="twitter:description" content="{{metaDescription}}">
+
+<link rel="stylesheet" href="/assets/style.css">
+
+<script type="application/ld+json">
+{{jsonld}}
+</script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="/" class="brand-logo" aria-label="TANVO Home">
+        <img src="/assets/images/Tanvo.png" alt="TANVO Mark" width="34" height="34">
+        <span>TANVO</span>
+      </a>
+      <nav aria-label="Main Navigation">
+        <ul class="nav-menu">
+          <li><a href="/#work" class="nav-link">Work</a></li>
+          <li><a href="/#services" class="nav-link">Services</a></li>
+          <li><a href="/#process" class="nav-link">Process</a></li>
+          <li><a href="/#about" class="nav-link">About</a></li>
+          <li><a href="/#contact" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="header-cta">
+        <a class="btn-primary" href="/#contact">
+          <span>Start a project</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <article class="svc-page">
+      <div class="svc-inner">
+        <nav class="svc-crumbs" aria-label="Breadcrumb">
+          <a href="/">Home</a>
+          <span aria-hidden="true">/</span>
+          <a href="/#services">Services</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{{name}}</span>
+        </nav>
+
+        <span class="section-index">{{num}} SERVICE</span>
+        <h1 class="svc-title">{{name}}</h1>
+        <p class="svc-lede">{{lede}}</p>
+
+        <p class="svc-intro">{{intro}}</p>
+
+        <h2 class="svc-h2">What this includes</h2>
+        <ul class="svc-list">
+{{whatYouGet}}
+        </ul>
+
+        <h2 class="svc-h2">How we build it</h2>
+        <p class="svc-body">Every engagement runs through the same four stages, whatever the scope.</p>
+        <ol class="svc-steps">
+          <li><strong>Discover &amp; Immerse</strong> — discovery workshops, telemetry audits and journey mapping to establish what actually needs solving.</li>
+          <li><strong>Define &amp; Strategize</strong> — turning those findings into an architecture and a plan you can sign off on.</li>
+          <li><strong>Design &amp; Prototype</strong> — interactive prototypes and systematic design libraries, tested before production code.</li>
+          <li><strong>Deliver &amp; Scale</strong> — build, launch, and the ongoing work of scaling it.</li>
+        </ol>
+
+        <h2 class="svc-h2">Technologies</h2>
+        <ul class="svc-chips">
+{{stack}}
+        </ul>
+{{related}}
+        <div class="svc-cta">
+          <h2 class="svc-h2">Start a {{name}} project</h2>
+          <p class="svc-body">Tell us what you are building and we will reply within 24 hours.</p>
+          <div class="svc-cta-actions">
+            <a class="hero-static-btn hero-static-btn--primary" href="/#contact">Start a project</a>
+            <a class="hero-static-btn" href="mailto:support@tanvo.in">support@tanvo.in</a>
+          </div>
+          <p class="svc-body svc-meta">TANVO · Hubli–Dharwad, Karnataka, India · <a href="tel:+919663341218">+91 96633 41218</a></p>
+        </div>
+
+        <nav class="svc-siblings" aria-label="Other services">
+          <h2 class="svc-h2">Other services</h2>
+          <ul>
+{{siblings}}
+          </ul>
+        </nav>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p class="footer-text">
+        <a href="mailto:support@tanvo.in">support@tanvo.in</a><br>
+        <a href="tel:+919663341218">+91 96633 41218</a><br>
+        <a href="tel:+918073623745">+91 80736 23745</a>
+      </p>
+      <p class="footer-text">Hubli–Dharwad, Karnataka, India</p>
+      <p class="footer-text">
+        <a href="https://www.linkedin.com/company/tanvoin/" target="_blank" rel="noopener noreferrer">LinkedIn</a> ·
+        <a href="https://www.instagram.com/tanvo.in/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      </p>
+      <p class="footer-text">&copy; <span id="yr">2026</span> TANVO. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="/assets/script.js"></script>
+</body>
+</html>
