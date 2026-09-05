@@ -20,8 +20,8 @@
   /* Typography Colors */
   --text-primary: #F4F1EA;
   --text-secondary: #A7A39C;
-  --text-muted: #737069;
-  --text-accent: #2080FC;
+  --text-muted: #8B8880;   /* was #737069 = 3.98:1 on --bg-primary; now 5.55:1 (WCAG AA) */
+  --text-accent: #38BDF8;  /* was #2080FC = 4.37:1 as text on dark panels; now 7.72:1 (WCAG AA) */
   --text-accent-bright: #6ae8fc;
   --text-white: #ffffff;
 
@@ -2299,22 +2299,14 @@ body.has-cursor .cursor-spotlight {
 }
 
 /* ==========================================================================
-   No-JS / failed-bundle hero fallback
-   Mirrors src/components/Hero.tsx closely enough that a visitor without a
-   working bundle still gets the headline, the pitch and a way to contact us.
-   Hidden the moment we know JS is alive — see the inline scripts in index.html.
+   Hero
+   Static markup, CSS-driven. This was React + GSAP + ScrollTrigger (99KB gzip)
+   purely to animate one section; the entrance is now keyframes and the scroll
+   parallax a native view() timeline. Nothing here waits on JavaScript, so the
+   headline and the LCP image are in the very first paint.
    ========================================================================== */
 
-/* visibility, not display: the fallback keeps its box in the layout so it
-   reserves the hero's real height until React mounts and replaces it. With
-   display:none the mount point collapsed to 0 and everything below jumped
-   ~842px. The hero image also stays in the preload path, and React reuses the
-   identical URL. Hidden from assistive tech, so no duplicate announcement. */
-.js .hero-fallback {
-  visibility: hidden;
-}
-
-.hero-fallback {
+.hero-static {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -2325,7 +2317,7 @@ body.has-cursor .cursor-spotlight {
   overflow: hidden;
 }
 
-.hero-fallback-panel {
+.hero-static-panel {
   position: relative;
   z-index: 1;
   display: flex;
@@ -2335,8 +2327,8 @@ body.has-cursor .cursor-spotlight {
   background: #0B0B0D;
 }
 
-.hero-fallback-label,
-.hero-fallback-location {
+.hero-static-label,
+.hero-static-location {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -2347,13 +2339,13 @@ body.has-cursor .cursor-spotlight {
   color: #38BDF8;
 }
 
-.hero-fallback-location {
+.hero-static-location {
   margin-top: auto;
   padding-top: 2rem;
   color: #A7A39C;
 }
 
-.hero-fallback-dot {
+.hero-static-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
@@ -2362,7 +2354,7 @@ body.has-cursor .cursor-spotlight {
   flex-shrink: 0;
 }
 
-.hero-fallback-title {
+.hero-static-title {
   margin: 0;
   font-family: var(--font-sans);
   font-size: clamp(2.4rem, 4.2vw, 3.9rem);
@@ -2372,7 +2364,7 @@ body.has-cursor .cursor-spotlight {
   color: #F4F1EA;
 }
 
-.hero-fallback-serif {
+.hero-static-serif {
   display: block;
   font-family: 'Instrument Serif', Georgia, serif;
   font-style: italic;
@@ -2380,7 +2372,7 @@ body.has-cursor .cursor-spotlight {
   color: #2080FC;
 }
 
-.hero-fallback-desc {
+.hero-static-desc {
   margin: 0;
   max-width: 440px;
   font-size: clamp(0.95rem, 1.15vw, 1.1rem);
@@ -2388,14 +2380,14 @@ body.has-cursor .cursor-spotlight {
   color: #A7A39C;
 }
 
-.hero-fallback-actions {
+.hero-static-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.875rem;
   padding-top: 0.5rem;
 }
 
-.hero-fallback-btn {
+.hero-static-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -2411,33 +2403,34 @@ body.has-cursor .cursor-spotlight {
   transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
-.hero-fallback-btn:hover,
-.hero-fallback-btn:focus-visible {
+.hero-static-btn:hover,
+.hero-static-btn:focus-visible {
   border-color: rgba(32, 128, 252, 0.6);
   background: rgba(255, 255, 255, 0.03);
 }
 
-.hero-fallback-btn--primary {
-  border-color: #2080FC;
-  background: #2080FC;
+.hero-static-btn--primary {
+  border-color: #1258F7;
+  /* white on #2080FC is only 3.78:1; this is the existing hover blue at 5.58:1 */
+  background: #1258F7;
   color: #fff;
   box-shadow: 0 4px 20px rgba(32, 128, 252, 0.35);
 }
 
-.hero-fallback-btn--primary:hover,
-.hero-fallback-btn--primary:focus-visible {
+.hero-static-btn--primary:hover,
+.hero-static-btn--primary:focus-visible {
   border-color: #1258F7;
   background: #1258F7;
 }
 
-.hero-fallback-media {
+.hero-static-media {
   position: relative;
   width: 100%;
   height: 340px;
   overflow: hidden;
 }
 
-.hero-fallback-media img {
+.hero-static-media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -2445,12 +2438,12 @@ body.has-cursor .cursor-spotlight {
 }
 
 @media (min-width: 769px) {
-  .hero-fallback {
+  .hero-static {
     flex-direction: row;
     align-items: stretch;
   }
 
-  .hero-fallback-panel {
+  .hero-static-panel {
     /* Wider than the 43% content column so the clip-path diagonal cuts across
        the photograph, the way the diagonal panel does in Hero.tsx. */
     width: 52%;
@@ -2459,7 +2452,7 @@ body.has-cursor .cursor-spotlight {
     clip-path: polygon(0 0, 100% 0, 84% 100%, 0 100%);
   }
 
-  .hero-fallback-media {
+  .hero-static-media {
     position: absolute;
     top: 0;
     right: 0;
@@ -2566,5 +2559,190 @@ body.has-cursor .cursor-spotlight {
     clip-path: none !important;
     transition: none !important;
     animation: none !important;
+  }
+}
+
+/* ==========================================================================
+   FAQ
+   Native <details>/<summary>: keyboard-accessible, screen-reader-announced and
+   open-by-default-when-printed for free, with no JavaScript. The answers stay
+   in the DOM while collapsed, so crawlers and AI engines read all of them.
+   ========================================================================== */
+
+.faq-section {
+  padding: clamp(4rem, 9vw, 7rem) 0;
+  background: var(--bg-primary);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.faq-inner {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 clamp(1.5rem, 5vw, 2.5rem);
+}
+
+.faq-list {
+  margin-top: clamp(2rem, 4vw, 3rem);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.faq-q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  /* 44px minimum tap target */
+  min-height: 44px;
+  padding: 1.4rem 0;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-sans);
+  font-size: clamp(1rem, 1.5vw, 1.15rem);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text-white);
+  transition: color 0.2s ease;
+}
+
+/* Remove the default disclosure triangle in both engines */
+.faq-q::-webkit-details-marker { display: none; }
+.faq-q::marker { content: ''; }
+
+.faq-q::after {
+  content: '';
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid var(--bg-accent);
+  border-bottom: 2px solid var(--bg-accent);
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.faq-item[open] .faq-q::after {
+  transform: rotate(-135deg) translateY(-2px);
+}
+
+.faq-q:hover,
+.faq-item[open] .faq-q {
+  color: var(--bg-accent);
+}
+
+.faq-q:focus-visible {
+  outline: 2px solid var(--bg-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.faq-a {
+  padding: 0 0 1.6rem;
+  max-width: 68ch;
+}
+
+.faq-a p {
+  margin: 0;
+  font-size: clamp(0.95rem, 1.15vw, 1.05rem);
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.faq-a a {
+  color: var(--text-white);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.faq-a a:hover {
+  color: var(--bg-accent);
+}
+
+.faq-a strong {
+  color: var(--text-white);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Hero entrance + scroll parallax (was the GSAP timeline)
+
+   Keyframes with staggered delays reproduce the original sequence: the photo
+   wipes in, the panel slides across, then label, headline lines, serif line,
+   copy, buttons and location cascade. Timings match the GSAP version so the
+   feel is unchanged.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+
+  @keyframes hero-media-in {
+    from { clip-path: inset(0 0 0 100%); }
+    to   { clip-path: inset(0 0 0 0); }
+  }
+
+  @keyframes hero-panel-in {
+    from { opacity: 0; transform: translateX(-100%); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes hero-rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Headline lines rise out of their own clipped mask, the same masked-line
+     language the section headings use. */
+  @keyframes hero-line-in {
+    from { transform: translateY(115%); }
+    to   { transform: translateY(0); }
+  }
+
+  .hero-static-media {
+    animation: hero-media-in 0.8s cubic-bezier(0.65, 0, 0.35, 1) both;
+  }
+
+  .hero-static-panel {
+    animation: hero-panel-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+  }
+
+  .hero-static-label   { animation: hero-rise 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both; }
+  .hero-static-desc    { animation: hero-rise 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.85s both; }
+  .hero-static-actions > * { animation: hero-rise 0.4s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .hero-static-actions > *:nth-child(1) { animation-delay: 1s; }
+  .hero-static-actions > *:nth-child(2) { animation-delay: 1.08s; }
+  .hero-static-location { animation: hero-rise 0.4s cubic-bezier(0.16, 1, 0.3, 1) 1.15s both; }
+
+  /* Each headline line needs its own overflow-hidden wrapper to mask against. */
+  .hero-static-title .hero-line {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.08em;
+    margin-bottom: -0.08em;
+  }
+
+  .hero-static-title .hero-line > span {
+    display: block;
+    animation: hero-line-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .hero-static-title .hero-line:nth-child(1) > span { animation-delay: 0.45s; }
+  .hero-static-title .hero-line:nth-child(2) > span { animation-delay: 0.53s; }
+  .hero-static-title .hero-line:nth-child(3) > span { animation-delay: 0.61s; }
+  .hero-static-serif { animation: hero-rise 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.7s both; }
+
+  /* Scroll parallax: replaces the ScrollTrigger scrub. Native timeline where
+     supported, otherwise the image simply sits still — no JS either way. */
+  @supports (animation-timeline: view()) {
+    @keyframes hero-media-drift {
+      from { transform: scale(1.05) translateY(-2%); }
+      to   { transform: scale(1.05) translateY(2%); }
+    }
+
+    .hero-static-media img {
+      animation: hero-media-drift linear both;
+      animation-timeline: view();
+      animation-range: entry 0% exit 100%;
+    }
   }
 }

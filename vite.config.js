@@ -1,8 +1,8 @@
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
 
+// No framework plugin: the site is static HTML + one plain script.
+// Vite is here for content-hashed asset output and the dev server.
 export default defineConfig({
-  plugins: [react()],
   server: {
     port: 8081,
     host: true,
